@@ -1,24 +1,14 @@
 import streamlit as st
 import pandas as pd
 import re
+import requests
+import folium
+from streamlit_folium import st_folium
 
 # Configuration de la page
 st.set_page_config(page_title="Outil Speaker Course", layout="wide")
 
 st.title("🎙️ Outil Speaker - Foulées Raids Dingues")
-
-# Dictionnaire des coordonnées des départements
-DEPT_COORDS = {
-    '85': {'lat': 46.6705, 'lon': -1.4264, 'nom': 'Vendée'},
-    '17': {'lat': 45.8333, 'lon': -0.6667, 'nom': 'Charente-Maritime'},
-    '79': {'lat': 46.5333, 'lon': -0.3333, 'nom': 'Deux-Sèvres'},
-    '44': {'lat': 47.3167, 'lon': -1.5500, 'nom': 'Loire-Atlantique'},
-    '49': {'lat': 47.4167, 'lon': -0.5500, 'nom': 'Maine-et-Loire'},
-    '86': {'lat': 46.5833, 'lon': 0.3333, 'nom': 'Vienne'},
-    '75': {'lat': 48.8566, 'lon': 2.3522, 'nom': 'Paris'},
-    '13': {'lat': 43.5297, 'lon': 5.4474, 'nom': 'Bouches-du-Rhône'},
-    '91': {'lat': 48.5333, 'lon': 2.2500, 'nom': 'Essonne'}
-}
 
 @st.cache_data
 def load_and_process_data():
@@ -37,18 +27,54 @@ def load_and_process_data():
             return parts[1].strip()
         return None
 
-    def extract_dept(val):
+    def extract_ville_cp(val):
         if pd.isna(val):
-            return None
-        match = re.search(r'\((\d{2})\d{3}\)', str(val))
+            return None, None
+        ville_part = str(val).split('/')[0].strip()
+        match = re.search(r'^(.*?)\s*\((\d{5})\)', ville_part)
         if match:
-            return match.group(1)
-        return None
+            nom_ville = match.group(1).strip()
+            cp = match.group(2).strip()
+            return nom_ville, cp
+        return ville_part, None
 
     df['CLUB'] = df['VILLE'].apply(extract_club)
-    df['DEPT'] = df['VILLE'].apply(extract_dept)
+    res_villes = df['VILLE'].apply(extract_ville_cp)
+    df['NOM_VILLE'] = [r[0] for r in res_villes]
+    df['CODE_POSTAL'] = [r[1] for r in res_villes]
     
     return df
+
+@st.cache_data
+def geolocaliser_communes(df_villes):
+    coords = []
+    for _, row in df_villes.iterrows():
+        cp = row['CODE_POSTAL']
+        ville = row['NOM_VILLE']
+        
+        if pd.notna(cp):
+            try:
+                url = f"https://geo.api.gouv.fr/communes?codePostal={cp}&fields=centre,nom&format=json"
+                response = requests.get(url, timeout=3).json()
+                
+                if response:
+                    commune_match = response[0]
+                    for item in response:
+                        if item['nom'].lower() == str(ville).lower():
+                            commune_match = item
+                            break
+                    
+                    lon, lat = commune_match['centre']['coordinates']
+                    coords.append({
+                        'NOM_VILLE': ville,
+                        'CODE_POSTAL': cp,
+                        'Ville_CP': f"{ville} ({cp})",
+                        'latitude': lat,
+                        'longitude': lon
+                    })
+            except Exception:
+                pass
+    return pd.DataFrame(coords)
 
 try:
     df = load_and_process_data()
@@ -83,7 +109,7 @@ try:
                 club_str = f" | Club : **{coureur['CLUB']}**" if pd.notna(coureur['CLUB']) and coureur['CLUB'] != "" else ""
                 st.subheader(f"Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{coureur.get('Catégorie', 'N/A')}** ({coureur.get('SEXE', 'N/A')}){club_str}")
                 
-                # --- CALCUL DYNAMIQUE DU RANG PAR COTE BETRAIL ---
+                # CALCUL DYNAMIQUE DU RANG
                 rang_str = "N/A"
                 if pd.notna(coureur.get('Indice BETRAIL')):
                     df_meme_course_sexe = df[
@@ -192,7 +218,7 @@ try:
                             st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : ORIGINES ET CLUBS
+    # ONGLET 3 : ORIGINES ET CLUBS (CARTE FOLIUM FR)
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
@@ -209,40 +235,49 @@ try:
                 st.write("Aucun club renseigné dans les données.")
 
         with col_map:
-            st.subheader("🗺️ Répartition par Département")
+            st.subheader("🗺️ Carte des Villes (en français)")
             
-            dept_counts = df['DEPT'].value_counts().reset_index()
-            dept_counts.columns = ['DEPT', 'Nb Coureurs']
+            df_villes_uniques = df[['NOM_VILLE', 'CODE_POSTAL']].dropna().drop_duplicates()
+            df_coords = geolocaliser_communes(df_villes_uniques)
             
-            map_data = []
-            for _, row in dept_counts.iterrows():
-                dept = row['DEPT']
-                if dept in DEPT_COORDS:
-                    map_data.append({
-                        'latitude': DEPT_COORDS[dept]['lat'],
-                        'longitude': DEPT_COORDS[dept]['lon'],
-                        'Département': f"{dept} - {DEPT_COORDS[dept]['nom']}",
-                        'Nb Coureurs': row['Nb Coureurs']
-                    })
-            
-            df_map = pd.DataFrame(map_data)
-            
-            if not df_map.empty:
-                st.map(
-                    df_map, 
-                    latitude='latitude', 
-                    longitude='longitude', 
-                    size='Nb Coureurs',
-                    color='#FF4B4B'
+            if not df_coords.empty:
+                counts_ville = df.groupby(['NOM_VILLE', 'CODE_POSTAL']).size().reset_index(name='Nb Coureurs')
+                df_map_final = pd.merge(df_coords, counts_ville, on=['NOM_VILLE', 'CODE_POSTAL'])
+                
+                # Centre moyen de la carte (autour de la Vendée / Charente-Maritime)
+                center_lat = df_map_final['latitude'].mean()
+                center_lon = df_map_final['longitude'].mean()
+                
+                # Fond de carte OpenStreetMap en français
+                m = folium.Map(
+                    location=[center_lat, center_lon], 
+                    zoom_start=9,
+                    tiles="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+                    attr="&copy; OpenStreetMap France"
                 )
                 
+                # Ajout des marqueurs circulaires
+                for _, row in df_map_final.iterrows():
+                    folium.CircleMarker(
+                        location=[row['latitude'], row['longitude']],
+                        radius=5 + (row['Nb Coureurs'] * 2),
+                        popup=f"<b>{row['Ville_CP']}</b><br>{row['Nb Coureurs']} coureur(s)",
+                        color="#FF4B4B",
+                        fill=True,
+                        fill_color="#FF4B4B",
+                        fill_opacity=0.6
+                    ).add_to(m)
+                
+                # Affichage dans Streamlit
+                st_folium(m, width="100%", height=450)
+                
                 st.dataframe(
-                    df_map[['Département', 'Nb Coureurs']], 
+                    df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False), 
                     use_container_width=True, 
                     hide_index=True
                 )
             else:
-                st.write("Aucune donnée de département valide trouvée.")
+                st.write("Géolocalisation des villes en cours...")
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
