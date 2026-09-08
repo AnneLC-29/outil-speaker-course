@@ -171,7 +171,6 @@ try:
                 df_cat.columns = ['Code_Cat', 'Nombre']
                 df_cat['Code_clean'] = df_cat['Code_Cat'].astype(str).str.strip().str.upper()
                 
-                # Conserver uniquement les catégories connues et appliquer un type catégoriel ordonné
                 df_cat = df_cat[df_cat['Code_clean'].isin(ORDRE_CATEGORIES)].copy()
                 df_cat['Code_clean'] = pd.Categorical(
                     df_cat['Code_clean'], 
@@ -336,61 +335,71 @@ try:
                 st.warning(f"Aucun coureur trouvé avec le dossard N° {dossard_input}")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : FAVORIS ET COTES BETRAIL
+    # ONGLET 3 : FAVORIS ET COTES BETRAIL (TOP 5 EN DÉFILEMENT CONTINU)
     # -------------------------------------------------------------
     with tab_favoris:
         st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
-        courses_dispo = df['COURSE'].dropna().unique()
+        
+        courses_raw = df['COURSE'].dropna().unique()
+        
+        # Fonction pour extraire la distance numérique et trier du 8 KM au 25 KM
+        def get_distance_num(course_str):
+            match = re.search(r'(\d+)', str(course_str))
+            return int(match.group(1)) if match else 999
+            
+        courses_dispo = sorted(courses_raw, key=get_distance_num)
         
         if len(courses_dispo) > 0:
-            sub_tabs = st.tabs([f"Épreuve {c}" for c in courses_dispo])
-            
-            for tab, course_name in zip(sub_tabs, courses_dispo):
-                with tab:
-                    df_course = df[(df['COURSE'] == course_name) & (df['Indice BETRAIL'].notna())].copy()
-                    col_femmes, col_hommes = st.columns(2)
+            for course_name in courses_dispo:
+                st.markdown("---")
+                st.markdown(f"### 🚩 Épreuve : **{course_name}**")
+                
+                df_course = df[(df['COURSE'] == course_name) & (df['Indice BETRAIL'].notna())].copy()
+                col_femmes, col_hommes = st.columns(2)
+                
+                # TOP 5 FEMMES
+                with col_femmes:
+                    st.markdown("#### 👩 Top 5 Femmes")
+                    top5_f = df_course[df_course['SEXE'] == 'F'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
                     
-                    with col_femmes:
-                        st.markdown("#### 👩 Top 3 Femmes")
-                        top3_f = df_course[df_course['SEXE'] == 'F'].sort_values(by="Indice BETRAIL", ascending=False).head(3)
-                        
-                        if not top3_f.empty:
-                            top3_f_display = top3_f[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE']].reset_index(drop=True)
-                            top3_f_display.index += 1
-                            st.dataframe(
-                                top3_f_display, 
-                                use_container_width=True,
-                                column_config={
-                                    "DOSSARD": "Dossard",
-                                    "NOM": "Nom",
-                                    "PRENOM": "Prénom",
-                                    "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
-                                    "VILLE": "Ville / Club"
-                                }
-                            )
-                        else:
-                            st.write("Aucune donnée disponible.")
+                    if not top5_f.empty:
+                        top5_f_display = top5_f[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']].reset_index(drop=True)
+                        top5_f_display.index += 1
+                        st.dataframe(
+                            top5_f_display, 
+                            use_container_width=True,
+                            column_config={
+                                "DOSSARD": "Dossard",
+                                "NOM": "Nom",
+                                "PRENOM": "Prénom",
+                                "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
+                                "VILLE_CLEAN": "Ville / Origine"
+                            }
+                        )
+                    else:
+                        st.write("Aucune donnée disponible.")
 
-                    with col_hommes:
-                        st.markdown("#### 👨 Top 3 Hommes")
-                        top3_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(3)
-                        
-                        if not top3_h.empty:
-                            top3_h_display = top3_h[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE']].reset_index(drop=True)
-                            top3_h_display.index += 1
-                            st.dataframe(
-                                top3_h_display, 
-                                use_container_width=True,
-                                column_config={
-                                    "DOSSARD": "Dossard",
-                                    "NOM": "Nom",
-                                    "PRENOM": "Prénom",
-                                    "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
-                                    "VILLE": "Ville / Club"
-                                }
-                            )
-                        else:
-                            st.write("Aucune donnée disponible.")
+                # TOP 5 HOMMES
+                with col_hommes:
+                    st.markdown("#### 👨 Top 5 Hommes")
+                    top5_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
+                    
+                    if not top5_h.empty:
+                        top5_h_display = top5_h[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']].reset_index(drop=True)
+                        top5_h_display.index += 1
+                        st.dataframe(
+                            top5_h_display, 
+                            use_container_width=True,
+                            column_config={
+                                "DOSSARD": "Dossard",
+                                "NOM": "Nom",
+                                "PRENOM": "Prénom",
+                                "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
+                                "VILLE_CLEAN": "Ville / Origine"
+                            }
+                        )
+                    else:
+                        st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
     # ONGLET 4 : ORIGINES ET CLUBS
