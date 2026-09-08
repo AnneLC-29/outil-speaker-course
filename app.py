@@ -87,7 +87,7 @@ try:
                     st.metric(label="Indice Betrail", value=f"{betrail}" if pd.notna(betrail) else "Non renseigné")
                     
                 with col3:
-                    classement = coureur.get('CLASSEMENT', 'N/A')
+                    classement = coureur.get('CLASSEMENT COTE BETRAIL', coureur.get('CLASSEMENT', 'N/A'))
                     st.metric(label="Rang théorique", value=f"N° {classement}" if pd.notna(classement) else "N/A")
 
                 st.markdown("---")
