@@ -10,6 +10,27 @@ st.set_page_config(page_title="Outil Speaker Course", layout="wide")
 
 st.title("🎙️ Outil Speaker - Foulées Raids Dingues")
 
+# Dictionnaire des catégories FFA avec tranches d'âge
+CATEGORIES_AGE = {
+    'CA': 'Cadets (16-17 ans)',
+    'JU': 'Juniors (18-19 ans)',
+    'ES': 'Espoirs (20-22 ans)',
+    'SE': 'Séniors (23-34 ans)',
+    'M0': 'Master 0 (35-39 ans)',
+    'M1': 'Master 1 (40-44 ans)',
+    'M2': 'Master 2 (45-49 ans)',
+    'M3': 'Master 3 (50-54 ans)',
+    'M4': 'Master 4 (55-59 ans)',
+    'M5': 'Master 5 (60-64 ans)',
+    'M6': 'Master 6 (65-69 ans)',
+    'M7': 'Master 7 (70-74 ans)',
+    'M8': 'Master 8 (75-79 ans)',
+    'M9': 'Master 9 (80-84 ans)',
+    'M10': 'Master 10 (85+ ans)'
+}
+
+ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
+
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
@@ -87,7 +108,6 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
-    # NOUVEAU : Tab General en 1ere position
     tab_general, tab_search, tab_favoris, tab_stats = st.tabs([
         "📈 Infos Générales & Stats",
         "🔎 Recherche Dossard", 
@@ -101,7 +121,6 @@ try:
     with tab_general:
         st.subheader("📈 Statistiques Générales de l'Édition")
         
-        # CHIFFRES CLÉS GLOBAUX SUR DONNÉES RÉELLES
         total_inscrits = len(df)
         nb_hommes = len(df[df['SEXE'] == 'H'])
         nb_femmes = len(df[df['SEXE'] == 'F'])
@@ -143,16 +162,33 @@ try:
                     }
                 )
 
-        # REPARTITION PAR CATEGORIE
+        # REPARTITION PAR CATEGORIE ET TRANCHE D'AGE
         with c_right:
-            st.markdown("### 🏷️ Répartition par Catégorie")
+            st.markdown("### 🏷️ Répartition par Catégorie (triée par âge)")
             
             if 'Catégorie' in df.columns:
                 df_cat = df['Catégorie'].value_counts().reset_index()
-                df_cat.columns = ['Catégorie', 'Nombre']
+                df_cat.columns = ['Code_Cat', 'Nombre']
                 
-                st.bar_chart(df_cat.set_index('Catégorie'))
-                st.dataframe(df_cat, use_container_width=True, hide_index=True)
+                df_cat['Code_clean'] = df_cat['Code_Cat'].astype(str).str.strip().str.upper()
+                df_cat['Ordre'] = df_cat['Code_clean'].apply(
+                    lambda x: ORDRE_CATEGORIES.index(x) if x in ORDRE_CATEGORIES else 99
+                )
+                df_cat['Catégorie & Plage d\'âge'] = df_cat['Code_clean'].apply(
+                    lambda x: f"{x} - {CATEGORIES_AGE.get(x, 'Non spécifié')}"
+                )
+                
+                df_cat = df_cat.sort_values(by='Ordre').reset_index(drop=True)
+                
+                # Graphique basé sur le code court
+                st.bar_chart(df_cat.set_index('Code_Cat')['Nombre'])
+                
+                # Tableau synthétique détaillé avec la tranche d'âge
+                st.dataframe(
+                    df_cat[['Catégorie & Plage d\'âge', 'Nombre']], 
+                    use_container_width=True, 
+                    hide_index=True
+                )
 
     # -------------------------------------------------------------
     # ONGLET 2 : RECHERCHE DOSSARD
@@ -178,7 +214,10 @@ try:
                 club_name = coureur['CLUB']
                 is_club_valid = club_name != "Indépendant / Non renseigné"
                 
-                st.subheader(f"Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{coureur.get('Catégorie', 'N/A')}** ({coureur.get('SEXE', 'N/A')})")
+                cat_code = str(coureur.get('Catégorie', 'N/A')).strip().upper()
+                cat_label = CATEGORIES_AGE.get(cat_code, cat_code)
+                
+                st.subheader(f"Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{cat_label}** ({coureur.get('SEXE', 'N/A')})")
                 
                 if is_club_valid:
                     st.success(f"🛡️ **Club / Association : {club_name}**")
