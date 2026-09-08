@@ -13,6 +13,13 @@ st.title("🎙️ Outil Speaker - Foulées Raids Dingues")
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
+    
+    # Nettoyage : ne garder que les lignes avec un nom ou un dossard valide
+    if 'NOM' in df.columns:
+        df = df[df['NOM'].notna() & (df['NOM'].astype(str).str.strip() != "")]
+    elif 'DOSSARD' in df.columns:
+        df = df[df['DOSSARD'].notna()]
+        
     df['DOSSARD'] = pd.to_numeric(df['DOSSARD'], errors='coerce')
     df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
     
@@ -80,15 +87,75 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
-    tab_search, tab_favoris, tab_stats, tab_general = st.tabs([
+    # NOUVEAU : Tab General en 1ere position
+    tab_general, tab_search, tab_favoris, tab_stats = st.tabs([
+        "📈 Infos Générales & Stats",
         "🔎 Recherche Dossard", 
         "🏆 Favoris & Cotes Betrail", 
-        "📊 Origine & Clubs",
-        "📈 Infos Générales & Stats"
+        "📊 Origine & Clubs"
     ])
 
     # -------------------------------------------------------------
-    # ONGLET 1 : RECHERCHE DOSSARD
+    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES
+    # -------------------------------------------------------------
+    with tab_general:
+        st.subheader("📈 Statistiques Générales de l'Édition")
+        
+        # CHIFFRES CLÉS GLOBAUX SUR DONNÉES RÉELLES
+        total_inscrits = len(df)
+        nb_hommes = len(df[df['SEXE'] == 'H'])
+        nb_femmes = len(df[df['SEXE'] == 'F'])
+        pct_femmes = (nb_femmes / total_inscrits * 100) if total_inscrits > 0 else 0
+        pct_hommes = (nb_hommes / total_inscrits * 100) if total_inscrits > 0 else 0
+        
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Total Inscrits", f"{total_inscrits} coureurs")
+        m2.metric("Hommes", f"{nb_hommes} ({pct_hommes:.1f}%)")
+        m3.metric("Femmes", f"{nb_femmes} ({pct_femmes:.1f}%)")
+        
+        if 'COURSE' in df.columns and not df['COURSE'].dropna().empty:
+            top_course = df['COURSE'].value_counts().idxmax()
+            m4.metric("Épreuve reine", f"{top_course}")
+
+        st.markdown("---")
+        
+        c_left, c_right = st.columns(2)
+        
+        # REPARTITION PAR EPREUVE
+        with c_left:
+            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
+            
+            if 'COURSE' in df.columns:
+                df_courses = df.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
+                df_courses['Total'] = df_courses.sum(axis=1)
+                
+                st.bar_chart(df_courses[['Total']], color="#FF4B4B")
+                
+                st.dataframe(
+                    df_courses.reset_index(),
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "COURSE": "Épreuve",
+                        "H": "Hommes",
+                        "F": "Femmes",
+                        "Total": "Total Inscrits"
+                    }
+                )
+
+        # REPARTITION PAR CATEGORIE
+        with c_right:
+            st.markdown("### 🏷️ Répartition par Catégorie")
+            
+            if 'Catégorie' in df.columns:
+                df_cat = df['Catégorie'].value_counts().reset_index()
+                df_cat.columns = ['Catégorie', 'Nombre']
+                
+                st.bar_chart(df_cat.set_index('Catégorie'))
+                st.dataframe(df_cat, use_container_width=True, hide_index=True)
+
+    # -------------------------------------------------------------
+    # ONGLET 2 : RECHERCHE DOSSARD
     # -------------------------------------------------------------
     with tab_search:
         dossard_input = st.number_input(
@@ -106,7 +173,6 @@ try:
                 coureur = resultat.iloc[0]
                 st.markdown("---")
                 
-                # EN-TÊTE
                 st.header(f"🏃 {coureur.get('NOM', '')} {coureur.get('PRENOM', '')}")
                 
                 club_name = coureur['CLUB']
@@ -117,7 +183,6 @@ try:
                 if is_club_valid:
                     st.success(f"🛡️ **Club / Association : {club_name}**")
 
-                # CALCUL DYNAMIQUE DU RANG
                 rang_str = "N/A"
                 if pd.notna(coureur.get('Indice BETRAIL')):
                     df_meme_course_sexe = df[
@@ -144,7 +209,6 @@ try:
 
                 st.markdown("---")
                 
-                # SECTION COMMENTAIRES & HISTORIQUE
                 col_com, col_hist = st.columns(2)
                 
                 with col_com:
@@ -167,18 +231,15 @@ try:
                     if pd.isna(f2025) and pd.isna(f2024):
                         st.write("Pas de participation enregistrée en 2024/2025.")
 
-                # SECTION LOCALISATION ET DETAIL PAR COMMUNE / CLUB
                 st.markdown("---")
                 st.markdown("### 📍 Origine & Représentation Locale")
                 
                 nom_ville = coureur['NOM_VILLE']
                 cp_ville = coureur['CODE_POSTAL']
                 
-                # Coureurs de la même ville
                 df_ville_all = df[(df['NOM_VILLE'] == nom_ville) & (df['CODE_POSTAL'] == cp_ville)]
                 nb_coureurs_ville = len(df_ville_all)
                 
-                # Alignement côte à côte
                 col_map_c, col_info_c = st.columns([1, 1])
                 
                 with col_map_c:
@@ -233,7 +294,7 @@ try:
                 st.warning(f"Aucun coureur trouvé avec le dossard N° {dossard_input}")
 
     # -------------------------------------------------------------
-    # ONGLET 2 : FAVORIS ET COTES BETRAIL
+    # ONGLET 3 : FAVORIS ET COTES BETRAIL
     # -------------------------------------------------------------
     with tab_favoris:
         st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
@@ -290,7 +351,7 @@ try:
                             st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : ORIGINES ET CLUBS (INTERACTIF)
+    # ONGLET 4 : ORIGINES ET CLUBS
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
@@ -371,71 +432,6 @@ try:
                     st.markdown("**Top 10 des villes les plus représentées :**")
                     top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
                     st.dataframe(top10_villes, use_container_width=True, hide_index=True)
-
-    # -------------------------------------------------------------
-    # ONGLET 4 : INFOS GÉNÉRALES & STATISTIQUES (NOUVEAU)
-    # -------------------------------------------------------------
-    with tab_general:
-        st.subheader("📈 Statistiques Générales de l'Édition")
-        
-        # CHIFFRES CLÉS GLOBAUX
-        total_inscrits = len(df)
-        nb_hommes = len(df[df['SEXE'] == 'H'])
-        nb_femmes = len(df[df['SEXE'] == 'F'])
-        pct_femmes = (nb_femmes / total_inscrits * 100) if total_inscrits > 0 else 0
-        pct_hommes = (nb_hommes / total_inscrits * 100) if total_inscrits > 0 else 0
-        
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Total Inscrits", f"{total_inscrits} coureurs")
-        m2.metric("Hommes", f"{nb_hommes} ({pct_hommes:.1f}%)")
-        m3.metric("Femmes", f"{nb_femmes} ({pct_femmes:.1f}%)")
-        
-        # Course la plus populaire
-        if 'COURSE' in df.columns and not df['COURSE'].dropna().empty:
-            top_course = df['COURSE'].value_counts().idxmax()
-            m4.metric("Épreuve reine", f"{top_course}")
-
-        st.markdown("---")
-        
-        c_left, c_right = st.columns(2)
-        
-        # REPARTITION PAR EPREUVE
-        with c_left:
-            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
-            
-            if 'COURSE' in df.columns:
-                df_courses = df.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
-                df_courses['Total'] = df_courses.sum(axis=1)
-                
-                # Graphique en barres de Streamlit
-                st.bar_chart(df_courses[['Total']], color="#FF4B4B")
-                
-                # Tableau synthétique
-                st.dataframe(
-                    df_courses.reset_index(),
-                    use_container_width=True,
-                    hide_index=True,
-                    column_config={
-                        "COURSE": "Épreuve",
-                        "H": "Hommes",
-                        "F": "Femmes",
-                        "Total": "Total Inscrits"
-                    }
-                )
-
-        # REPARTITION PAR CATEGORIE
-        with c_right:
-            st.markdown("### 🏷️ Répartition par Catégorie")
-            
-            if 'Catégorie' in df.columns:
-                df_cat = df['Catégorie'].value_counts().reset_index()
-                df_cat.columns = ['Catégorie', 'Nombre']
-                
-                # Graphique en barres
-                st.bar_chart(df_cat.set_index('Catégorie'))
-                
-                # Tableau synthétique
-                st.dataframe(df_cat, use_container_width=True, hide_index=True)
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
