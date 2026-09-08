@@ -12,6 +12,10 @@ try:
     df['DOSSARD'] = pd.to_numeric(df['DOSSARD'], errors='coerce')
     df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
     
+    # Clean des valeurs de la colonne SEXE (enlever espaces éventuels)
+    if 'SEXE' in df.columns:
+        df['SEXE'] = df['SEXE'].astype(str).str.strip().str.upper()
+
     # -------------------------------------------------------------
     # 1. ZONE DE RECHERCHE DOSSARD
     # -------------------------------------------------------------
@@ -78,43 +82,66 @@ try:
     st.markdown("---")
     
     # -------------------------------------------------------------
-    # 2. CLASSEMENT POTENTIEL / FAVORIS (TOP 3 PAR COURSE)
+    # 2. CLASSEMENT POTENTIEL / FAVORIS (TOP 3 H & F PAR COURSE)
     # -------------------------------------------------------------
-    st.subheader("🏆 Favoris / Classement potentiel (selon la côte Betrail)")
+    st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
     
     # Récupérer la liste des parcours uniques
     courses_dispo = df['COURSE'].dropna().unique()
     
     if len(courses_dispo) > 0:
-        tabs = st.tabs([f"Epreuve {c}" for c in courses_dispo])
+        tabs = st.tabs([f"Épreuve {c}" for c in courses_dispo])
         
         for tab, course_name in zip(tabs, courses_dispo):
             with tab:
-                # Filtrer par épreuve et garder uniquement les coureurs avec une cote Betrail valide
+                # Filtrer par épreuve et garder les cotes valides
                 df_course = df[(df['COURSE'] == course_name) & (df['Indice BETRAIL'].notna())].copy()
                 
-                if not df_course.empty:
-                    # Trier par indice Betrail décroissant (du plus fort au moins fort)
-                    top3 = df_course.sort_values(by="Indice BETRAIL", ascending=False).head(3)
+                col_femmes, col_hommes = st.columns(2)
+                
+                # --- TOP 3 FEMMES ---
+                with col_femmes:
+                    st.markdown("#### 👩 Top 3 Femmes")
+                    top3_f = df_course[df_course['SEXE'] == 'F'].sort_values(by="Indice BETRAIL", ascending=False).head(3)
                     
-                    # Sélectionner et nettoyer les colonnes à afficher
-                    top3_display = top3[['DOSSARD', 'NOM', 'PRENOM', 'SEXE', 'Indice BETRAIL', 'VILLE']].reset_index(drop=True)
-                    top3_display.index += 1  # Rang 1, 2, 3 au lieu de 0, 1, 2
+                    if not top3_f.empty:
+                        top3_f_display = top3_f[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE']].reset_index(drop=True)
+                        top3_f_display.index += 1
+                        st.dataframe(
+                            top3_f_display, 
+                            use_container_width=True,
+                            column_config={
+                                "DOSSARD": "Dossard",
+                                "NOM": "Nom",
+                                "PRENOM": "Prénom",
+                                "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
+                                "VILLE": "Ville / Club"
+                            }
+                        )
+                    else:
+                        st.write("Aucune donnée disponible.")
+
+                # --- TOP 3 HOMMES ---
+                with col_hommes:
+                    st.markdown("#### 👨 Top 3 Hommes")
+                    top3_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(3)
                     
-                    st.dataframe(
-                        top3_display, 
-                        use_container_width=True,
-                        column_config={
-                            "DOSSARD": "Dossard",
-                            "NOM": "Nom",
-                            "PRENOM": "Prénom",
-                            "SEXE": "Sexe",
-                            "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
-                            "VILLE": "Ville / Club"
-                        }
-                    )
-                else:
-                    st.write("Aucun indice Betrail renseigné pour cette épreuve.")
+                    if not top3_h.empty:
+                        top3_h_display = top3_h[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE']].reset_index(drop=True)
+                        top3_h_display.index += 1
+                        st.dataframe(
+                            top3_h_display, 
+                            use_container_width=True,
+                            column_config={
+                                "DOSSARD": "Dossard",
+                                "NOM": "Nom",
+                                "PRENOM": "Prénom",
+                                "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
+                                "VILLE": "Ville / Club"
+                            }
+                        )
+                    else:
+                        st.write("Aucune donnée disponible.")
 
 except Exception as e:
     st.error(f"Erreur lors de la lecture des données : {e}")
