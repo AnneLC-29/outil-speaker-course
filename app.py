@@ -369,6 +369,10 @@ try:
                     coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
                     st.write(f"🏘️ **{len(coureurs_ville)} coureur(s)** originaire(s) de **{selected_ville}** :")
                     st.dataframe(coureurs_ville, use_container_width=True, hide_index=True)
+                else:
+                    st.markdown("**Top 10 des villes les plus représentées :**")
+                    top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
+                    st.dataframe(top10_villes, use_container_width=True, hide_index=True)
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
