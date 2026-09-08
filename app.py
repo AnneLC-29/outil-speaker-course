@@ -21,15 +21,15 @@ def load_and_process_data():
 
     def extract_club(val):
         if pd.isna(val):
-            return None
+            return "Indépendant / Non renseigné"
         parts = str(val).split('/')
-        if len(parts) > 1:
+        if len(parts) > 1 and parts[1].strip() != "":
             return parts[1].strip()
-        return None
+        return "Indépendant / Non renseigné"
 
     def extract_ville_cp(val):
         if pd.isna(val):
-            return None, None
+            return "Inconnue", None
         ville_part = str(val).split('/')[0].strip()
         match = re.search(r'^(.*?)\s*\((\d{5})\)', ville_part)
         if match:
@@ -42,6 +42,7 @@ def load_and_process_data():
     res_villes = df['VILLE'].apply(extract_ville_cp)
     df['NOM_VILLE'] = [r[0] for r in res_villes]
     df['CODE_POSTAL'] = [r[1] for r in res_villes]
+    df['VILLE_CLEAN'] = df.apply(lambda r: f"{r['NOM_VILLE']} ({r['CODE_POSTAL']})" if pd.notna(r['CODE_POSTAL']) else r['NOM_VILLE'], axis=1)
     
     return df
 
@@ -106,8 +107,8 @@ try:
                 
                 st.header(f"🏃 {coureur.get('NOM', '')} {coureur.get('PRENOM', '')}")
                 
-                club_str = f" | Club : **{coureur['CLUB']}**" if pd.notna(coureur['CLUB']) and coureur['CLUB'] != "" else ""
-                st.subheader(f"Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{coureur.get('Catégorie', 'N/A')}** ({coureur.get('SEXE', 'N/A')}){club_str}")
+                club_display = coureur['CLUB'] if coureur['CLUB'] != "Indépendant / Non renseigné" else "Aucun"
+                st.subheader(f"Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{coureur.get('Catégorie', 'N/A')}** ({coureur.get('SEXE', 'N/A')}) | Club : **{club_display}**")
                 
                 # CALCUL DYNAMIQUE DU RANG
                 rang_str = "N/A"
@@ -136,6 +137,7 @@ try:
 
                 st.markdown("---")
                 
+                # SECTION COMMENTAIRES + HISTORIQUE + CARTE COUREUR
                 col_com, col_hist = st.columns(2)
                 
                 with col_com:
@@ -157,6 +159,51 @@ try:
                         st.write(f"- **Édition 2024 :** {f2024}")
                     if pd.isna(f2025) and pd.isna(f2024):
                         st.write("Pas de participation enregistrée en 2024/2025.")
+
+                # SECTION LOCALISATION DU COUREUR
+                st.markdown("---")
+                st.markdown("### 📍 Origine & Représentation Locale")
+                
+                # Compter le nombre de personnes venant de cette ville
+                nom_ville = coureur['NOM_VILLE']
+                cp_ville = coureur['CODE_POSTAL']
+                
+                nb_coureurs_ville = len(df[(df['NOM_VILLE'] == nom_ville) & (df['CODE_POSTAL'] == cp_ville)])
+                
+                col_map_c, col_info_c = st.columns([2, 1])
+                
+                with col_info_c:
+                    st.metric(
+                        label=f"Inscrits venant de {coureur['VILLE_CLEAN']}", 
+                        value=f"{nb_coureurs_ville} coureur(s)"
+                    )
+                    st.caption("Représentation totale de cette commune sur l'ensemble des parcours de cette édition.")
+
+                with col_map_c:
+                    df_v_unique = pd.DataFrame([{'NOM_VILLE': nom_ville, 'CODE_POSTAL': cp_ville}])
+                    coords_c = geolocaliser_communes(df_v_unique)
+                    
+                    if not coords_c.empty:
+                        lat = coords_c.iloc[0]['latitude']
+                        lon = coords_c.iloc[0]['longitude']
+                        
+                        m_coureur = folium.Map(
+                            location=[lat, lon], 
+                            zoom_start=11,
+                            tiles="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+                            attr="&copy; OpenStreetMap France"
+                        )
+                        folium.Marker(
+                            location=[lat, lon],
+                            popup=f"<b>{coureur['VILLE_CLEAN']}</b><br>{nb_coureurs_ville} inscrit(s)",
+                            tooltip=coureur['VILLE_CLEAN'],
+                            icon=folium.Icon(color="red", icon="user")
+                        ).add_to(m_coureur)
+                        
+                        st_folium(m_coureur, width="100%", height=220, key=f"map_coureur_{dossard_input}")
+                    else:
+                        st.write("Coordonnées de la ville non disponibles pour l'affichage de la carte.")
+
             else:
                 st.warning(f"Aucun coureur trouvé avec le dossard N° {dossard_input}")
 
@@ -218,24 +265,33 @@ try:
                             st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : ORIGINES ET CLUBS (CARTE FOLIUM FR)
+    # ONGLET 3 : ORIGINES ET CLUBS (INTERACTIF)
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
         
         with col_clubs:
-            st.subheader("🛡️ Clubs & Associations les plus représentés")
-            df_clubs = df[df['CLUB'].notna() & (df['CLUB'] != "")]
+            st.subheader("🛡️ Détail par Club / Association")
             
-            if not df_clubs.empty:
-                stats_clubs = df_clubs['CLUB'].value_counts().reset_index()
-                stats_clubs.columns = ['Club / Association', 'Nombre d\'inscrits']
-                st.dataframe(stats_clubs, use_container_width=True, hide_index=True)
+            clubs_valides = [c for c in df['CLUB'].unique() if c != "Indépendant / Non renseigné"]
+            stats_clubs = df[df['CLUB'].isin(clubs_valides)]['CLUB'].value_counts().reset_index()
+            stats_clubs.columns = ['Club', 'Nb Inscrits']
+            
+            selected_club = st.selectbox(
+                "Sélectionnez un club pour voir la liste des coureurs :",
+                options=["-- Choisir un club --"] + list(stats_clubs['Club'])
+            )
+            
+            if selected_club and selected_club != "-- Choisir un club --":
+                coureurs_club = df[df['CLUB'] == selected_club][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
+                st.write(f"👥 **{len(coureurs_club)} coureur(s)** inscrit(s) pour **{selected_club}** :")
+                st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
             else:
-                st.write("Aucun club renseigné dans les données.")
+                st.markdown("**Top des clubs les plus représentés :**")
+                st.dataframe(stats_clubs.head(10), use_container_width=True, hide_index=True)
 
         with col_map:
-            st.subheader("🗺️ Carte des Villes (en français)")
+            st.subheader("🗺️ Carte & Détail par Ville")
             
             df_villes_uniques = df[['NOM_VILLE', 'CODE_POSTAL']].dropna().drop_duplicates()
             df_coords = geolocaliser_communes(df_villes_uniques)
@@ -244,11 +300,9 @@ try:
                 counts_ville = df.groupby(['NOM_VILLE', 'CODE_POSTAL']).size().reset_index(name='Nb Coureurs')
                 df_map_final = pd.merge(df_coords, counts_ville, on=['NOM_VILLE', 'CODE_POSTAL'])
                 
-                # Centre moyen de la carte (autour de la Vendée / Charente-Maritime)
                 center_lat = df_map_final['latitude'].mean()
                 center_lon = df_map_final['longitude'].mean()
                 
-                # Fond de carte OpenStreetMap en français
                 m = folium.Map(
                     location=[center_lat, center_lon], 
                     zoom_start=9,
@@ -256,28 +310,38 @@ try:
                     attr="&copy; OpenStreetMap France"
                 )
                 
-                # Ajout des marqueurs circulaires
                 for _, row in df_map_final.iterrows():
+                    c_list = df[(df['NOM_VILLE'] == row['NOM_VILLE']) & (df['CODE_POSTAL'] == row['CODE_POSTAL'])]
+                    coureurs_html = "<br>".join([f"- <b>{r['DOSSARD']}</b>: {r['NOM']} {r['PRENOM']} ({r['COURSE']})" for _, r in c_list.iterrows()])
+                    
+                    popup_content = f"""
+                    <div style='font-size:13px; min-width:180px;'>
+                        <b>📍 {row['Ville_CP']}</b><br>
+                        <i>{row['Nb Coureurs']} coureur(s) :</i><br>{coureurs_html}
+                    </div>
+                    """
+                    
                     folium.CircleMarker(
                         location=[row['latitude'], row['longitude']],
                         radius=5 + (row['Nb Coureurs'] * 2),
-                        popup=f"<b>{row['Ville_CP']}</b><br>{row['Nb Coureurs']} coureur(s)",
+                        popup=folium.Popup(popup_content, max_width=300),
                         color="#FF4B4B",
                         fill=True,
                         fill_color="#FF4B4B",
                         fill_opacity=0.6
                     ).add_to(m)
                 
-                # Affichage dans Streamlit
-                st_folium(m, width="100%", height=450)
+                st_folium(m, width="100%", height=400, key="map_globale")
                 
-                st.dataframe(
-                    df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False), 
-                    use_container_width=True, 
-                    hide_index=True
+                selected_ville = st.selectbox(
+                    "Ou sélectionnez une ville dans la liste :",
+                    options=["-- Choisir une ville --"] + list(df_map_final['Ville_CP'].sort_values())
                 )
-            else:
-                st.write("Géolocalisation des villes en cours...")
+                
+                if selected_ville and selected_ville != "-- Choisir une ville --":
+                    coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
+                    st.write(f"🏘️ **{len(coureurs_ville)} coureur(s)** originaire(s) de **{selected_ville}** :")
+                    st.dataframe(coureurs_ville, use_container_width=True, hide_index=True)
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
