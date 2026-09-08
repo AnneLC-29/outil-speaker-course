@@ -80,10 +80,11 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
-    tab_search, tab_favoris, tab_stats = st.tabs([
+    tab_search, tab_favoris, tab_stats, tab_general = st.tabs([
         "🔎 Recherche Dossard", 
         "🏆 Favoris & Cotes Betrail", 
-        "📊 Origine & Clubs"
+        "📊 Origine & Clubs",
+        "📈 Infos Générales & Stats"
     ])
 
     # -------------------------------------------------------------
@@ -177,7 +178,7 @@ try:
                 df_ville_all = df[(df['NOM_VILLE'] == nom_ville) & (df['CODE_POSTAL'] == cp_ville)]
                 nb_coureurs_ville = len(df_ville_all)
                 
-                # Alignement côte à côte (Carte à gauche, Détails à droite)
+                # Alignement côte à côte
                 col_map_c, col_info_c = st.columns([1, 1])
                 
                 with col_map_c:
@@ -209,16 +210,13 @@ try:
                 with col_info_c:
                     st.markdown(f"#### 🏘️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} coureurs)")
                     
-                    # Répartition par distance
                     dist_counts = df_ville_all['COURSE'].value_counts()
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
                     st.markdown(f"📊 **Répartition :** {dist_str}")
                     
-                    # Tableau récapitulatif nominatif
                     df_v_display = df_ville_all[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
                     st.dataframe(df_v_display, use_container_width=True, hide_index=True)
 
-                # AUTRES MEMBRES DU CLUB SI APPLICABLE
                 if is_club_valid:
                     st.markdown("---")
                     df_club_all = df[df['CLUB'] == club_name]
@@ -373,6 +371,71 @@ try:
                     st.markdown("**Top 10 des villes les plus représentées :**")
                     top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
                     st.dataframe(top10_villes, use_container_width=True, hide_index=True)
+
+    # -------------------------------------------------------------
+    # ONGLET 4 : INFOS GÉNÉRALES & STATISTIQUES (NOUVEAU)
+    # -------------------------------------------------------------
+    with tab_general:
+        st.subheader("📈 Statistiques Générales de l'Édition")
+        
+        # CHIFFRES CLÉS GLOBAUX
+        total_inscrits = len(df)
+        nb_hommes = len(df[df['SEXE'] == 'H'])
+        nb_femmes = len(df[df['SEXE'] == 'F'])
+        pct_femmes = (nb_femmes / total_inscrits * 100) if total_inscrits > 0 else 0
+        pct_hommes = (nb_hommes / total_inscrits * 100) if total_inscrits > 0 else 0
+        
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Total Inscrits", f"{total_inscrits} coureurs")
+        m2.metric("Hommes", f"{nb_hommes} ({pct_hommes:.1f}%)")
+        m3.metric("Femmes", f"{nb_femmes} ({pct_femmes:.1f}%)")
+        
+        # Course la plus populaire
+        if 'COURSE' in df.columns and not df['COURSE'].dropna().empty:
+            top_course = df['COURSE'].value_counts().idxmax()
+            m4.metric("Épreuve reine", f"{top_course}")
+
+        st.markdown("---")
+        
+        c_left, c_right = st.columns(2)
+        
+        # REPARTITION PAR EPREUVE
+        with c_left:
+            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
+            
+            if 'COURSE' in df.columns:
+                df_courses = df.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
+                df_courses['Total'] = df_courses.sum(axis=1)
+                
+                # Graphique en barres de Streamlit
+                st.bar_chart(df_courses[['Total']], color="#FF4B4B")
+                
+                # Tableau synthétique
+                st.dataframe(
+                    df_courses.reset_index(),
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "COURSE": "Épreuve",
+                        "H": "Hommes",
+                        "F": "Femmes",
+                        "Total": "Total Inscrits"
+                    }
+                )
+
+        # REPARTITION PAR CATEGORIE
+        with c_right:
+            st.markdown("### 🏷️ Répartition par Catégorie")
+            
+            if 'Catégorie' in df.columns:
+                df_cat = df['Catégorie'].value_counts().reset_index()
+                df_cat.columns = ['Catégorie', 'Nombre']
+                
+                # Graphique en barres
+                st.bar_chart(df_cat.set_index('Catégorie'))
+                
+                # Tableau synthétique
+                st.dataframe(df_cat, use_container_width=True, hide_index=True)
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
