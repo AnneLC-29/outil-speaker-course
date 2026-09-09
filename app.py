@@ -75,6 +75,9 @@ def load_and_process_data():
     df['CODE_POSTAL'] = [r[1] for r in res_villes]
     df['VILLE_CLEAN'] = df.apply(lambda r: f"{r['NOM_VILLE']} ({r['CODE_POSTAL']})" if pd.notna(r['CODE_POSTAL']) else r['NOM_VILLE'], axis=1)
     
+    # Champ de recherche texte combiné
+    df['NOM_COMPLET'] = df.apply(lambda r: f"{str(r.get('NOM', '')).strip()} {str(r.get('PRENOM', '')).strip()}".upper(), axis=1)
+    
     return df
 
 @st.cache_data
@@ -113,7 +116,7 @@ try:
 
     tab_general, tab_search, tab_favoris, tab_stats = st.tabs([
         "📈 Infos Générales & Stats",
-        "🔎 Recherche Dossard", 
+        "🔎 Recherche Participant", 
         "🏆 Favoris & Cotes Betrail", 
         "📊 Origine & Clubs"
     ])
@@ -143,7 +146,7 @@ try:
         
         c_left, c_right = st.columns(2)
         
-        # REPARTITION PAR EPREUVE (INCLUT LA MARCHE)
+        # REPARTITION PAR EPREUVE
         with c_left:
             st.markdown("### 🏃‍♂️ Inscrits par Épreuve & Marche")
             
@@ -199,24 +202,42 @@ try:
                 )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RECHERCHE DOSSARD (COUREURS SEULEMENT)
+    # ONGLET 2 : RECHERCHE PARTICIPANT (DOSSARD OU NOM / PRÉNOM)
     # -------------------------------------------------------------
     with tab_search:
-        dossard_input = st.number_input(
-            "Saisir le N° de Dossard :", 
-            min_value=1, 
-            step=1, 
-            value=None, 
-            placeholder="Tapez le numéro de dossard ici..."
-        )
+        st.subheader("🔍 Recherche de Participant")
+        
+        query_input = st.text_input(
+            "Saisissez un N° de Dossard ou un Nom / Prénom :",
+            placeholder="Exemples: 12, Giraudeau, Valérie..."
+        ).strip()
 
-        if dossard_input:
-            resultat = df[df['DOSSARD'] == dossard_input]
-            
-            if not resultat.empty:
-                coureur = resultat.iloc[0]
+        if query_input:
+            # Vérifier si l'entrée est un nombre (Dossard)
+            if query_input.isdigit():
+                dossard_num = int(query_input)
+                resultats = df[df['DOSSARD'] == dossard_num]
+            else:
+                # Recherche par sous-chaîne dans le Nom / Prénom
+                query_upper = query_input.upper()
+                resultats = df[df['NOM_COMPLET'].str.contains(query_upper, na=False)]
+
+            if not resultats.empty:
+                # Si plusieurs coureurs correspondent (ex: recherche par prénom ou nom de famille courant)
+                if len(resultats) > 1:
+                    st.info(f"💡 {len(resultats)} participants correspondent à votre recherche :")
+                    options_dict = {
+                        f"Dossard {r['DOSSARD']} - {r['NOM']} {r['PRENOM']} ({r['COURSE']})": idx 
+                        for idx, r in resultats.iterrows()
+                    }
+                    selected_label = st.selectbox("Sélectionnez le participant :", options=list(options_dict.keys()))
+                    coureur = resultats.loc[options_dict[selected_label]]
+                else:
+                    coureur = resultats.iloc[0]
+
                 st.markdown("---")
                 
+                # AFFICHER LA FICHE DU PARTICIPANT SELECTIONNÉ
                 st.header(f"🏃 {coureur.get('NOM', '')} {coureur.get('PRENOM', '')}")
                 
                 club_name = coureur['CLUB']
@@ -225,20 +246,21 @@ try:
                 cat_code = str(coureur.get('Catégorie', 'N/A')).strip().upper()
                 cat_label = CATEGORIES_AGE.get(cat_code, cat_code)
                 
-                st.subheader(f"Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{cat_label}** ({coureur.get('SEXE', 'N/A')})")
+                dossard_str = f"N° {int(coureur['DOSSARD'])}" if pd.notna(coureur['DOSSARD']) else "Non attribué"
+                st.subheader(f"Dossard : **{dossard_str}** | Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{cat_label}** ({coureur.get('SEXE', 'N/A')})")
                 
                 if is_club_valid:
                     st.success(f"🛡️ **Club / Association : {club_name}**")
 
                 rang_str = "N/A"
-                if pd.notna(coureur.get('Indice BETRAIL')):
+                if pd.notna(coureur.get('Indice BETRAIL')) and pd.notna(coureur.get('DOSSARD')):
                     df_meme_course_sexe = df[
                         (df['COURSE'] == coureur['COURSE']) & 
                         (df['SEXE'] == coureur['SEXE']) & 
                         (df['Indice BETRAIL'].notna())
                     ].sort_values(by='Indice BETRAIL', ascending=False).reset_index(drop=True)
                     
-                    pos = df_meme_course_sexe[df_meme_course_sexe['DOSSARD'] == dossard_input].index
+                    pos = df_meme_course_sexe[df_meme_course_sexe['DOSSARD'] == coureur['DOSSARD']].index
                     if not pos.empty:
                         rang_str = f"N° {pos[0] + 1} ({coureur['SEXE']})"
 
@@ -311,7 +333,8 @@ try:
                             icon=folium.Icon(color="red", icon="user")
                         ).add_to(m_coureur)
                         
-                        st_folium(m_coureur, width="100%", height=280, key=f"map_coureur_{dossard_input}")
+                        d_key = f"{coureur.get('DOSSARD', 'no_dos')}_{coureur.get('NOM', '')}"
+                        st_folium(m_coureur, width="100%", height=280, key=f"map_coureur_{d_key}")
                     else:
                         st.write("Carte non disponible.")
 
@@ -338,7 +361,7 @@ try:
                     st.dataframe(df_club_display, use_container_width=True, hide_index=True)
 
             else:
-                st.warning(f"Aucun coureur trouvé avec le dossard N° {dossard_input}")
+                st.warning(f"Aucun participant trouvé avec la recherche \"{query_input}\"")
 
     # -------------------------------------------------------------
     # ONGLET 3 : FAVORIS ET COTES BETRAIL (EPREUVES DE TRAIL SEULEMENT)
@@ -346,7 +369,6 @@ try:
     with tab_favoris:
         st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
         
-        # Filtrer uniquement les épreuves qui contiennent au moins une cote Betrail (exclut la marche)
         df_trails = df[df['Indice BETRAIL'].notna()]
         courses_trail_raw = df_trails['COURSE'].dropna().unique()
         
