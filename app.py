@@ -74,8 +74,6 @@ def load_and_process_data():
     df['NOM_VILLE'] = [r[0] for r in res_villes]
     df['CODE_POSTAL'] = [r[1] for r in res_villes]
     df['VILLE_CLEAN'] = df.apply(lambda r: f"{r['NOM_VILLE']} ({r['CODE_POSTAL']})" if pd.notna(r['CODE_POSTAL']) else r['NOM_VILLE'], axis=1)
-    
-    # Champ de recherche texte combiné
     df['NOM_COMPLET'] = df.apply(lambda r: f"{str(r.get('NOM', '')).strip()} {str(r.get('PRENOM', '')).strip()}".upper(), axis=1)
     
     return df
@@ -122,59 +120,91 @@ try:
     ])
 
     # -------------------------------------------------------------
-    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES (AVEC MARCHE)
+    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES
     # -------------------------------------------------------------
     with tab_general:
-        st.subheader("📈 Statistiques Générales de l'Édition")
+        st.subheader("📈 Statistiques Générales & Fidélité")
         
-        total_inscrits = len(df)
-        nb_hommes = len(df[df['SEXE'] == 'H'])
-        nb_femmes = len(df[df['SEXE'] == 'F'])
-        pct_femmes = (nb_femmes / total_inscrits * 100) if total_inscrits > 0 else 0
-        pct_hommes = (nb_hommes / total_inscrits * 100) if total_inscrits > 0 else 0
-        
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Total Participants", f"{total_inscrits} inscrits")
-        m2.metric("Hommes", f"{nb_hommes} ({pct_hommes:.1f}%)")
-        m3.metric("Femmes", f"{nb_femmes} ({pct_femmes:.1f}%)")
-        
-        if 'COURSE' in df.columns and not df['COURSE'].dropna().empty:
-            top_course = df['COURSE'].value_counts().idxmax()
-            m4.metric("Épreuve reine", f"{top_course}")
+        # TABLEAU MATRICIEL SUR MESURE
+        if 'COURSE' in df.columns:
+            courses_raw = df['COURSE'].dropna().unique()
+            
+            def get_distance_num(course_str):
+                match = re.search(r'(\d+)', str(course_str))
+                return int(match.group(1)) if match else 999
+                
+            courses_sorted = sorted(courses_raw, key=get_distance_num)
+            
+            matrix_data = []
+            
+            total_h = len(df[df['SEXE'] == 'H'])
+            total_f = len(df[df['SEXE'] == 'F'])
+            total_global = len(df)
+            
+            # Présents 2025/2024 globaux
+            tot_p2025 = len(df[df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")]) if 'FOULEES 2025' in df.columns else 0
+            tot_p2024 = len(df[df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")]) if 'FOULEES 2024' in df.columns else 0
+
+            for c in courses_sorted:
+                df_c = df[df['COURSE'] == c]
+                tot_c = len(df_c)
+                if tot_c == 0: continue
+                
+                h_cnt = len(df_c[df_c['SEXE'] == 'H'])
+                f_cnt = len(df_c[df_c['SEXE'] == 'F'])
+                
+                h_pct = (h_cnt / tot_c * 100)
+                f_pct = (f_cnt / tot_c * 100)
+                
+                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if 'FOULEES 2025' in df.columns else 0
+                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if 'FOULEES 2024' in df.columns else 0
+                
+                p2025_pct = (p2025_cnt / tot_c * 100)
+                p2024_pct = (p2024_cnt / tot_c * 100)
+                
+                matrix_data.append({
+                    "Épreuve": c,
+                    "Hommes (H)": f"{h_cnt} ({h_pct:.1f}%)",
+                    "Femmes (F)": f"{f_cnt} ({f_pct:.1f}%)",
+                    "TOTAL": tot_c,
+                    "Présent en 2025": f"{p2025_cnt} ({p2025_pct:.1f}%)",
+                    "Présent en 2024": f"{p2024_cnt} ({p2024_pct:.1f}%)"
+                })
+                
+            # Ligne de TOTAL Global
+            if total_global > 0:
+                tot_h_pct = (total_h / total_global * 100)
+                tot_f_pct = (total_f / total_global * 100)
+                tot_p2025_pct = (tot_p2025 / total_global * 100)
+                tot_p2024_pct = (tot_p2024 / total_global * 100)
+                
+                matrix_data.append({
+                    "Épreuve": "TOTAL",
+                    "Hommes (H)": f"{total_h} ({tot_h_pct:.1f}%)",
+                    "Femmes (F)": f"{total_f} ({tot_f_pct:.1f}%)",
+                    "TOTAL": total_global,
+                    "Présent en 2025": f"{tot_p2025} ({tot_p2025_pct:.1f}%)",
+                    "Présent en 2024": f"{tot_p2024} ({tot_p2024_pct:.1f}%)"
+                })
+                
+            st.markdown("### 📊 Récapitulatif Inscrits & Fidélité Éditions Précédentes")
+            st.dataframe(pd.DataFrame(matrix_data), use_container_width=True, hide_index=True)
 
         st.markdown("---")
         
         c_left, c_right = st.columns(2)
         
-        # REPARTITION PAR EPREUVE
         with c_left:
-            st.markdown("### 🏃‍♂️ Inscrits par Épreuve & Marche")
-            
+            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
             if 'COURSE' in df.columns:
                 df_courses = df.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
                 if 'H' not in df_courses.columns: df_courses['H'] = 0
                 if 'F' not in df_courses.columns: df_courses['F'] = 0
-                
                 df_courses['Total'] = df_courses['H'] + df_courses['F']
-                
                 st.bar_chart(df_courses[['Total']], color="#FF4B4B")
-                
-                st.dataframe(
-                    df_courses.reset_index(),
-                    use_container_width=True,
-                    hide_index=True,
-                    column_config={
-                        "COURSE": "Épreuve / Distance",
-                        "H": "Hommes",
-                        "F": "Femmes",
-                        "Total": "Total Inscrits"
-                    }
-                )
 
-        # REPARTITION PAR CATEGORIE ET TRANCHE D'AGE
         with c_right:
             st.markdown("### 🏷️ Répartition par Catégorie (triée par âge)")
-            
             if 'Catégorie' in df.columns:
                 df_cat = df['Catégorie'].value_counts().reset_index()
                 df_cat.columns = ['Code_Cat', 'Nombre']
@@ -202,7 +232,7 @@ try:
                 )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RECHERCHE PARTICIPANT (DOSSARD OU NOM / PRÉNOM)
+    # ONGLET 2 : RECHERCHE PARTICIPANT
     # -------------------------------------------------------------
     with tab_search:
         st.subheader("🔍 Recherche de Participant")
@@ -213,17 +243,14 @@ try:
         ).strip()
 
         if query_input:
-            # Vérifier si l'entrée est un nombre (Dossard)
             if query_input.isdigit():
                 dossard_num = int(query_input)
                 resultats = df[df['DOSSARD'] == dossard_num]
             else:
-                # Recherche par sous-chaîne dans le Nom / Prénom
                 query_upper = query_input.upper()
                 resultats = df[df['NOM_COMPLET'].str.contains(query_upper, na=False)]
 
             if not resultats.empty:
-                # Si plusieurs coureurs correspondent (ex: recherche par prénom ou nom de famille courant)
                 if len(resultats) > 1:
                     st.info(f"💡 {len(resultats)} participants correspondent à votre recherche :")
                     options_dict = {
@@ -237,7 +264,6 @@ try:
 
                 st.markdown("---")
                 
-                # AFFICHER LA FICHE DU PARTICIPANT SELECTIONNÉ
                 st.header(f"🏃 {coureur.get('NOM', '')} {coureur.get('PRENOM', '')}")
                 
                 club_name = coureur['CLUB']
@@ -364,7 +390,7 @@ try:
                 st.warning(f"Aucun participant trouvé avec la recherche \"{query_input}\"")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : FAVORIS ET COTES BETRAIL (EPREUVES DE TRAIL SEULEMENT)
+    # ONGLET 3 : FAVORIS ET COTES BETRAIL
     # -------------------------------------------------------------
     with tab_favoris:
         st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
@@ -386,7 +412,6 @@ try:
                 df_course = df_trails[df_trails['COURSE'] == course_name].copy()
                 col_femmes, col_hommes = st.columns(2)
                 
-                # TOP 5 FEMMES
                 with col_femmes:
                     st.markdown("#### 👩 Top 5 Femmes")
                     top5_f = df_course[df_course['SEXE'] == 'F'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
@@ -408,7 +433,6 @@ try:
                     else:
                         st.write("Aucune donnée disponible.")
 
-                # TOP 5 HOMMES
                 with col_hommes:
                     st.markdown("#### 👨 Top 5 Hommes")
                     top5_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
@@ -431,7 +455,7 @@ try:
                         st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 4 : ORIGINES ET CLUBS (INCLUT COUREURS ET MARCHEURS)
+    # ONGLET 4 : ORIGINES ET CLUBS
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
