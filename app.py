@@ -12,6 +12,11 @@ st.title("🎙️ Outil Speaker - Foulées Raids Dingues")
 
 # Dictionnaire des catégories FFA avec tranches d'âge
 CATEGORIES_AGE = {
+    'BB': 'Baby (3-5 ans)',
+    'EA': 'Éveil Athlé (6-9 ans)',
+    'PO': 'Poussins (10-11 ans)',
+    'BE': 'Benjamins (12-13 ans)',
+    'MI': 'Minimes (14-15 ans)',
     'CA': 'Cadets (16-17 ans)',
     'JU': 'Juniors (18-19 ans)',
     'ES': 'Espoirs (20-22 ans)',
@@ -35,11 +40,9 @@ ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
     
-    # Nettoyage : ne garder que les lignes avec un nom ou un dossard valide
+    # Nettoyage : ne garder que les lignes avec un nom valide
     if 'NOM' in df.columns:
         df = df[df['NOM'].notna() & (df['NOM'].astype(str).str.strip() != "")]
-    elif 'DOSSARD' in df.columns:
-        df = df[df['DOSSARD'].notna()]
         
     df['DOSSARD'] = pd.to_numeric(df['DOSSARD'], errors='coerce')
     df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
@@ -116,7 +119,7 @@ try:
     ])
 
     # -------------------------------------------------------------
-    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES
+    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES (AVEC MARCHE)
     # -------------------------------------------------------------
     with tab_general:
         st.subheader("📈 Statistiques Générales de l'Édition")
@@ -128,7 +131,7 @@ try:
         pct_hommes = (nb_hommes / total_inscrits * 100) if total_inscrits > 0 else 0
         
         m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Total Inscrits", f"{total_inscrits} coureurs")
+        m1.metric("Total Participants", f"{total_inscrits} inscrits")
         m2.metric("Hommes", f"{nb_hommes} ({pct_hommes:.1f}%)")
         m3.metric("Femmes", f"{nb_femmes} ({pct_femmes:.1f}%)")
         
@@ -140,13 +143,16 @@ try:
         
         c_left, c_right = st.columns(2)
         
-        # REPARTITION PAR EPREUVE
+        # REPARTITION PAR EPREUVE (INCLUT LA MARCHE)
         with c_left:
-            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
+            st.markdown("### 🏃‍♂️ Inscrits par Épreuve & Marche")
             
             if 'COURSE' in df.columns:
                 df_courses = df.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
-                df_courses['Total'] = df_courses.sum(axis=1)
+                if 'H' not in df_courses.columns: df_courses['H'] = 0
+                if 'F' not in df_courses.columns: df_courses['F'] = 0
+                
+                df_courses['Total'] = df_courses['H'] + df_courses['F']
                 
                 st.bar_chart(df_courses[['Total']], color="#FF4B4B")
                 
@@ -155,14 +161,14 @@ try:
                     use_container_width=True,
                     hide_index=True,
                     column_config={
-                        "COURSE": "Épreuve",
+                        "COURSE": "Épreuve / Distance",
                         "H": "Hommes",
                         "F": "Femmes",
                         "Total": "Total Inscrits"
                     }
                 )
 
-        # REPARTITION PAR CATEGORIE ET TRANCHE D'AGE (TRI STRICT SUR L'AGE)
+        # REPARTITION PAR CATEGORIE ET TRANCHE D'AGE
         with c_right:
             st.markdown("### 🏷️ Répartition par Catégorie (triée par âge)")
             
@@ -193,7 +199,7 @@ try:
                 )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RECHERCHE DOSSARD
+    # ONGLET 2 : RECHERCHE DOSSARD (COUREURS SEULEMENT)
     # -------------------------------------------------------------
     with tab_search:
         dossard_input = st.number_input(
@@ -300,7 +306,7 @@ try:
                         )
                         folium.Marker(
                             location=[lat, lon],
-                            popup=f"<b>{coureur['VILLE_CLEAN']}</b><br>{nb_coureurs_ville} inscrit(s)",
+                            popup=f"<b>{coureur['VILLE_CLEAN']}</b><br>{nb_coureurs_ville} participant(s)",
                             tooltip=coureur['VILLE_CLEAN'],
                             icon=folium.Icon(color="red", icon="user")
                         ).add_to(m_coureur)
@@ -310,7 +316,7 @@ try:
                         st.write("Carte non disponible.")
 
                 with col_info_c:
-                    st.markdown(f"#### 🏘️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} coureurs)")
+                    st.markdown(f"#### 🏘️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} participants)")
                     
                     dist_counts = df_ville_all['COURSE'].value_counts()
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
@@ -335,26 +341,27 @@ try:
                 st.warning(f"Aucun coureur trouvé avec le dossard N° {dossard_input}")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : FAVORIS ET COTES BETRAIL (TOP 5 EN DÉFILEMENT CONTINU)
+    # ONGLET 3 : FAVORIS ET COTES BETRAIL (EPREUVES DE TRAIL SEULEMENT)
     # -------------------------------------------------------------
     with tab_favoris:
         st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
         
-        courses_raw = df['COURSE'].dropna().unique()
+        # Filtrer uniquement les épreuves qui contiennent au moins une cote Betrail (exclut la marche)
+        df_trails = df[df['Indice BETRAIL'].notna()]
+        courses_trail_raw = df_trails['COURSE'].dropna().unique()
         
-        # Fonction pour extraire la distance numérique et trier du 8 KM au 25 KM
         def get_distance_num(course_str):
             match = re.search(r'(\d+)', str(course_str))
             return int(match.group(1)) if match else 999
             
-        courses_dispo = sorted(courses_raw, key=get_distance_num)
+        courses_dispo = sorted(courses_trail_raw, key=get_distance_num)
         
         if len(courses_dispo) > 0:
             for course_name in courses_dispo:
                 st.markdown("---")
                 st.markdown(f"### 🚩 Épreuve : **{course_name}**")
                 
-                df_course = df[(df['COURSE'] == course_name) & (df['Indice BETRAIL'].notna())].copy()
+                df_course = df_trails[df_trails['COURSE'] == course_name].copy()
                 col_femmes, col_hommes = st.columns(2)
                 
                 # TOP 5 FEMMES
@@ -402,7 +409,7 @@ try:
                         st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 4 : ORIGINES ET CLUBS
+    # ONGLET 4 : ORIGINES ET CLUBS (INCLUT COUREURS ET MARCHEURS)
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
@@ -415,13 +422,13 @@ try:
             stats_clubs.columns = ['Club', 'Nb Inscrits']
             
             selected_club = st.selectbox(
-                "Sélectionnez un club pour voir la liste des coureurs :",
+                "Sélectionnez un club pour voir la liste des participants :",
                 options=["-- Choisir un club --"] + list(stats_clubs['Club'])
             )
             
             if selected_club and selected_club != "-- Choisir un club --":
                 coureurs_club = df[df['CLUB'] == selected_club][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
-                st.write(f"👥 **{len(coureurs_club)} coureur(s)** inscrit(s) pour **{selected_club}** :")
+                st.write(f"👥 **{len(coureurs_club)} participant(s)** inscrit(s) pour **{selected_club}** :")
                 st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
             else:
                 st.markdown("**Top des clubs les plus représentés :**")
@@ -449,12 +456,12 @@ try:
                 
                 for _, row in df_map_final.iterrows():
                     c_list = df[(df['NOM_VILLE'] == row['NOM_VILLE']) & (df['CODE_POSTAL'] == row['CODE_POSTAL'])]
-                    coureurs_html = "<br>".join([f"- <b>{r['DOSSARD']}</b>: {r['NOM']} {r['PRENOM']} ({r['COURSE']})" for _, r in c_list.iterrows()])
+                    coureurs_html = "<br>".join([f"- {r['NOM']} {r['PRENOM']} ({r['COURSE']})" for _, r in c_list.iterrows()])
                     
                     popup_content = f"""
                     <div style='font-size:13px; min-width:180px;'>
                         <b>📍 {row['Ville_CP']}</b><br>
-                        <i>{row['Nb Coureurs']} coureur(s) :</i><br>{coureurs_html}
+                        <i>{row['Nb Coureurs']} participant(s) :</i><br>{coureurs_html}
                     </div>
                     """
                     
@@ -477,7 +484,7 @@ try:
                 
                 if selected_ville and selected_ville != "-- Choisir une ville --":
                     coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
-                    st.write(f"🏘️ **{len(coureurs_ville)} coureur(s)** originaire(s) de **{selected_ville}** :")
+                    st.write(f"🏘️ **{len(coureurs_ville)} participant(s)** originaire(s) de **{selected_ville}** :")
                     st.dataframe(coureurs_ville, use_container_width=True, hide_index=True)
                 else:
                     st.markdown("**Top 10 des villes les plus représentées :**")
