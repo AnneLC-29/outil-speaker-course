@@ -120,12 +120,11 @@ try:
     ])
 
     # -------------------------------------------------------------
-    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES
+    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES (AVEC FIDÉLITÉ)
     # -------------------------------------------------------------
     with tab_general:
         st.subheader("📈 Statistiques Générales & Fidélité")
         
-        # TABLEAU MATRICIEL SUR MESURE
         if 'COURSE' in df.columns:
             courses_raw = df['COURSE'].dropna().unique()
             
@@ -141,9 +140,11 @@ try:
             total_f = len(df[df['SEXE'] == 'F'])
             total_global = len(df)
             
-            # Présents 2025/2024 globaux
-            tot_p2025 = len(df[df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")]) if 'FOULEES 2025' in df.columns else 0
-            tot_p2024 = len(df[df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")]) if 'FOULEES 2024' in df.columns else 0
+            has_2025 = 'FOULEES 2025' in df.columns
+            has_2024 = 'FOULEES 2024' in df.columns
+            
+            tot_p2025 = len(df[df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
+            tot_p2024 = len(df[df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
 
             for c in courses_sorted:
                 df_c = df[df['COURSE'] == c]
@@ -156,8 +157,8 @@ try:
                 h_pct = (h_cnt / tot_c * 100)
                 f_pct = (f_cnt / tot_c * 100)
                 
-                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if 'FOULEES 2025' in df.columns else 0
-                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if 'FOULEES 2024' in df.columns else 0
+                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
+                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
                 
                 p2025_pct = (p2025_cnt / tot_c * 100)
                 p2024_pct = (p2024_cnt / tot_c * 100)
@@ -171,7 +172,6 @@ try:
                     "Présent en 2024": f"{p2024_cnt} ({p2024_pct:.1f}%)"
                 })
                 
-            # Ligne de TOTAL Global
             if total_global > 0:
                 tot_h_pct = (total_h / total_global * 100)
                 tot_f_pct = (total_f / total_global * 100)
@@ -187,8 +187,107 @@ try:
                     "Présent en 2024": f"{tot_p2024} ({tot_p2024_pct:.1f}%)"
                 })
                 
+            df_matrix = pd.DataFrame(matrix_data)
+            
+            def style_table(val_df):
+                styles = pd.DataFrame('', index=val_df.index, columns=val_df.columns)
+                styles['TOTAL'] = 'font-weight: 900; font-size: 16px; background-color: #f0f2f6; text-align: center;'
+                
+                for idx, row in val_df.iterrows():
+                    ep = str(row['Épreuve']).upper()
+                    bg_color = ""
+                    text_color = "black"
+                    
+                    if "8" in ep and "MARCHE" not in ep:
+                        bg_color = "#cce5ff"
+                        text_color = "#004085"
+                    elif "MARCHE" in ep:
+                        bg_color = "#d4edda"
+                        text_color = "#155724"
+                    elif "15" in ep:
+                        bg_color = "#fff3cd"
+                        text_color = "#856404"
+                    elif "25" in ep:
+                        bg_color = "#f8d7da"
+                        text_color = "#721c24"
+                    elif ep == "TOTAL":
+                        styles.loc[idx, :] = 'font-weight: bold; background-color: #e2e3e5;'
+                        styles.loc[idx, 'TOTAL'] = 'font-weight: 900; font-size: 18px; background-color: #d6d8d9; color: #000;'
+                        continue
+
+                    if bg_color:
+                        styles.loc[idx, 'Épreuve'] = f'background-color: {bg_color}; color: {text_color}; font-weight: bold; font-size: 15px;'
+                        
+                return styles
+
             st.markdown("### 📊 Récapitulatif Inscrits & Fidélité Éditions Précédentes")
-            st.dataframe(pd.DataFrame(matrix_data), use_container_width=True, hide_index=True)
+            st.dataframe(
+                df_matrix.style.apply(style_table, axis=None), 
+                use_container_width=True, 
+                hide_index=True
+            )
+
+        # -------------------------------------------------------------
+        # SECTION MISE EN AVANT DES FIDÈLES (2024 ET 2025)
+        # -------------------------------------------------------------
+        st.markdown("---")
+        st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
+        
+        if has_2025 and has_2024:
+            cond_2025 = df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")
+            cond_2024 = df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")
+            
+            # 1. Les fidèles absolus (Présents en 2024 ET 2025)
+            df_fidele_3 = df[cond_2025 & cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
+            
+            # 2. Les habitués (Présents en 2024 OU 2025)
+            df_fidele_at_least_1 = df[cond_2025 | cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
+            
+            col_f3, col_f1 = st.columns(2)
+            
+            with col_f3:
+                st.markdown(f"#### 👑 3e Participation d'affilée ({len(df_fidele_3)} participants)")
+                st.caption("A déjà participé aux éditions 2024 ET 2025 !")
+                
+                if not df_fidele_3.empty:
+                    disp_f3 = df_fidele_3[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']]
+                    st.dataframe(
+                        disp_f3, 
+                        use_container_width=True, 
+                        hide_index=True,
+                        column_config={
+                            "DOSSARD": "Dossard",
+                            "NOM": "Nom",
+                            "PRENOM": "Prénom",
+                            "COURSE": "Course 2026",
+                            "FOULEES 2025": "Résultat 2025",
+                            "FOULEES 2024": "Résultat 2024"
+                        }
+                    )
+                else:
+                    st.write("Aucun participant dans cette catégorie.")
+                    
+            with col_f1:
+                st.markdown(f"#### 🏅 Au moins 1 édition précédente ({len(df_fidele_at_least_1)} participants)")
+                st.caption("A déjà participé en 2024 ou 2025 !")
+                
+                if not df_fidele_at_least_1.empty:
+                    disp_f1 = df_fidele_at_least_1[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']]
+                    st.dataframe(
+                        disp_f1, 
+                        use_container_width=True, 
+                        hide_index=True,
+                        column_config={
+                            "DOSSARD": "Dossard",
+                            "NOM": "Nom",
+                            "PRENOM": "Prénom",
+                            "COURSE": "Course 2026",
+                            "FOULEES 2025": "Résultat 2025",
+                            "FOULEES 2024": "Résultat 2024"
+                        }
+                    )
+                else:
+                    st.write("Aucun participant dans cette catégorie.")
 
         st.markdown("---")
         
