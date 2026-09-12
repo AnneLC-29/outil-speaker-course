@@ -4,6 +4,7 @@ import re
 import requests
 import folium
 import os
+from datetime import datetime, time
 from streamlit_folium import st_folium
 
 # Configuration de la page
@@ -41,7 +42,6 @@ ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
     
-    # Nettoyage : ne garder que les lignes avec un nom valide
     if 'NOM' in df.columns:
         df = df[df['NOM'].notna() & (df['NOM'].astype(str).str.strip() != "")]
         
@@ -113,6 +113,74 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
+    # -------------------------------------------------------------
+    # ⏱️ BARRE DU HAUT : COMPTE À REBOURS ET DEPARTS
+    # -------------------------------------------------------------
+    now = datetime.now()
+    
+    # Heures de départs configurées
+    h16 = datetime.combine(now.date(), time(16, 0, 0))
+    h1645 = datetime.combine(now.date(), time(16, 45, 0))
+    
+    # Différences
+    diff_16 = h16 - now
+    diff_1645 = h1645 - now
+
+    def format_td(td):
+        if td.total_seconds() < 0:
+            return "🏁 Épreuve lancée !"
+        hrs, remainder = divmod(int(td.total_seconds()), 3600)
+        mins, secs = divmod(remainder, 60)
+        return f"⏳ {hrs:02d}h {mins:02d}m {secs:02d}s"
+
+    col_h1, col_h2, col_h3 = st.columns([1, 1, 1])
+    
+    with col_h1:
+        st.metric("🕒 Heure Actuelle", now.strftime("%H:%M:%S"))
+    with col_h2:
+        st.metric("🚩 Départ 15 KM & 25 KM (16h00)", format_td(diff_16))
+    with col_h3:
+        st.metric("🚩 Départ 8 KM & Marche (16h45)", format_td(diff_1645))
+
+    st.markdown("---")
+
+    # -------------------------------------------------------------
+    # ⚡ BARRE DE RECHERCHE RAPIDE PAR DOSSARD / NOM (SIDEBAR)
+    # -------------------------------------------------------------
+    st.sidebar.header("⚡ Recherche Rapide Speaker")
+    quick_query = st.sidebar.text_input("N° Dossard ou Nom :", placeholder="Tapez ici...").strip()
+    
+    if quick_query:
+        st.sidebar.markdown("---")
+        if quick_query.isdigit():
+            res_q = df[df['DOSSARD'] == int(quick_query)]
+        else:
+            res_q = df[df['NOM_COMPLET'].str.contains(quick_query.upper(), na=False)]
+            
+        if not res_q.empty:
+            if len(res_q) > 1:
+                st.sidebar.info(f"{len(res_q)} trouvés :")
+                opts_q = {f"#{r['DOSSARD']} {r['NOM']} {r['PRENOM']}": idx for idx, r in res_q.iterrows()}
+                sel_q = st.sidebar.selectbox("Choisir :", options=list(opts_q.keys()))
+                c_q = res_q.loc[opts_q[sel_q]]
+            else:
+                c_q = res_q.iloc[0]
+                
+            st.sidebar.success(f"🏃 **{c_q.get('NOM','')} {c_q.get('PRENOM','')}**")
+            st.sidebar.write(f"• **Dossard :** #{int(c_q['DOSSARD']) if pd.notna(c_q['DOSSARD']) else 'N/A'}")
+            st.sidebar.write(f"• **Course :** {c_q.get('COURSE','N/A')}")
+            st.sidebar.write(f"• **Catégorie :** {c_q.get('Catégorie','N/A')}")
+            st.sidebar.write(f"• **Ville/Club :** {c_q.get('VILLE_CLEAN','N/A')}")
+            if pd.notna(c_q.get('Indice BETRAIL')):
+                st.sidebar.write(f"• **Betrail :** {c_q['Indice BETRAIL']}")
+            if pd.notna(c_q.get('COMMENTAIRES')):
+                st.sidebar.warning(f"📝 {c_q['COMMENTAIRES']}")
+        else:
+            st.sidebar.error("Aucun participant trouvé.")
+
+    # -------------------------------------------------------------
+    # ONGLETS DE NAVIGATION PRINCIPAUX
+    # -------------------------------------------------------------
     tab_general, tab_search, tab_favoris, tab_stats, tab_sponsors = st.tabs([
         "📈 Infos Générales & Stats",
         "🔎 Recherche Participant", 
@@ -229,7 +297,7 @@ try:
             )
 
         # -------------------------------------------------------------
-        # SECTION PODIUMS HISTORIQUES (2024 & 2025)
+        # SECTION PODIUMS HISTORIQUES
         # -------------------------------------------------------------
         st.markdown("---")
         st.markdown("### 🥇 Podiums des Éditions Précédentes")
@@ -238,7 +306,6 @@ try:
         
         with tab_pod2025:
             st.info("💡 **Note Speaker 2026 :** Axelle FAUGER (Vainqueure du 7 KM en 2025) a rejoint le club des **RAIDS DINGUES** cette année !")
-            
             c7, c14, c21 = st.columns(3)
             
             with c7:
@@ -247,7 +314,6 @@ try:
                 st.write("1. **DEPLANQUE Alexandre** - 00:31:14 (Doix les Fontaines)")
                 st.write("2. **BRETAUD Mateo** - 00:31:18 (Training Like Pro)")
                 st.write("3. **HERAUD Mickael** - 00:31:41 (Vendée Running 85)")
-                
                 st.markdown("**Femmes :**")
                 st.write("1. 🥇 **FAUGER Axelle** - 00:34:09 (Fors)")
                 st.write("2. **PEROCHAIN Cecile** - 00:40:41 (Damvix)")
@@ -259,7 +325,6 @@ try:
                 st.write("1. **ALLARD Justin** - 01:04:53 (Bournezeau)")
                 st.write("2. **METAIS Teddy** - 01:06:56 (Saint-Pierre-le-Vieux)")
                 st.write("3. **AIME Franck** - 01:07:01 (Longèves)")
-                
                 st.markdown("**Femmes :**")
                 st.write("1. **VIDOT Joelle** - 01:29:48 (SA Fontenay le Comte)")
                 st.write("2. **FOUR Camille** - 01:31:43 (Liez)")
@@ -271,7 +336,6 @@ try:
                 st.write("1. **ROCHETEAU Benjamin** - 01:41:49 (La Roche sur Yon)")
                 st.write("2. **CHAILLOLEAU Antoine** - 01:51:33 (SAF Fontenay le Comte)")
                 st.write("3. **LEFORT Freddy** - 01:51:37 (Sérigné)")
-                
                 st.markdown("**Femmes :**")
                 st.write("1. **BOUREAU Mathilde** - 02:24:31 (Pouzauges)")
                 st.write("2. **GREDELU Flavie** - 02:35:50 (Mernel)")
@@ -279,7 +343,6 @@ try:
 
         with tab_pod2024:
             st.info("💡 **Note Speaker 2026 :** Emmanuelle HUMBERT-DROZ-LAURENT (3e du 9 KM en 2024) nous a rejoint chez les **RAIDS DINGUES** cette année !")
-            
             c9, c18 = st.columns(2)
             
             with c9:
@@ -288,7 +351,6 @@ try:
                 st.write("1. **GUIGNOUARD Cédric** - 00:32:25 (Aventures Running Segonzac)")
                 st.write("2. **CHABOT Mickael** - 00:34:39")
                 st.write("3. **TEXIER Mathieu** - 00:34:51 (FC2 Sud Vendée)")
-                
                 st.markdown("**Femmes :**")
                 st.write("1. **ROY Léa** - 00:36:59")
                 st.write("2. **SICLON JARRAU Théoline** - 00:38:49")
@@ -300,7 +362,6 @@ try:
                 st.write("1. **CHAUSSEE Marc** - 01:16:03 (UA Chateaubourg)")
                 st.write("2. **MENARD Franck** - 01:16:09 (ABV La Chataigneraie)")
                 st.write("3. **ETOURNEAU Charly** - 01:20:29")
-                
                 st.markdown("**Femmes :**")
                 st.write("1. **SCHVARTZ Amandine** - 01:45:34")
                 st.write("2. **DOMENGER Camille** - 01:45:44")
@@ -437,7 +498,6 @@ try:
                     coureur = resultats.iloc[0]
 
                 st.markdown("---")
-                
                 st.header(f"🏃 {coureur.get('NOM', '')} {coureur.get('PRENOM', '')}")
                 
                 club_name = coureur['CLUB']
@@ -468,16 +528,13 @@ try:
                 
                 with col1:
                     st.metric(label="Ville / Origine", value=str(coureur.get('VILLE_CLEAN', 'Inconnu')))
-                
                 with col2:
                     betrail = coureur.get('Indice BETRAIL', 'N/A')
                     st.metric(label="Indice Betrail", value=f"{betrail}" if pd.notna(betrail) else "Non renseigné")
-                    
                 with col3:
                     st.metric(label="Rang théorique", value=rang_str)
 
                 st.markdown("---")
-                
                 col_com, col_hist = st.columns(2)
                 
                 with col_com:
@@ -540,7 +597,6 @@ try:
 
                 with col_info_c:
                     st.markdown(f"#### 🏘️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} participants)")
-                    
                     dist_counts = df_ville_all['COURSE'].value_counts()
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
                     st.markdown(f"📊 **Répartition :** {dist_str}")
@@ -552,7 +608,6 @@ try:
                     st.markdown("---")
                     df_club_all = df[df['CLUB'] == club_name]
                     st.markdown(f"### 🛡️ Membres de l'association **{club_name}** ({len(df_club_all)} inscrits)")
-                    
                     dist_club_counts = df_club_all['COURSE'].value_counts()
                     dist_club_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_club_counts.items()])
                     st.markdown(f"📊 **Répartition par épreuve :** {dist_club_str}")
