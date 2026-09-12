@@ -512,11 +512,26 @@ try:
                 chart_data = df_cat.set_index('Code_clean')[['Nombre']]
                 st.bar_chart(chart_data)
                 
-                st.dataframe(
-                    df_cat[['Catégorie & Plage d\'âge', 'Nombre']], 
-                    use_container_width=True, 
-                    hide_index=True
+                # --- MENU DÉROULANT INTERACTIF POUR INSPECTER UNE CATÉGORIE ---
+                list_cats_dispo = list(df_cat['Code_clean'])
+                dict_labels = {c_code: f"{c_code} - {CATEGORIES_AGE.get(str(c_code), '')} ({len(df[df['Catégorie'].astype(str).str.strip().str.upper() == c_code])} inscrits)" for c_code in list_cats_dispo}
+                
+                selected_cat_code = st.selectbox(
+                    "🔎 Cliquez ici pour sélectionner une catégorie et voir la liste des coureurs :",
+                    options=["-- Choisir une catégorie --"] + list_cats_dispo,
+                    format_func=lambda x: dict_labels.get(x, x)
                 )
+                
+                if selected_cat_code and selected_cat_code != "-- Choisir une catégorie --":
+                    df_cat_coureurs = df[df['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='DOSSARD').reset_index(drop=True)
+                    st.write(f"👥 **{len(df_cat_coureurs)} coureur(s)** dans la catégorie **{selected_cat_code}** ({CATEGORIES_AGE.get(selected_cat_code, '')}) :")
+                    st.dataframe(df_cat_coureurs, use_container_width=True, hide_index=True)
+                else:
+                    st.dataframe(
+                        df_cat[['Catégorie & Plage d\'âge', 'Nombre']], 
+                        use_container_width=True, 
+                        hide_index=True
+                    )
 
     # -------------------------------------------------------------
     # ONGLET 2 : RECHERCHE PARTICIPANT
