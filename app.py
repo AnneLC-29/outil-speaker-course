@@ -83,6 +83,21 @@ def calc_vitesse(dist_km, time_str):
         pass
     return ""
 
+def add_medal_prefix(res_str):
+    if pd.isna(res_str) or str(res_str).strip() == "" or str(res_str).upper() == "NONE":
+        return "-"
+    s = str(res_str).strip()
+    match = re.search(r'^\s*(\d+)\s*([MF])', s, re.IGNORECASE)
+    if match:
+        rank = int(match.group(1))
+        if rank == 1:
+            return f"🥇 {s}"
+        elif rank == 2:
+            return f"🥈 {s}"
+        elif rank == 3:
+            return f"🥉 {s}"
+    return s
+
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
@@ -566,7 +581,7 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (AYANT COURU)
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (MÉDAILLES)
     # -------------------------------------------------------------
     with tab_raids:
         st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
@@ -578,13 +593,15 @@ try:
         
         df_raids_all = df[is_in_official_list | is_adherent_course].copy()
 
-        # FILTRE STRICT : Avoir un résultat non nul en 2024 OU en 2025
         has_res_2025 = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE")
         has_res_2024 = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE")
         
         df_raids = df_raids_all[has_res_2025 | has_res_2024].copy()
 
         if not df_raids.empty:
+            df_raids['FOULEES 2025'] = df_raids['FOULEES 2025'].apply(add_medal_prefix)
+            df_raids['FOULEES 2024'] = df_raids['FOULEES 2024'].apply(add_medal_prefix)
+            
             df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
             col_r1, col_r2 = st.columns([1, 2])
@@ -601,10 +618,9 @@ try:
             else:
                 df_raids_disp = df_raids_sorted
 
-            cols_show = ['NOM', 'PRENOM', 'Catégorie']
+            cols_show = ['NOM', 'PRENOM']
             if 'FOULEES 2025' in df.columns: cols_show.append('FOULEES 2025')
             if 'FOULEES 2024' in df.columns: cols_show.append('FOULEES 2024')
-            if 'COMMENTAIRES' in df.columns: cols_show.append('COMMENTAIRES')
             
             st.dataframe(
                 df_raids_disp[cols_show], 
@@ -613,10 +629,8 @@ try:
                 column_config={
                     "NOM": "Nom",
                     "PRENOM": "Prénom",
-                    "Catégorie": "Catégorie",
                     "FOULEES 2025": "Édition 2025",
-                    "FOULEES 2024": "Édition 2024",
-                    "COMMENTAIRES": "Notes Speaker"
+                    "FOULEES 2024": "Édition 2024"
                 }
             )
         else:
