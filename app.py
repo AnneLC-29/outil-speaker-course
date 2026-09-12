@@ -4,6 +4,7 @@ import re
 import requests
 import folium
 import os
+import time as time_lib
 from datetime import datetime, time
 import zoneinfo
 from streamlit_folium import st_folium
@@ -120,7 +121,6 @@ try:
     tz_france = zoneinfo.ZoneInfo("Europe/Paris")
     now = datetime.now(tz_france)
     
-    # Cible : Samedi 3 Octobre 2026
     date_course = datetime(2026, 10, 3, tzinfo=tz_france).date()
     h16 = datetime.combine(date_course, time(16, 0, 0), tzinfo=tz_france)
     h1645 = datetime.combine(date_course, time(16, 45, 0), tzinfo=tz_france)
@@ -208,11 +208,16 @@ try:
         if 'COURSE' in df.columns:
             courses_raw = df['COURSE'].dropna().unique()
             
-            def get_distance_num(course_str):
-                match = re.search(r'(\d+)', str(course_str))
-                return int(match.group(1)) if match else 999
+            # FONCTION DE TRI : MARCHE EN PREMIER, PUIS PAR KM CROISSANT
+            def sort_courses_key(course_str):
+                s = str(course_str).upper()
+                if "MARCHE" in s:
+                    return (0, 0)
+                match = re.search(r'(\d+)', s)
+                km = int(match.group(1)) if match else 999
+                return (1, km)
                 
-            courses_sorted = sorted(courses_raw, key=get_distance_num)
+            courses_sorted = sorted(courses_raw, key=sort_courses_key)
             matrix_data = []
             
             total_h = len(df[df['SEXE'] == 'H'])
@@ -277,17 +282,17 @@ try:
                     bg_color = ""
                     text_color = "black"
                     
-                    if "8" in ep and "MARCHE" not in ep:
-                        bg_color = "#cce5ff"
-                        text_color = "#004085"
-                    elif "MARCHE" in ep:
-                        bg_color = "#d4edda"
+                    if "MARCHE" in ep:
+                        bg_color = "#d4edda"  # Vert pastel
                         text_color = "#155724"
+                    elif "8" in ep:
+                        bg_color = "#cce5ff"  # Bleu pastel
+                        text_color = "#004085"
                     elif "15" in ep:
-                        bg_color = "#fff3cd"
+                        bg_color = "#fff3cd"  # Jaune pastel
                         text_color = "#856404"
                     elif "25" in ep:
-                        bg_color = "#f8d7da"
+                        bg_color = "#f8d7da"  # Rouge pastel
                         text_color = "#721c24"
                     elif ep == "TOTAL":
                         styles.loc[idx, :] = 'font-weight: bold; background-color: #e2e3e5;'
@@ -828,6 +833,12 @@ try:
                     st.image(sp_file, width=220)
                 else:
                     st.info(f"🏷️ **{sp_nom}**")
+
+    # -------------------------------------------------------------
+    # 🔄 RAFRAÎCHISSEMENT AUTOMATIQUE DU TEMPS
+    # -------------------------------------------------------------
+    time_lib.sleep(1)
+    st.rerun()
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
