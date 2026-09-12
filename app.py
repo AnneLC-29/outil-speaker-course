@@ -208,7 +208,6 @@ try:
         if 'COURSE' in df.columns:
             courses_raw = df['COURSE'].dropna().unique()
             
-            # FONCTION DE TRI : MARCHE EN PREMIER, PUIS PAR KM CROISSANT
             def sort_courses_key(course_str):
                 s = str(course_str).upper()
                 if "MARCHE" in s:
@@ -283,16 +282,16 @@ try:
                     text_color = "black"
                     
                     if "MARCHE" in ep:
-                        bg_color = "#d4edda"  # Vert pastel
+                        bg_color = "#d4edda"
                         text_color = "#155724"
                     elif "8" in ep:
-                        bg_color = "#cce5ff"  # Bleu pastel
+                        bg_color = "#cce5ff"
                         text_color = "#004085"
                     elif "15" in ep:
-                        bg_color = "#fff3cd"  # Jaune pastel
+                        bg_color = "#fff3cd"
                         text_color = "#856404"
                     elif "25" in ep:
-                        bg_color = "#f8d7da"  # Rouge pastel
+                        bg_color = "#f8d7da"
                         text_color = "#721c24"
                     elif ep == "TOTAL":
                         styles.loc[idx, :] = 'font-weight: bold; background-color: #e2e3e5;'
@@ -312,10 +311,10 @@ try:
             )
 
         # -------------------------------------------------------------
-        # SECTION PODIUMS HISTORIQUES
+        # SECTION PODIUMS & RANGS DE FIN DE COURSE HISTORIQUES
         # -------------------------------------------------------------
         st.markdown("---")
-        st.markdown("### 🥇 Podiums des Éditions Précédentes")
+        st.markdown("### 🥇 Podiums & Tempos de Fin de Course Historiques")
         
         tab_pod2025, tab_pod2024 = st.tabs(["🏆 Édition 2025 (7 / 14 / 21 KM)", "🏆 Édition 2024 (9 / 18 KM)"])
         
@@ -325,62 +324,82 @@ try:
             
             with c7:
                 st.markdown("#### 🏃 7 KM (2025)")
-                st.markdown("**Hommes :**")
+                st.markdown("**Podium Hommes :**")
                 st.write("1. **DEPLANQUE Alexandre** - 00:31:14 (Doix les Fontaines)")
                 st.write("2. **BRETAUD Mateo** - 00:31:18 (Training Like Pro)")
                 st.write("3. **HERAUD Mickael** - 00:31:41 (Vendée Running 85)")
-                st.markdown("**Femmes :**")
+                st.markdown("**Podium Femmes :**")
                 st.write("1. 🥇 **FAUGER Axelle** - 00:34:09 (Fors)")
                 st.write("2. **PEROCHAIN Cecile** - 00:40:41 (Damvix)")
                 st.write("3. **SAOUDIN Alexane** - 00:41:03 (Sainte Soulle)")
+                
+                st.caption("🏁 **Fin de course 2025 :**")
+                st.caption("• Doyenne F : **PECHINE Catherine** - 01:08:19")
+                st.caption("• Doyen H : **GANNE Laurent** - 01:08:19")
 
             with c14:
                 st.markdown("#### 🏃 14 KM (2025)")
-                st.markdown("**Hommes :**")
+                st.markdown("**Podium Hommes :**")
                 st.write("1. **ALLARD Justin** - 01:04:53 (Bournezeau)")
                 st.write("2. **METAIS Teddy** - 01:06:56 (Saint-Pierre-le-Vieux)")
                 st.write("3. **AIME Franck** - 01:07:01 (Longèves)")
-                st.markdown("**Femmes :**")
+                st.markdown("**Podium Femmes :**")
                 st.write("1. **VIDOT Joelle** - 01:29:48 (SA Fontenay le Comte)")
                 st.write("2. **FOUR Camille** - 01:31:43 (Liez)")
                 st.write("3. **TALON Clara** - 01:32:47 (Maillezais)")
+                
+                st.caption("🏁 **Fin de course 2025 :**")
+                st.caption("• Dernier H : **LEMOINE Cyril** - 01:58:42")
+                st.caption("• Dernière F : **BARRE Marianne** - 02:10:11")
 
             with c21:
                 st.markdown("#### 🏃 21 KM (2025)")
-                st.markdown("**Hommes :**")
+                st.markdown("**Podium Hommes :**")
                 st.write("1. **ROCHETEAU Benjamin** - 01:41:49 (La Roche sur Yon)")
                 st.write("2. **CHAILLOLEAU Antoine** - 01:51:33 (SAF Fontenay le Comte)")
                 st.write("3. **LEFORT Freddy** - 01:51:37 (Sérigné)")
-                st.markdown("**Femmes :**")
+                st.markdown("**Podium Femmes :**")
                 st.write("1. **BOUREAU Mathilde** - 02:24:31 (Pouzauges)")
                 st.write("2. **GREDELU Flavie** - 02:35:50 (Mernel)")
                 st.write("3. **LUCAS Margaux** - 02:50:11 (Benet)")
+                
+                st.caption("🏁 **Fin de course 2025 :**")
+                st.caption("• Dernier H : **CALVET Christophe** - 03:02:14")
+                st.caption("• Dernière F : **FAUCHER RAYMOND Erika** - 03:18:59")
 
         with tab_pod2024:
-            st.info("💡 **Note Speaker 2026 :** Emmanuelle HUMBERT-DROZ-LAURENT (3e du 9 KM en 2024) nous a rejoint chez les **RAIDS DINGUES** cette année !")
+            st.info("💡 **Note Speaker 2026 :** Emmanuelle HUMBERT-DROZ-LAURENT (3e du 9 KM en 2024) & Hélène FOLIARD LE GAL (Fin de course 2024) ont rejoint les **RAIDS DINGUES** !")
             c9, c18 = st.columns(2)
             
             with c9:
                 st.markdown("#### 🏃 9 KM (2024 - 1ère Édition)")
-                st.markdown("**Hommes :**")
+                st.markdown("**Podium Hommes :**")
                 st.write("1. **GUIGNOUARD Cédric** - 00:32:25 (Aventures Running Segonzac)")
                 st.write("2. **CHABOT Mickael** - 00:34:39")
                 st.write("3. **TEXIER Mathieu** - 00:34:51 (FC2 Sud Vendée)")
-                st.markdown("**Femmes :**")
+                st.markdown("**Podium Femmes :**")
                 st.write("1. **ROY Léa** - 00:36:59")
                 st.write("2. **SICLON JARRAU Théoline** - 00:38:49")
                 st.write("3. 🥉 **HUMBERT-DROZ-LAURENT Emmanuelle** - 00:42:58")
+                
+                st.caption("🏁 **Fin de course 2024 :**")
+                st.caption("• Dernier H : **GARRAUD Tony** - 01:01:30")
+                st.caption("• Dernière F : **FOLIARD LE GAL Hélène** - 01:11:46")
 
             with c18:
                 st.markdown("#### 🏃 18 KM (2024 - 1ère Édition)")
-                st.markdown("**Hommes :**")
+                st.markdown("**Podium Hommes :**")
                 st.write("1. **CHAUSSEE Marc** - 01:16:03 (UA Chateaubourg)")
                 st.write("2. **MENARD Franck** - 01:16:09 (ABV La Chataigneraie)")
                 st.write("3. **ETOURNEAU Charly** - 01:20:29")
-                st.markdown("**Femmes :**")
+                st.markdown("**Podium Femmes :**")
                 st.write("1. **SCHVARTZ Amandine** - 01:45:34")
                 st.write("2. **DOMENGER Camille** - 01:45:44")
                 st.write("3. **GUIBERT Clémentine** - 01:46:34")
+                
+                st.caption("🏁 **Fin de course 2024 :**")
+                st.caption("• Dernière F : **ROUART Camille** - 02:07:20")
+                st.caption("• Dernier H : **PAIRAUD Guillaume** - 02:11:40")
 
         # -------------------------------------------------------------
         # SECTION LES PILIERS DE LA COURSE
