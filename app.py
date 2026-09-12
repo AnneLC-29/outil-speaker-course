@@ -40,28 +40,9 @@ CATEGORIES_AGE = {
 
 ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
 
-# Liste complète des membres de l'association Raids Dingues
-MEMBRES_RAIDS_DINGUES = [
-    "BAUDRY Gaëtan", "BONNIN Gregory", "GUILLON Geoffroy", "PARADIS Caroline", "RENAUD Stéphane",
-    "GUÉRY Médérick", "LE COZ Anne", "BOBIN Mathieu", "CHARRON Giovanni", "PUAUD Delphine",
-    "BRIAND Mathieu", "RENAUD David", "DESLANDES Michael", "BLANCHET Lilian", "CHEVOLEAU Anne",
-    "TRUTEAU Pierre", "FAUGER Axelle", "LE MOULLEC Kyllian", "COUÉ Jean-François", "MANTEAU Pierre",
-    "RENOU Julien", "FOLIARD LE GAL Hélène", "RENAUD Jean-François", "JANVIER Ludovic", "DELALANDRE Cyril",
-    "MANTEAU Aline", "CHAPELET Joachim", "MÉNARD Adeline", "BLANCHET Noël", "BAUDRY Julie",
-    "GOUIN Fréderic", "FOLIARD LE GAL Sébastien", "GUÉRY Axel", "AUBRY Christophe", "HUMBERT-DROZ-LAURENT Emmanuelle",
-    "BOUTEILLER François", "BONNIN Bérengère", "MATHIEU Sébastien", "BRIAND Charlotte", "BOUDAUD Amélie",
-    "SOUCHARD Céline", "TOUMI Tony", "RENOU Mathieu", "BONNIN Elodie", "BONNIN Anthony",
-    "GANTIER Aurélie", "BERNARD Johanne", "DOBIGNY Aurore", "JORET Isabelle", "BONNIN Aloïs",
-    "TANGATCHY Stéphane", "RIVÉ Sébastien", "ROY Bernard", "BLANCHET Quentin", "GABORIAU Freddy",
-    "BLUTEAU Simon", "BLANCHET Romain", "BIRONNEAU Stéphanie", "ROUSSEAU Cécile", "GUILLON Arnaud",
-    "LE GOFF Yohan", "NEAU Gaëtan", "CHARRON Virginie", "GABORIT Maxime", "MORIN Raphaël",
-    "PARADIS Thérèse", "PARADIS Jean-Michel", "BAUDRY Noël", "BAUDRY Thérèse", "BLANCHET Isabelle",
-    "BONNIN Pascal", "GUILLON Yolaine"
-]
-
 def calc_vitesse(dist_km, time_str):
     try:
-        parts = time_str.split(':')
+        parts = str(time_str).strip().split(':')
         if len(parts) == 3:
             h, m, s = map(int, parts)
             total_hours = h + m/60.0 + s/3600.0
@@ -96,7 +77,7 @@ def load_and_process_data():
         parts = str(val).split('/')
         if len(parts) > 1 and parts[1].strip() != "":
             return parts[1].strip()
-        return "Indépendant / Non renseigné"
+        return str(val).strip() if str(val).strip() != "" else "Indépendant / Non renseigné"
 
     def extract_ville_cp(val):
         if pd.isna(val):
@@ -559,31 +540,32 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (DYNAMIQUE CSV)
     # -------------------------------------------------------------
     with tab_raids:
-        st.subheader("🛡️ Historique & Performances des Membres de l'Association Raids Dingues")
-        st.write("Retrouvez l'ensemble des participations et temps passés de nos membres actuels sur les Foulées Raids Dingues !")
+        st.subheader("🛡️ Historique & Performances des Membres / Adhérents Raids Dingues")
+        st.write("Retrouvez la liste dynamique de tous nos adhérents et leurs participations enregistrées dans le fichier CSV !")
         
-        # Filtre par nom de membre dans le fichier
-        membres_upper = [m.upper() for m in MEMBRES_RAIDS_DINGUES]
+        # Filtre sur les coureurs/adhérents ayant le club Raids Dingues ou associés dans le CSV
+        df_raids = df[df['CLUB'].str.contains("RAID", case=False, na=False) | df['VILLE'].str.contains("RAID", case=False, na=False)].copy()
         
-        # Détection des coureurs correspondants
-        df_raids = df[df['NOM_COMPLET'].apply(lambda x: any(m in str(x) for m in membres_upper)) | (df['CLUB'].str.contains("RAID", case=False, na=False))].copy()
-        
+        if df_raids.empty:
+            # Recherche élargie par nom si la colonne club est différente
+            df_raids = df[df['CLUB'] != "Indépendant / Non renseigné"].copy()
+
         if not df_raids.empty:
-            df_raids_sorted = df_raids.sort_values(by='DOSSARD').reset_index(drop=True)
+            df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
             col_r1, col_r2 = st.columns([1, 2])
             with col_r1:
-                st.metric("🏃 Membres Inscrits / Identifiés", len(df_raids_sorted))
+                st.metric("🏃 Adhérents / Membres identifiés", len(df_raids_sorted))
             with col_r2:
                 sel_membre = st.selectbox(
                     "🔍 Filtrer par membre de l'association :",
-                    options=["-- Tous les membres --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
+                    options=["-- Tous les adhérents --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
                 )
 
-            if sel_membre != "-- Tous les membres --":
+            if sel_membre != "-- Tous les adhérents --":
                 df_raids_disp = df_raids_sorted[df_raids_sorted['NOM_COMPLET'] == sel_membre]
             else:
                 df_raids_disp = df_raids_sorted
@@ -601,14 +583,14 @@ try:
                     "DOSSARD": "Dossard",
                     "NOM": "Nom",
                     "PRENOM": "Prénom",
-                    "COURSE": "Épreuve 2026",
+                    "COURSE": "Épreuve / Statut",
                     "FOULEES 2025": "Édition 2025",
                     "FOULEES 2024": "Édition 2024",
                     "COMMENTAIRES": "Notes Speaker"
                 }
             )
         else:
-            st.warning("Aucun membre de l'association identifié dans le fichier CSV actuel.")
+            st.info("💡 Chargez votre fichier `coureurs.csv` sur GitHub pour voir les adhérents mis à jour !")
 
     # -------------------------------------------------------------
     # ONGLET 3 : RECHERCHE PARTICIPANT
