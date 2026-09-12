@@ -208,6 +208,7 @@ try:
         if 'COURSE' in df.columns:
             courses_raw = df['COURSE'].dropna().unique()
             
+            # FONCTION DE TRI : MARCHE EN PREMIER (0), PUIS PAR KM CROISSANT (1, km)
             def sort_courses_key(course_str):
                 s = str(course_str).upper()
                 if "MARCHE" in s:
@@ -282,16 +283,16 @@ try:
                     text_color = "black"
                     
                     if "MARCHE" in ep:
-                        bg_color = "#d4edda"
+                        bg_color = "#d4edda"  # Vert pastel
                         text_color = "#155724"
                     elif "8" in ep:
-                        bg_color = "#cce5ff"
+                        bg_color = "#cce5ff"  # Bleu pastel
                         text_color = "#004085"
                     elif "15" in ep:
-                        bg_color = "#fff3cd"
+                        bg_color = "#fff3cd"  # Jaune pastel
                         text_color = "#856404"
                     elif "25" in ep:
-                        bg_color = "#f8d7da"
+                        bg_color = "#f8d7da"  # Rouge pastel
                         text_color = "#721c24"
                     elif ep == "TOTAL":
                         styles.loc[idx, :] = 'font-weight: bold; background-color: #e2e3e5;'
