@@ -5,6 +5,7 @@ import requests
 import folium
 import os
 from datetime import datetime, time
+import zoneinfo
 from streamlit_folium import st_folium
 
 # Configuration de la page
@@ -114,33 +115,42 @@ try:
     df = load_and_process_data()
 
     # -------------------------------------------------------------
-    # ⏱️ BARRE DU HAUT : COMPTE À REBOURS ET DEPARTS
+    # ⏱️ BARRE DU HAUT : COMPTE À REBOURS SAMEDI 3 OCTOBRE 2026
     # -------------------------------------------------------------
-    now = datetime.now()
+    tz_france = zoneinfo.ZoneInfo("Europe/Paris")
+    now = datetime.now(tz_france)
     
-    # Heures de départs configurées
-    h16 = datetime.combine(now.date(), time(16, 0, 0))
-    h1645 = datetime.combine(now.date(), time(16, 45, 0))
+    # Cible : Samedi 3 Octobre 2026
+    date_course = datetime(2026, 10, 3, tzinfo=tz_france).date()
+    h16 = datetime.combine(date_course, time(16, 0, 0), tzinfo=tz_france)
+    h1645 = datetime.combine(date_course, time(16, 45, 0), tzinfo=tz_france)
     
-    # Différences
     diff_16 = h16 - now
     diff_1645 = h1645 - now
 
     def format_td(td):
         if td.total_seconds() < 0:
             return "🏁 Épreuve lancée !"
-        hrs, remainder = divmod(int(td.total_seconds()), 3600)
-        mins, secs = divmod(remainder, 60)
-        return f"⏳ {hrs:02d}h {mins:02d}m {secs:02d}s"
+        
+        total_sec = int(td.total_seconds())
+        days = total_sec // 86400
+        hrs = (total_sec % 86400) // 3600
+        mins = (total_sec % 3600) // 60
+        secs = total_sec % 60
+        
+        if days > 0:
+            return f"⏳ J-{days} ({hrs:02d}h {mins:02d}m {secs:02d}s)"
+        else:
+            return f"⏳ {hrs:02d}h {mins:02d}m {secs:02d}s"
 
     col_h1, col_h2, col_h3 = st.columns([1, 1, 1])
     
     with col_h1:
-        st.metric("🕒 Heure Actuelle", now.strftime("%H:%M:%S"))
+        st.metric("🕒 Heure Actuelle (France)", now.strftime("%d/%m/%Y - %H:%M:%S"))
     with col_h2:
-        st.metric("🚩 Départ 15 KM & 25 KM (16h00)", format_td(diff_16))
+        st.metric("🚩 15 KM & 25 KM (03/10 à 16h00)", format_td(diff_16))
     with col_h3:
-        st.metric("🚩 Départ 8 KM & Marche (16h45)", format_td(diff_1645))
+        st.metric("🚩 8 KM & Marche (03/10 à 16h45)", format_td(diff_1645))
 
     st.markdown("---")
 
