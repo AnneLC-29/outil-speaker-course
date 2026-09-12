@@ -40,6 +40,31 @@ CATEGORIES_AGE = {
 
 ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
 
+# Liste officielle des adhérents / membres Raids Dingues
+MEMBRES_RAIDS_DINGUES = [
+    "BAUDRY Gaëtan", "BONNIN Gregory", "GUILLON Geoffroy", "PARADIS Caroline", "RENAUD Stéphane",
+    "GUÉRY Médérick", "LE COZ Anne", "BOBIN Mathieu", "CHARRON Giovanni", "PUAUD Delphine",
+    "BRIAND Mathieu", "RENAUD David", "DESLANDES Michael", "BLANCHET Lilian", "CHEVOLEAU Anne",
+    "TRUTEAU Pierre", "FAUGER Axelle", "LE MOULLEC Kyllian", "COUÉ Jean-François", "MANTEAU Pierre",
+    "RENOU Julien", "FOLIARD LE GAL Hélène", "RENAUD Jean-François", "JANVIER Ludovic", "DELALANDRE Cyril",
+    "MANTEAU Aline", "CHAPELET Joachim", "MÉNARD Adeline", "BLANCHET Noël", "BAUDRY Julie",
+    "GOUIN Fréderic", "FOLIARD LE GAL Sébastien", "GUÉRY Axel", "AUBRY Christophe", "HUMBERT-DROZ-LAURENT Emmanuelle",
+    "BOUTEILLER François", "BONNIN Bérengère", "MATHIEU Sébastien", "BRIAND Charlotte", "BOUDAUD Amélie",
+    "SOUCHARD Céline", "TOUMI Tony", "RENOU Mathieu", "BONNIN Elodie", "BONNIN Anthony",
+    "GANTIER Aurélie", "BERNARD Johanne", "DOBIGNY Aurore", "JORET Isabelle", "BONNIN Aloïs",
+    "TANGATCHY Stéphane", "RIVÉ Sébastien", "ROY Bernard", "BLANCHET Quentin", "GABORIAU Freddy",
+    "BLUTEAU Simon", "BLANCHET Romain", "BIRONNEAU Stéphanie", "ROUSSEAU Cécile", "GUILLON Arnaud",
+    "LE GOFF Yohan", "NEAU Gaëtan", "CHARRON Virginie", "GABORIT Maxime", "MORIN Raphaël",
+    "PARADIS Thérèse", "PARADIS Jean-Michel", "BAUDRY Noël", "BAUDRY Thérèse", "BLANCHET Isabelle",
+    "BONNIN Pascal", "GUILLON Yolaine"
+]
+
+def clean_name_str(s):
+    if pd.isna(s): return ""
+    return re.sub(r'[^A-Z]', '', str(s).upper())
+
+MEMBRES_RAIDS_CLEAN = [clean_name_str(m) for m in MEMBRES_RAIDS_DINGUES]
+
 def calc_vitesse(dist_km, time_str):
     try:
         parts = str(time_str).strip().split(':')
@@ -71,13 +96,14 @@ def load_and_process_data():
     if 'SEXE' in df.columns:
         df['SEXE'] = df['SEXE'].astype(str).str.strip().str.upper()
 
+    # Extraction stricte : un club doit comporter un slash '/'
     def extract_club(val):
         if pd.isna(val):
             return "Indépendant / Non renseigné"
         parts = str(val).split('/')
         if len(parts) > 1 and parts[1].strip() != "":
             return parts[1].strip()
-        return str(val).strip() if str(val).strip() != "" else "Indépendant / Non renseigné"
+        return "Indépendant / Non renseigné"
 
     def extract_ville_cp(val):
         if pd.isna(val):
@@ -231,7 +257,9 @@ try:
         st.subheader("📈 Statistiques Générales & Fidélité")
         
         if 'COURSE' in df.columns:
-            courses_raw = df['COURSE'].dropna().unique()
+            # FILTRER LES VRAIES ÉPREUVES (SANS ADHERENT)
+            df_epreuves = df[df['COURSE'].notna() & (~df['COURSE'].astype(str).str.upper().str.contains("ADHERENT"))].copy()
+            courses_raw = df_epreuves['COURSE'].unique()
             
             def sort_courses_key(course_str):
                 s = str(course_str).upper()
@@ -244,18 +272,18 @@ try:
             courses_sorted = sorted(courses_raw, key=sort_courses_key)
             matrix_data = []
             
-            total_h = len(df[df['SEXE'] == 'H'])
-            total_f = len(df[df['SEXE'] == 'F'])
-            total_global = len(df)
+            total_h = len(df_epreuves[df_epreuves['SEXE'] == 'H'])
+            total_f = len(df_epreuves[df_epreuves['SEXE'] == 'F'])
+            total_global = len(df_epreuves)
             
-            has_2025 = 'FOULEES 2025' in df.columns
-            has_2024 = 'FOULEES 2024' in df.columns
+            has_2025 = 'FOULEES 2025' in df_epreuves.columns
+            has_2024 = 'FOULEES 2024' in df_epreuves.columns
             
-            tot_p2025 = len(df[df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
-            tot_p2024 = len(df[df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
+            tot_p2025 = len(df_epreuves[df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
+            tot_p2024 = len(df_epreuves[df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
 
             for c in courses_sorted:
-                df_c = df[df['COURSE'] == c]
+                df_c = df_epreuves[df_epreuves['COURSE'] == c]
                 tot_c = len(df_c)
                 if tot_c == 0: continue
                 
@@ -433,11 +461,11 @@ try:
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
         if has_2025 and has_2024:
-            cond_2025 = df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")
-            cond_2024 = df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")
+            cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
+            cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
-            df_fidele_3 = df[cond_2025 & cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
-            df_fidele_at_least_1 = df[cond_2025 | cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
+            df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
+            df_fidele_at_least_1 = df_epreuves[cond_2025 | cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
             
             col_f3, col_f1 = st.columns(2)
             
@@ -490,8 +518,8 @@ try:
         
         with c_left:
             st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
-            if 'COURSE' in df.columns:
-                df_courses = df.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
+            if 'COURSE' in df_epreuves.columns:
+                df_courses = df_epreuves.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
                 if 'H' not in df_courses.columns: df_courses['H'] = 0
                 if 'F' not in df_courses.columns: df_courses['F'] = 0
                 df_courses['Total'] = df_courses['H'] + df_courses['F']
@@ -499,8 +527,8 @@ try:
 
         with c_right:
             st.markdown("### 🏷️ Répartition par Catégorie (triée par âge)")
-            if 'Catégorie' in df.columns:
-                df_cat = df['Catégorie'].value_counts().reset_index()
+            if 'Catégorie' in df_epreuves.columns:
+                df_cat = df_epreuves['Catégorie'].value_counts().reset_index()
                 df_cat.columns = ['Code_Cat', 'Nombre']
                 df_cat['Code_clean'] = df_cat['Code_Cat'].astype(str).str.strip().str.upper()
                 
@@ -520,7 +548,7 @@ try:
                 st.bar_chart(chart_data)
                 
                 list_cats_dispo = list(df_cat['Code_clean'])
-                dict_labels = {c_code: f"{c_code} - {CATEGORIES_AGE.get(str(c_code), '')} ({len(df[df['Catégorie'].astype(str).str.strip().str.upper() == c_code])} inscrits)" for c_code in list_cats_dispo}
+                dict_labels = {c_code: f"{c_code} - {CATEGORIES_AGE.get(str(c_code), '')} ({len(df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == c_code])} inscrits)" for c_code in list_cats_dispo}
                 
                 selected_cat_code = st.selectbox(
                     "🔎 Cliquez ici pour sélectionner une catégorie et voir la liste des coureurs :",
@@ -529,7 +557,7 @@ try:
                 )
                 
                 if selected_cat_code and selected_cat_code != "-- Choisir une catégorie --":
-                    df_cat_coureurs = df[df['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='DOSSARD').reset_index(drop=True)
+                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='DOSSARD').reset_index(drop=True)
                     st.write(f"👥 **{len(df_cat_coureurs)} coureur(s)** dans la catégorie **{selected_cat_code}** ({CATEGORIES_AGE.get(selected_cat_code, '')}) :")
                     st.dataframe(df_cat_coureurs, use_container_width=True, hide_index=True)
                 else:
@@ -540,37 +568,36 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (DYNAMIQUE CSV)
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (LISTE EXACTE)
     # -------------------------------------------------------------
     with tab_raids:
-        st.subheader("🛡️ Historique & Performances des Membres / Adhérents Raids Dingues")
-        st.write("Retrouvez la liste dynamique de tous nos adhérents et leurs participations enregistrées dans le fichier CSV !")
+        st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
+        st.write("Retrouvez la liste exclusive de nos membres officiels et leurs performances enregistrées !")
         
-        # Filtre sur les coureurs/adhérents ayant le club Raids Dingues ou associés dans le CSV
-        df_raids = df[df['CLUB'].str.contains("RAID", case=False, na=False) | df['VILLE'].str.contains("RAID", case=False, na=False)].copy()
+        df['CLEAN_NOM'] = df['NOM_COMPLET'].apply(clean_name_str)
+        is_in_official_list = df['CLEAN_NOM'].isin(MEMBRES_RAIDS_CLEAN)
+        is_adherent_course = df['COURSE'].astype(str).str.upper().str.contains("ADHERENT")
         
-        if df_raids.empty:
-            # Recherche élargie par nom si la colonne club est différente
-            df_raids = df[df['CLUB'] != "Indépendant / Non renseigné"].copy()
+        df_raids = df[is_in_official_list | is_adherent_course].copy()
 
         if not df_raids.empty:
             df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
             col_r1, col_r2 = st.columns([1, 2])
             with col_r1:
-                st.metric("🏃 Adhérents / Membres identifiés", len(df_raids_sorted))
+                st.metric("🏃 Membres identifiés dans la liste", len(df_raids_sorted))
             with col_r2:
                 sel_membre = st.selectbox(
-                    "🔍 Filtrer par membre de l'association :",
-                    options=["-- Tous les adhérents --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
+                    "🔍 Filtrer par membre du club :",
+                    options=["-- Tous les membres --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
                 )
 
-            if sel_membre != "-- Tous les adhérents --":
+            if sel_membre != "-- Tous les membres --":
                 df_raids_disp = df_raids_sorted[df_raids_sorted['NOM_COMPLET'] == sel_membre]
             else:
                 df_raids_disp = df_raids_sorted
 
-            cols_show = ['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']
+            cols_show = ['NOM', 'PRENOM', 'COURSE', 'Catégorie']
             if 'FOULEES 2025' in df.columns: cols_show.append('FOULEES 2025')
             if 'FOULEES 2024' in df.columns: cols_show.append('FOULEES 2024')
             if 'COMMENTAIRES' in df.columns: cols_show.append('COMMENTAIRES')
@@ -580,17 +607,16 @@ try:
                 use_container_width=True, 
                 hide_index=True,
                 column_config={
-                    "DOSSARD": "Dossard",
                     "NOM": "Nom",
                     "PRENOM": "Prénom",
-                    "COURSE": "Épreuve / Statut",
+                    "COURSE": "Statut / Épreuve",
                     "FOULEES 2025": "Édition 2025",
                     "FOULEES 2024": "Édition 2024",
                     "COMMENTAIRES": "Notes Speaker"
                 }
             )
         else:
-            st.info("💡 Chargez votre fichier `coureurs.csv` sur GitHub pour voir les adhérents mis à jour !")
+            st.warning("Aucun membre de la liste officielle n'a été identifié dans le fichier CSV actuel.")
 
     # -------------------------------------------------------------
     # ONGLET 3 : RECHERCHE PARTICIPANT
@@ -819,21 +845,25 @@ try:
             st.subheader("🛡️ Détail par Club / Association")
             
             clubs_valides = [c for c in df['CLUB'].unique() if c != "Indépendant / Non renseigné"]
-            stats_clubs = df[df['CLUB'].isin(clubs_valides)]['CLUB'].value_counts().reset_index()
-            stats_clubs.columns = ['Club', 'Nb Inscrits']
             
-            selected_club = st.selectbox(
-                "Sélectionnez un club pour voir la liste des participants :",
-                options=["-- Choisir un club --"] + list(stats_clubs['Club'])
-            )
-            
-            if selected_club and selected_club != "-- Choisir un club --":
-                coureurs_club = df[df['CLUB'] == selected_club][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
-                st.write(f"👥 **{len(coureurs_club)} participant(s)** inscrit(s) pour **{selected_club}** :")
-                st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
+            if clubs_valides:
+                stats_clubs = df[df['CLUB'].isin(clubs_valides)]['CLUB'].value_counts().reset_index()
+                stats_clubs.columns = ['Club', 'Nb Inscrits']
+                
+                selected_club = st.selectbox(
+                    "Sélectionnez un club pour voir la liste des participants :",
+                    options=["-- Choisir un club --"] + list(stats_clubs['Club'])
+                )
+                
+                if selected_club and selected_club != "-- Choisir un club --":
+                    coureurs_club = df[df['CLUB'] == selected_club][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
+                    st.write(f"👥 **{len(coureurs_club)} participant(s)** inscrit(s) pour **{selected_club}** :")
+                    st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
+                else:
+                    st.markdown("**Top des clubs les plus représentés :**")
+                    st.dataframe(stats_clubs.head(10), use_container_width=True, hide_index=True)
             else:
-                st.markdown("**Top des clubs les plus représentés :**")
-                st.dataframe(stats_clubs.head(10), use_container_width=True, hide_index=True)
+                st.write("Aucun club renseigné avec slash dans le fichier.")
 
         with col_map:
             st.subheader("🗺️ Carte & Détail par Ville")
