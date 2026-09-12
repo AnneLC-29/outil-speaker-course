@@ -40,6 +40,25 @@ CATEGORIES_AGE = {
 
 ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
 
+# Liste complète des membres de l'association Raids Dingues
+MEMBRES_RAIDS_DINGUES = [
+    "BAUDRY Gaëtan", "BONNIN Gregory", "GUILLON Geoffroy", "PARADIS Caroline", "RENAUD Stéphane",
+    "GUÉRY Médérick", "LE COZ Anne", "BOBIN Mathieu", "CHARRON Giovanni", "PUAUD Delphine",
+    "BRIAND Mathieu", "RENAUD David", "DESLANDES Michael", "BLANCHET Lilian", "CHEVOLEAU Anne",
+    "TRUTEAU Pierre", "FAUGER Axelle", "LE MOULLEC Kyllian", "COUÉ Jean-François", "MANTEAU Pierre",
+    "RENOU Julien", "FOLIARD LE GAL Hélène", "RENAUD Jean-François", "JANVIER Ludovic", "DELALANDRE Cyril",
+    "MANTEAU Aline", "CHAPELET Joachim", "MÉNARD Adeline", "BLANCHET Noël", "BAUDRY Julie",
+    "GOUIN Fréderic", "FOLIARD LE GAL Sébastien", "GUÉRY Axel", "AUBRY Christophe", "HUMBERT-DROZ-LAURENT Emmanuelle",
+    "BOUTEILLER François", "BONNIN Bérengère", "MATHIEU Sébastien", "BRIAND Charlotte", "BOUDAUD Amélie",
+    "SOUCHARD Céline", "TOUMI Tony", "RENOU Mathieu", "BONNIN Elodie", "BONNIN Anthony",
+    "GANTIER Aurélie", "BERNARD Johanne", "DOBIGNY Aurore", "JORET Isabelle", "BONNIN Aloïs",
+    "TANGATCHY Stéphane", "RIVÉ Sébastien", "ROY Bernard", "BLANCHET Quentin", "GABORIAU Freddy",
+    "BLUTEAU Simon", "BLANCHET Romain", "BIRONNEAU Stéphanie", "ROUSSEAU Cécile", "GUILLON Arnaud",
+    "LE GOFF Yohan", "NEAU Gaëtan", "CHARRON Virginie", "GABORIT Maxime", "MORIN Raphaël",
+    "PARADIS Thérèse", "PARADIS Jean-Michel", "BAUDRY Noël", "BAUDRY Thérèse", "BLANCHET Isabelle",
+    "BONNIN Pascal", "GUILLON Yolaine"
+]
+
 def calc_vitesse(dist_km, time_str):
     try:
         parts = time_str.split(':')
@@ -133,15 +152,6 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
-    # Initialisation des ajouts manuels en session
-    if 'custom_coureurs' not in st.session_state:
-        st.session_state['custom_coureurs'] = []
-
-    # Fusion des coureurs du CSV et des coureurs ajoutés sur place
-    if len(st.session_state['custom_coureurs']) > 0:
-        df_custom = pd.DataFrame(st.session_state['custom_coureurs'])
-        df = pd.concat([df, df_custom], ignore_index=True)
-
     # -------------------------------------------------------------
     # ⏱️ BARRE DU HAUT : COMPTE À REBOURS SAMEDI 3 OCTOBRE 2026
     # -------------------------------------------------------------
@@ -182,11 +192,10 @@ try:
     st.markdown("---")
 
     # -------------------------------------------------------------
-    # ⚡ BARRE LATERALE : OUTILS RAPIDES SPEAKER & RECHARGEMENT
+    # ⚡ BARRE LATERALE : RECHERCHE & RECHARGEMENT CSV
     # -------------------------------------------------------------
     st.sidebar.header("⚡ Outils Rapides Speaker")
     
-    # BOUTON DE RECHARGEMENT FORCE DU CSV
     if st.sidebar.button("🔄 Force Recharger CSV (GitHub)", use_container_width=True):
         st.cache_data.clear()
         st.sidebar.success("Données rechargées !")
@@ -222,44 +231,12 @@ try:
         else:
             st.sidebar.error("Aucun participant trouvé.")
 
-    # MODULE AJOUT EXPRESS INSCRIPTION SUR PLACE
-    st.sidebar.markdown("---")
-    with st.sidebar.expander("➕ Ajout Express (Inscription sur place)"):
-        with st.form("form_ajout_express"):
-            new_dos = st.number_input("N° Dossard", min_value=1, max_value=9999, step=1)
-            new_nom = st.text_input("Nom").strip().upper()
-            new_prenom = st.text_input("Prénom").strip().title()
-            new_course = st.selectbox("Course", options=["8 KM", "15 KM", "25 KM", "MARCHE 12 Km"])
-            new_sexe = st.selectbox("Sexe", options=["H", "F"])
-            new_cat = st.selectbox("Catégorie", options=ORDRE_CATEGORIES, index=8) # SE par défaut
-            new_ville = st.text_input("Ville / Club", value="Inscription sur place").strip()
-            
-            btn_add = st.form_submit_button("Ajouter immédiatement")
-            if btn_add and new_nom and new_prenom:
-                coureur_obj = {
-                    'DOSSARD': new_dos,
-                    'NOM': new_nom,
-                    'PRENOM': new_prenom,
-                    'COURSE': new_course,
-                    'SEXE': new_sexe,
-                    'Catégorie': new_cat,
-                    'VILLE': new_ville,
-                    'CLUB': 'Inscription sur place',
-                    'NOM_VILLE': new_ville,
-                    'CODE_POSTAL': None,
-                    'VILLE_CLEAN': new_ville,
-                    'NOM_COMPLET': f"{new_nom} {new_prenom}".upper(),
-                    'COMMENTAIRES': '⚡ Inscrit sur place le jour J'
-                }
-                st.session_state['custom_coureurs'].append(coureur_obj)
-                st.success(f"Dossard #{new_dos} ajouté !")
-                st.rerun()
-
     # -------------------------------------------------------------
     # ONGLETS DE NAVIGATION PRINCIPAUX
     # -------------------------------------------------------------
-    tab_general, tab_search, tab_favoris, tab_stats, tab_sponsors = st.tabs([
+    tab_general, tab_raids, tab_search, tab_favoris, tab_stats, tab_sponsors = st.tabs([
         "📈 Infos Générales & Stats",
+        "🛡️ Résultats Raids Dingues",
         "🔎 Recherche Participant", 
         "🏆 Favoris & Cotes Betrail", 
         "📊 Origine & Clubs",
@@ -582,7 +559,59 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RECHERCHE PARTICIPANT
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES
+    # -------------------------------------------------------------
+    with tab_raids:
+        st.subheader("🛡️ Historique & Performances des Membres de l'Association Raids Dingues")
+        st.write("Retrouvez l'ensemble des participations et temps passés de nos membres actuels sur les Foulées Raids Dingues !")
+        
+        # Filtre par nom de membre dans le fichier
+        membres_upper = [m.upper() for m in MEMBRES_RAIDS_DINGUES]
+        
+        # Détection des coureurs correspondants
+        df_raids = df[df['NOM_COMPLET'].apply(lambda x: any(m in str(x) for m in membres_upper)) | (df['CLUB'].str.contains("RAID", case=False, na=False))].copy()
+        
+        if not df_raids.empty:
+            df_raids_sorted = df_raids.sort_values(by='DOSSARD').reset_index(drop=True)
+            
+            col_r1, col_r2 = st.columns([1, 2])
+            with col_r1:
+                st.metric("🏃 Membres Inscrits / Identifiés", len(df_raids_sorted))
+            with col_r2:
+                sel_membre = st.selectbox(
+                    "🔍 Filtrer par membre de l'association :",
+                    options=["-- Tous les membres --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
+                )
+
+            if sel_membre != "-- Tous les membres --":
+                df_raids_disp = df_raids_sorted[df_raids_sorted['NOM_COMPLET'] == sel_membre]
+            else:
+                df_raids_disp = df_raids_sorted
+
+            cols_show = ['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']
+            if 'FOULEES 2025' in df.columns: cols_show.append('FOULEES 2025')
+            if 'FOULEES 2024' in df.columns: cols_show.append('FOULEES 2024')
+            if 'COMMENTAIRES' in df.columns: cols_show.append('COMMENTAIRES')
+            
+            st.dataframe(
+                df_raids_disp[cols_show], 
+                use_container_width=True, 
+                hide_index=True,
+                column_config={
+                    "DOSSARD": "Dossard",
+                    "NOM": "Nom",
+                    "PRENOM": "Prénom",
+                    "COURSE": "Épreuve 2026",
+                    "FOULEES 2025": "Édition 2025",
+                    "FOULEES 2024": "Édition 2024",
+                    "COMMENTAIRES": "Notes Speaker"
+                }
+            )
+        else:
+            st.warning("Aucun membre de l'association identifié dans le fichier CSV actuel.")
+
+    # -------------------------------------------------------------
+    # ONGLET 3 : RECHERCHE PARTICIPANT
     # -------------------------------------------------------------
     with tab_search:
         st.subheader("🔍 Recherche de Participant")
@@ -734,7 +763,7 @@ try:
                 st.warning(f"Aucun participant trouvé avec la recherche \"{query_input}\"")
 
     # -------------------------------------------------------------
-    # ONGLET 3 : FAVORIS ET COTES BETRAIL
+    # ONGLET 4 : FAVORIS ET COTES BETRAIL
     # -------------------------------------------------------------
     with tab_favoris:
         st.subheader("🏆 Favoris / Classement potentiel par cote Betrail")
@@ -799,7 +828,7 @@ try:
                         st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 4 : ORIGINES ET CLUBS
+    # ONGLET 5 : ORIGINES ET CLUBS
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
@@ -882,7 +911,7 @@ try:
                     st.dataframe(top10_villes, use_container_width=True, hide_index=True)
 
     # -------------------------------------------------------------
-    # ONGLET 5 : SPONSORS & PARTENAIRES
+    # ONGLET 6 : SPONSORS & PARTENAIRES
     # -------------------------------------------------------------
     with tab_sponsors:
         st.subheader("🤝 Nos Partenaires Officiels")
