@@ -96,7 +96,6 @@ def load_and_process_data():
     if 'SEXE' in df.columns:
         df['SEXE'] = df['SEXE'].astype(str).str.strip().str.upper()
 
-    # Extraction stricte : un club doit comporter un slash '/'
     def extract_club(val):
         if pd.isna(val):
             return "Indépendant / Non renseigné"
@@ -257,7 +256,6 @@ try:
         st.subheader("📈 Statistiques Générales & Fidélité")
         
         if 'COURSE' in df.columns:
-            # FILTRER LES VRAIES ÉPREUVES (SANS ADHERENT)
             df_epreuves = df[df['COURSE'].notna() & (~df['COURSE'].astype(str).str.upper().str.contains("ADHERENT"))].copy()
             courses_raw = df_epreuves['COURSE'].unique()
             
@@ -568,24 +566,30 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (LISTE EXACTE)
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (AYANT COURU)
     # -------------------------------------------------------------
     with tab_raids:
         st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
-        st.write("Retrouvez la liste exclusive de nos membres officiels et leurs performances enregistrées !")
+        st.write("Retrouvez la liste exclusive de nos membres ayant au moins une participation enregistrée en 2024 ou 2025 !")
         
         df['CLEAN_NOM'] = df['NOM_COMPLET'].apply(clean_name_str)
         is_in_official_list = df['CLEAN_NOM'].isin(MEMBRES_RAIDS_CLEAN)
         is_adherent_course = df['COURSE'].astype(str).str.upper().str.contains("ADHERENT")
         
-        df_raids = df[is_in_official_list | is_adherent_course].copy()
+        df_raids_all = df[is_in_official_list | is_adherent_course].copy()
+
+        # FILTRE STRICT : Avoir un résultat non nul en 2024 OU en 2025
+        has_res_2025 = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE")
+        has_res_2024 = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE")
+        
+        df_raids = df_raids_all[has_res_2025 | has_res_2024].copy()
 
         if not df_raids.empty:
             df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
             col_r1, col_r2 = st.columns([1, 2])
             with col_r1:
-                st.metric("🏃 Membres identifiés dans la liste", len(df_raids_sorted))
+                st.metric("🏃 Membres ayant déjà couru (2024/2025)", len(df_raids_sorted))
             with col_r2:
                 sel_membre = st.selectbox(
                     "🔍 Filtrer par membre du club :",
@@ -597,7 +601,7 @@ try:
             else:
                 df_raids_disp = df_raids_sorted
 
-            cols_show = ['NOM', 'PRENOM', 'COURSE', 'Catégorie']
+            cols_show = ['NOM', 'PRENOM', 'Catégorie']
             if 'FOULEES 2025' in df.columns: cols_show.append('FOULEES 2025')
             if 'FOULEES 2024' in df.columns: cols_show.append('FOULEES 2024')
             if 'COMMENTAIRES' in df.columns: cols_show.append('COMMENTAIRES')
@@ -609,14 +613,14 @@ try:
                 column_config={
                     "NOM": "Nom",
                     "PRENOM": "Prénom",
-                    "COURSE": "Statut / Épreuve",
+                    "Catégorie": "Catégorie",
                     "FOULEES 2025": "Édition 2025",
                     "FOULEES 2024": "Édition 2024",
                     "COMMENTAIRES": "Notes Speaker"
                 }
             )
         else:
-            st.warning("Aucun membre de la liste officielle n'a été identifié dans le fichier CSV actuel.")
+            st.warning("Aucun membre de l'association n'a de résultat enregistré en 2024 ou 2025 dans le CSV actuel.")
 
     # -------------------------------------------------------------
     # ONGLET 3 : RECHERCHE PARTICIPANT
