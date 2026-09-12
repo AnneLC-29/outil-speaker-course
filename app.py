@@ -40,25 +40,6 @@ CATEGORIES_AGE = {
 
 ORDRE_CATEGORIES = list(CATEGORIES_AGE.keys())
 
-# Liste complète des membres de l'association Raids Dingues
-MEMBRES_RAIDS_DINGUES = [
-    "BAUDRY Gaëtan", "BONNIN Gregory", "GUILLON Geoffroy", "PARADIS Caroline", "RENAUD Stéphane",
-    "GUÉRY Médérick", "LE COZ Anne", "BOBIN Mathieu", "CHARRON Giovanni", "PUAUD Delphine",
-    "BRIAND Mathieu", "RENAUD David", "DESLANDES Michael", "BLANCHET Lilian", "CHEVOLEAU Anne",
-    "TRUTEAU Pierre", "FAUGER Axelle", "LE MOULLEC Kyllian", "COUÉ Jean-François", "MANTEAU Pierre",
-    "RENOU Julien", "FOLIARD LE GAL Hélène", "RENAUD Jean-François", "JANVIER Ludovic", "DELALANDRE Cyril",
-    "MANTEAU Aline", "CHAPELET Joachim", "MÉNARD Adeline", "BLANCHET Noël", "BAUDRY Julie",
-    "GOUIN Fréderic", "FOLIARD LE GAL Sébastien", "GUÉRY Axel", "AUBRY Christophe", "HUMBERT-DROZ-LAURENT Emmanuelle",
-    "BOUTEILLER François", "BONNIN Bérengère", "MATHIEU Sébastien", "BRIAND Charlotte", "BOUDAUD Amélie",
-    "SOUCHARD Céline", "TOUMI Tony", "RENOU Mathieu", "BONNIN Elodie", "BONNIN Anthony",
-    "GANTIER Aurélie", "BERNARD Johanne", "DOBIGNY Aurore", "JORET Isabelle", "BONNIN Aloïs",
-    "TANGATCHY Stéphane", "RIVÉ Sébastien", "ROY Bernard", "BLANCHET Quentin", "GABORIAU Freddy",
-    "BLUTEAU Simon", "BLANCHET Romain", "BIRONNEAU Stéphanie", "ROUSSEAU Cécile", "GUILLON Arnaud",
-    "LE GOFF Yohan", "NEAU Gaëtan", "CHARRON Virginie", "GABORIT Maxime", "MORIN Raphaël",
-    "PARADIS Thérèse", "PARADIS Jean-Michel", "BAUDRY Noël", "BAUDRY Thérèse", "BLANCHET Isabelle",
-    "BONNIN Pascal", "GUILLON Yolaine"
-]
-
 def calc_vitesse(dist_km, time_str):
     try:
         parts = time_str.split(':')
@@ -152,6 +133,15 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
+    # Initialisation des ajouts manuels en session
+    if 'custom_coureurs' not in st.session_state:
+        st.session_state['custom_coureurs'] = []
+
+    # Fusion des coureurs du CSV et des coureurs ajoutés sur place
+    if len(st.session_state['custom_coureurs']) > 0:
+        df_custom = pd.DataFrame(st.session_state['custom_coureurs'])
+        df = pd.concat([df, df_custom], ignore_index=True)
+
     # -------------------------------------------------------------
     # ⏱️ BARRE DU HAUT : COMPTE À REBOURS SAMEDI 3 OCTOBRE 2026
     # -------------------------------------------------------------
@@ -192,13 +182,20 @@ try:
     st.markdown("---")
 
     # -------------------------------------------------------------
-    # ⚡ BARRE DE RECHERCHE RAPIDE PAR DOSSARD / NOM (SIDEBAR)
+    # ⚡ BARRE LATERALE : OUTILS RAPIDES SPEAKER & RECHARGEMENT
     # -------------------------------------------------------------
-    st.sidebar.header("⚡ Recherche Rapide Speaker")
-    quick_query = st.sidebar.text_input("N° Dossard ou Nom :", placeholder="Tapez ici...").strip()
+    st.sidebar.header("⚡ Outils Rapides Speaker")
+    
+    # BOUTON DE RECHARGEMENT FORCE DU CSV
+    if st.sidebar.button("🔄 Force Recharger CSV (GitHub)", use_container_width=True):
+        st.cache_data.clear()
+        st.sidebar.success("Données rechargées !")
+        st.rerun()
+
+    st.sidebar.markdown("---")
+    quick_query = st.sidebar.text_input("🔍 N° Dossard ou Nom :", placeholder="Tapez ici...").strip()
     
     if quick_query:
-        st.sidebar.markdown("---")
         if quick_query.isdigit():
             res_q = df[df['DOSSARD'] == int(quick_query)]
         else:
@@ -224,6 +221,39 @@ try:
                 st.sidebar.warning(f"📝 {c_q['COMMENTAIRES']}")
         else:
             st.sidebar.error("Aucun participant trouvé.")
+
+    # MODULE AJOUT EXPRESS INSCRIPTION SUR PLACE
+    st.sidebar.markdown("---")
+    with st.sidebar.expander("➕ Ajout Express (Inscription sur place)"):
+        with st.form("form_ajout_express"):
+            new_dos = st.number_input("N° Dossard", min_value=1, max_value=9999, step=1)
+            new_nom = st.text_input("Nom").strip().upper()
+            new_prenom = st.text_input("Prénom").strip().title()
+            new_course = st.selectbox("Course", options=["8 KM", "15 KM", "25 KM", "MARCHE 12 Km"])
+            new_sexe = st.selectbox("Sexe", options=["H", "F"])
+            new_cat = st.selectbox("Catégorie", options=ORDRE_CATEGORIES, index=8) # SE par défaut
+            new_ville = st.text_input("Ville / Club", value="Inscription sur place").strip()
+            
+            btn_add = st.form_submit_button("Ajouter immédiatement")
+            if btn_add and new_nom and new_prenom:
+                coureur_obj = {
+                    'DOSSARD': new_dos,
+                    'NOM': new_nom,
+                    'PRENOM': new_prenom,
+                    'COURSE': new_course,
+                    'SEXE': new_sexe,
+                    'Catégorie': new_cat,
+                    'VILLE': new_ville,
+                    'CLUB': 'Inscription sur place',
+                    'NOM_VILLE': new_ville,
+                    'CODE_POSTAL': None,
+                    'VILLE_CLEAN': new_ville,
+                    'NOM_COMPLET': f"{new_nom} {new_prenom}".upper(),
+                    'COMMENTAIRES': '⚡ Inscrit sur place le jour J'
+                }
+                st.session_state['custom_coureurs'].append(coureur_obj)
+                st.success(f"Dossard #{new_dos} ajouté !")
+                st.rerun()
 
     # -------------------------------------------------------------
     # ONGLETS DE NAVIGATION PRINCIPAUX
@@ -531,7 +561,6 @@ try:
                 chart_data = df_cat.set_index('Code_clean')[['Nombre']]
                 st.bar_chart(chart_data)
                 
-                # --- MENU DÉROULANT INTERACTIF POUR INSPECTER UNE CATÉGORIE ---
                 list_cats_dispo = list(df_cat['Code_clean'])
                 dict_labels = {c_code: f"{c_code} - {CATEGORIES_AGE.get(str(c_code), '')} ({len(df[df['Catégorie'].astype(str).str.strip().str.upper() == c_code])} inscrits)" for c_code in list_cats_dispo}
                 
