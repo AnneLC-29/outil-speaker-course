@@ -112,15 +112,16 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
-    tab_general, tab_search, tab_favoris, tab_stats = st.tabs([
+    tab_general, tab_search, tab_favoris, tab_stats, tab_sponsors = st.tabs([
         "📈 Infos Générales & Stats",
         "🔎 Recherche Participant", 
         "🏆 Favoris & Cotes Betrail", 
-        "📊 Origine & Clubs"
+        "📊 Origine & Clubs",
+        "🤝 Sponsors & Partenaires"
     ])
 
     # -------------------------------------------------------------
-    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES (AVEC FIDÉLITÉ)
+    # ONGLET 1 : INFOS GÉNÉRALES & STATISTIQUES
     # -------------------------------------------------------------
     with tab_general:
         st.subheader("📈 Statistiques Générales & Fidélité")
@@ -133,7 +134,6 @@ try:
                 return int(match.group(1)) if match else 999
                 
             courses_sorted = sorted(courses_raw, key=get_distance_num)
-            
             matrix_data = []
             
             total_h = len(df[df['SEXE'] == 'H'])
@@ -227,9 +227,6 @@ try:
                 hide_index=True
             )
 
-        # -------------------------------------------------------------
-        # SECTION MISE EN AVANT DES FIDÈLES (2024 ET 2025)
-        # -------------------------------------------------------------
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
@@ -237,10 +234,7 @@ try:
             cond_2025 = df['FOULEES 2025'].notna() & (df['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df['FOULEES 2024'].notna() & (df['FOULEES 2024'].astype(str).str.strip() != "")
             
-            # 1. Les fidèles absolus (Présents en 2024 ET 2025)
             df_fidele_3 = df[cond_2025 & cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
-            
-            # 2. Les habitués (Présents en 2024 OU 2025)
             df_fidele_at_least_1 = df[cond_2025 | cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
             
             col_f3, col_f1 = st.columns(2)
@@ -290,7 +284,6 @@ try:
                     st.write("Aucun participant dans cette catégorie.")
 
         st.markdown("---")
-        
         c_left, c_right = st.columns(2)
         
         with c_left:
@@ -635,6 +628,59 @@ try:
                     st.markdown("**Top 10 des villes les plus représentées :**")
                     top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
                     st.dataframe(top10_villes, use_container_width=True, hide_index=True)
+
+    # -------------------------------------------------------------
+    # ONGLET 5 : SPONSORS & PARTENAIRES
+    # -------------------------------------------------------------
+    with tab_sponsors:
+        st.subheader("🤝 Nos Partenaires Officiels")
+        st.write("Un grand merci aux entreprises et institutions qui soutiennent les Foulées Raids Dingues !")
+        
+        st.markdown("---")
+        
+        # 1. SPONSORS ÉVÉNEMENTIELS
+        st.markdown("### 🏆 Partenaires Événementiels")
+        sponsors_evt = [
+            ("Hyper U", "HYPER U.png"),
+            ("Intersport", "Intersport.png"),
+            ("PAYS DE FONTENAY", "PAYS DE FONTENAY.png"),
+            ("LES VERGERS DE VENDEE", "VERGERS DE VENDEE.png")
+        ]
+        
+        cols_evt = st.columns(len(sponsors_evt))
+        for idx, (sp_nom, sp_file) in enumerate(sponsors_evt):
+            with cols_evt[idx]:
+                try:
+                    st.image(sp_file, use_container_width=True)
+                except Exception:
+                    st.info(f"**{sp_nom}**")
+
+        st.markdown("---")
+        
+        # 2. SPONSORS ANNUELS
+        st.markdown("### 🌟 Sponsors Annuels")
+        sponsors_annuels = [
+            ("BERNARD JOHANNE", "BERNARD JOHANNE.png"),
+            ("BLANCHET ENERGIE", "BLANCHET ENERGIE.png"),
+            ("BREMAUD", "BREMAUD.png"),
+            ("CAJEV", "CAJEV.png"),
+            ("LE GRAIN DE BLE", "LE GRAIN DE BLE.png"),
+            ("MAISON BAUDRY", "MAISON BAUDRY.png"),
+            ("MAISON GOUIN", "MAISON GOUIN.png"),
+            ("ROBIN", "ROBIN.png"),
+            ("SANTE DIFFUSION", "SANTE DIFFUSION.png"),
+            ("SIGNALISATION 85", "SIGNALISATION 85.png"),
+            ("SYMTA PIECES", "SYMTA PIECES.png"),
+            ("VINCENDEAU AGENCEMENT", "VICENDEAU AGENCEMENT.png")
+        ]
+        
+        cols_ann = st.columns(3)
+        for idx, (sp_nom, sp_file) in enumerate(sponsors_annuels):
+            with cols_ann[idx % 3]:
+                try:
+                    st.image(sp_file, width=220)
+                except Exception:
+                    st.markdown(f"• **{sp_nom}**")
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
