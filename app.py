@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import requests
 import folium
+import os
 from streamlit_folium import st_folium
 
 # Configuration de la page
@@ -227,6 +228,87 @@ try:
                 hide_index=True
             )
 
+        # -------------------------------------------------------------
+        # SECTION PODIUMS HISTORIQUES (2024 & 2025)
+        # -------------------------------------------------------------
+        st.markdown("---")
+        st.markdown("### 🥇 Podiums des Éditions Précédentes")
+        
+        tab_pod2025, tab_pod2024 = st.tabs(["🏆 Édition 2025 (7 / 14 / 21 KM)", "🏆 Édition 2024 (9 / 18 KM)"])
+        
+        with tab_pod2025:
+            st.info("💡 **Note Speaker 2026 :** Axelle FAUGER (Vainqueure du 7 KM en 2025) a rejoint le club des **RAIDS DINGUES** cette année !")
+            
+            c7, c14, c21 = st.columns(3)
+            
+            with c7:
+                st.markdown("#### 🏃 7 KM (2025)")
+                st.markdown("**Hommes :**")
+                st.write("1. **DEPLANQUE Alexandre** - 00:31:14 (Doix les Fontaines)")
+                st.write("2. **BRETAUD Mateo** - 00:31:18 (Training Like Pro)")
+                st.write("3. **HERAUD Mickael** - 00:31:41 (Vendée Running 85)")
+                
+                st.markdown("**Femmes :**")
+                st.write("1. 🥇 **FAUGER Axelle** - 00:34:09 (Fors)")
+                st.write("2. **PEROCHAIN Cecile** - 00:40:41 (Damvix)")
+                st.write("3. **SAOUDIN Alexane** - 00:41:03 (Sainte Soulle)")
+
+            with c14:
+                st.markdown("#### 🏃 14 KM (2025)")
+                st.markdown("**Hommes :**")
+                st.write("1. **ALLARD Justin** - 01:04:53 (Bournezeau)")
+                st.write("2. **METAIS Teddy** - 01:06:56 (Saint-Pierre-le-Vieux)")
+                st.write("3. **AIME Franck** - 01:07:01 (Longèves)")
+                
+                st.markdown("**Femmes :**")
+                st.write("1. **VIDOT Joelle** - 01:29:48 (SA Fontenay le Comte)")
+                st.write("2. **FOUR Camille** - 01:31:43 (Liez)")
+                st.write("3. **TALON Clara** - 01:32:47 (Maillezais)")
+
+            with c21:
+                st.markdown("#### 🏃 21 KM (2025)")
+                st.markdown("**Hommes :**")
+                st.write("1. **ROCHETEAU Benjamin** - 01:41:49 (La Roche sur Yon)")
+                st.write("2. **CHAILLOLEAU Antoine** - 01:51:33 (SAF Fontenay le Comte)")
+                st.write("3. **LEFORT Freddy** - 01:51:37 (Sérigné)")
+                
+                st.markdown("**Femmes :**")
+                st.write("1. **BOUREAU Mathilde** - 02:24:31 (Pouzauges)")
+                st.write("2. **GREDELU Flavie** - 02:35:50 (Mernel)")
+                st.write("3. **LUCAS Margaux** - 02:50:11 (Benet)")
+
+        with tab_pod2024:
+            st.info("💡 **Note Speaker 2026 :** Emmanuelle HUMBERT-DROZ-LAURENT (3e du 9 KM en 2024) nous a rejoint chez les **RAIDS DINGUES** cette année !")
+            
+            c9, c18 = st.columns(2)
+            
+            with c9:
+                st.markdown("#### 🏃 9 KM (2024 - 1ère Édition)")
+                st.markdown("**Hommes :**")
+                st.write("1. **GUIGNOUARD Cédric** - 00:32:25 (Aventures Running Segonzac)")
+                st.write("2. **CHABOT Mickael** - 00:34:39")
+                st.write("3. **TEXIER Mathieu** - 00:34:51 (FC2 Sud Vendée)")
+                
+                st.markdown("**Femmes :**")
+                st.write("1. **ROY Léa** - 00:36:59")
+                st.write("2. **SICLON JARRAU Théoline** - 00:38:49")
+                st.write("3. 🥉 **HUMBERT-DROZ-LAURENT Emmanuelle** - 00:42:58")
+
+            with c18:
+                st.markdown("#### 🏃 18 KM (2024 - 1ère Édition)")
+                st.markdown("**Hommes :**")
+                st.write("1. **CHAUSSEE Marc** - 01:16:03 (UA Chateaubourg)")
+                st.write("2. **MENARD Franck** - 01:16:09 (ABV La Chataigneraie)")
+                st.write("3. **ETOURNEAU Charly** - 01:20:29")
+                
+                st.markdown("**Femmes :**")
+                st.write("1. **SCHVARTZ Amandine** - 01:45:34")
+                st.write("2. **DOMENGER Camille** - 01:45:44")
+                st.write("3. **GUIBERT Clémentine** - 01:46:34")
+
+        # -------------------------------------------------------------
+        # SECTION LES PILIERS DE LA COURSE
+        # -------------------------------------------------------------
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
@@ -650,10 +732,10 @@ try:
         cols_evt = st.columns(len(sponsors_evt))
         for idx, (sp_nom, sp_file) in enumerate(sponsors_evt):
             with cols_evt[idx]:
-                try:
+                if os.path.exists(sp_file):
                     st.image(sp_file, use_container_width=True)
-                except Exception:
-                    st.info(f"**{sp_nom}**")
+                else:
+                    st.info(f"🏷️ **{sp_nom}**")
 
         st.markdown("---")
         
@@ -677,10 +759,10 @@ try:
         cols_ann = st.columns(3)
         for idx, (sp_nom, sp_file) in enumerate(sponsors_annuels):
             with cols_ann[idx % 3]:
-                try:
+                if os.path.exists(sp_file):
                     st.image(sp_file, width=220)
-                except Exception:
-                    st.markdown(f"• **{sp_nom}**")
+                else:
+                    st.info(f"🏷️ **{sp_nom}**")
 
 except Exception as e:
     st.error(f"Erreur lors de l'exécution : {e}")
