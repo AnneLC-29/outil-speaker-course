@@ -213,10 +213,18 @@ try:
     st.markdown("---")
 
     # -------------------------------------------------------------
-    # ⚡ BARRE LATERALE : RECHERCHE & RECHARGEMENT CSV
+    # ⚡ BARRE LATERALE : RECHERCHE, MAJ & RECHARGEMENT CSV
     # -------------------------------------------------------------
     st.sidebar.header("⚡ Outils Rapides Speaker")
     
+    # Affichage de la date de dernière modification de coureurs.csv
+    if os.path.exists("coureurs.csv"):
+        mtime = os.path.getmtime("coureurs.csv")
+        last_mod_dt = datetime.fromtimestamp(mtime, tz=tz_france)
+        st.sidebar.caption(f"📅 **Dernier import CSV :** {last_mod_dt.strftime('%d/%m/%Y à %H:%M:%S')}")
+    else:
+        st.sidebar.caption("📅 **Dernier import CSV :** Inconnu")
+
     if st.sidebar.button("🔄 Force Recharger CSV (GitHub)", use_container_width=True):
         st.cache_data.clear()
         st.sidebar.success("Données rechargées !")
@@ -473,7 +481,10 @@ try:
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
-        if has_2025 and has_2024:
+        has_2025_col = 'FOULEES 2025' in df_epreuves.columns
+        has_2024_col = 'FOULEES 2024' in df_epreuves.columns
+
+        if has_2025_col and has_2024_col:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
