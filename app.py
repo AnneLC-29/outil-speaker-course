@@ -183,6 +183,9 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
+    has_2025 = 'FOULEES 2025' in df.columns
+    has_2024 = 'FOULEES 2024' in df.columns
+
     # -------------------------------------------------------------
     # ⏱️ BARRE DU HAUT : COMPTE À REBOURS SAMEDI 3 OCTOBRE 2026
     # -------------------------------------------------------------
@@ -306,11 +309,8 @@ try:
             total_f = len(df_epreuves[df_epreuves['SEXE'] == 'F'])
             total_global = len(df_epreuves)
             
-            has_2025_col = 'FOULEES 2025' in df_epreuves.columns
-            has_2024_col = 'FOULEES 2024' in df_epreuves.columns
-            
-            tot_p2025 = len(df_epreuves[df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025_col else 0
-            tot_p2024 = len(df_epreuves[df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024_col else 0
+            tot_p2025 = len(df_epreuves[df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
+            tot_p2024 = len(df_epreuves[df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
 
             for c in courses_sorted:
                 df_c = df_epreuves[df_epreuves['COURSE'] == c]
@@ -323,8 +323,8 @@ try:
                 h_pct = (h_cnt / tot_c * 100)
                 f_pct = (f_cnt / tot_c * 100)
                 
-                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025_col else 0
-                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024_col else 0
+                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
+                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
                 
                 p2025_pct = (p2025_cnt / tot_c * 100)
                 p2024_pct = (p2024_cnt / tot_c * 100)
@@ -490,7 +490,7 @@ try:
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
-        if has_2025_col and has_2024_col:
+        if has_2025 and has_2024:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
@@ -621,10 +621,10 @@ try:
         
         df_raids_all = df[is_in_official_list | is_adherent_course].copy()
 
-        has_res_2025 = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE")
-        has_res_2024 = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE")
+        has_res_2025_r = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE")
+        has_res_2024_r = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE")
         
-        df_raids = df_raids_all[has_res_2025 | has_res_2024].copy()
+        df_raids = df_raids_all[has_res_2025_r | has_res_2024_r].copy()
 
         if not df_raids.empty:
             df_raids['FOULEES 2025'] = df_raids['FOULEES 2025'].apply(add_medal_prefix)
