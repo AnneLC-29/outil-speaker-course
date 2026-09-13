@@ -306,11 +306,11 @@ try:
             total_f = len(df_epreuves[df_epreuves['SEXE'] == 'F'])
             total_global = len(df_epreuves)
             
-            has_2025 = 'FOULEES 2025' in df_epreuves.columns
-            has_2024 = 'FOULEES 2024' in df_epreuves.columns
+            has_2025_col = 'FOULEES 2025' in df_epreuves.columns
+            has_2024_col = 'FOULEES 2024' in df_epreuves.columns
             
-            tot_p2025 = len(df_epreuves[df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
-            tot_p2024 = len(df_epreuves[df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
+            tot_p2025 = len(df_epreuves[df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025_col else 0
+            tot_p2024 = len(df_epreuves[df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024_col else 0
 
             for c in courses_sorted:
                 df_c = df_epreuves[df_epreuves['COURSE'] == c]
@@ -323,8 +323,8 @@ try:
                 h_pct = (h_cnt / tot_c * 100)
                 f_pct = (f_cnt / tot_c * 100)
                 
-                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
-                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
+                p2025_cnt = len(df_c[df_c['FOULEES 2025'].notna() & (df_c['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025_col else 0
+                p2024_cnt = len(df_c[df_c['FOULEES 2024'].notna() & (df_c['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024_col else 0
                 
                 p2025_pct = (p2025_cnt / tot_c * 100)
                 p2024_pct = (p2024_cnt / tot_c * 100)
@@ -490,7 +490,7 @@ try:
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
-        if has_2025 and has_2024:
+        if has_2025_col and has_2024_col:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
@@ -504,7 +504,11 @@ try:
                 st.caption("A déjà participé aux éditions 2024 ET 2025 !")
                 
                 if not df_fidele_3.empty:
-                    disp_f3 = df_fidele_3[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']]
+                    cols_f3 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
+                    if 'DOSSARD' in df_fidele_3.columns and df_fidele_3['DOSSARD'].notna().any():
+                        cols_f3.insert(0, 'DOSSARD')
+                    
+                    disp_f3 = df_fidele_3[cols_f3]
                     st.dataframe(
                         disp_f3, 
                         use_container_width=True, 
@@ -526,7 +530,11 @@ try:
                 st.caption("A déjà participé en 2024 ou 2025 !")
                 
                 if not df_fidele_at_least_1.empty:
-                    disp_f1 = df_fidele_at_least_1[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']]
+                    cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
+                    if 'DOSSARD' in df_fidele_at_least_1.columns and df_fidele_at_least_1['DOSSARD'].notna().any():
+                        cols_f1.insert(0, 'DOSSARD')
+                        
+                    disp_f1 = df_fidele_at_least_1[cols_f1]
                     st.dataframe(
                         disp_f1, 
                         use_container_width=True, 
@@ -587,7 +595,10 @@ try:
                 )
                 
                 if selected_cat_code and selected_cat_code != "-- Choisir une catégorie --":
-                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='NOM').reset_index(drop=True)
+                    cols_cat = ['NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']
+                    if 'DOSSARD' in df_epreuves.columns:
+                        cols_cat.insert(0, 'DOSSARD')
+                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][cols_cat].sort_values(by='NOM').reset_index(drop=True)
                     st.write(f"👥 **{len(df_cat_coureurs)} coureur(s)** dans la catégorie **{selected_cat_code}** ({CATEGORIES_AGE.get(selected_cat_code, '')}) :")
                     st.dataframe(df_cat_coureurs, use_container_width=True, hide_index=True)
                 else:
@@ -788,7 +799,9 @@ try:
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
                     st.markdown(f"📊 **Répartition :** {dist_str}")
                     
-                    df_v_display = df_ville_all[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_v = ['NOM', 'PRENOM', 'COURSE', 'Catégorie']
+                    if 'DOSSARD' in df_ville_all.columns: cols_v.insert(0, 'DOSSARD')
+                    df_v_display = df_ville_all[cols_v].sort_values(by='COURSE').reset_index(drop=True)
                     st.dataframe(df_v_display, use_container_width=True, hide_index=True)
 
                 if is_club_valid:
@@ -799,7 +812,9 @@ try:
                     dist_club_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_club_counts.items()])
                     st.markdown(f"📊 **Répartition par épreuve :** {dist_club_str}")
                     
-                    df_club_display = df_club_all[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_c = ['NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']
+                    if 'DOSSARD' in df_club_all.columns: cols_c.insert(0, 'DOSSARD')
+                    df_club_display = df_club_all[cols_c].sort_values(by='COURSE').reset_index(drop=True)
                     st.dataframe(df_club_display, use_container_width=True, hide_index=True)
 
             else:
@@ -891,7 +906,9 @@ try:
                 )
                 
                 if selected_club and selected_club != "-- Choisir un club --":
-                    coureurs_club = df[df['CLUB'] == selected_club][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_cb = ['NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']
+                    if 'DOSSARD' in df.columns: cols_cb.insert(0, 'DOSSARD')
+                    coureurs_club = df[df['CLUB'] == selected_club][cols_cb].sort_values(by='COURSE').reset_index(drop=True)
                     st.write(f"👥 **{len(coureurs_club)} participant(s)** inscrit(s) pour **{selected_club}** :")
                     st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
                 else:
@@ -949,7 +966,9 @@ try:
                 )
                 
                 if selected_ville and selected_ville != "-- Choisir une ville --":
-                    coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_vl = ['NOM', 'PRENOM', 'COURSE', 'Catégorie']
+                    if 'DOSSARD' in df.columns: cols_vl.insert(0, 'DOSSARD')
+                    coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][cols_vl].sort_values(by='COURSE').reset_index(drop=True)
                     st.write(f"🏘️ **{len(coureurs_ville)} participant(s)** originaire(s) de **{selected_ville}** :")
                     st.dataframe(coureurs_ville, use_container_width=True, hide_index=True)
                 else:
