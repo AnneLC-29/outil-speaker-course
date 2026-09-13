@@ -98,6 +98,13 @@ def add_medal_prefix(res_str):
             return f"🥉 {s}"
     return s
 
+def extract_rank_number(res_str):
+    if pd.isna(res_str): return 9999
+    match = re.search(r'(\d+)', str(res_str))
+    if match:
+        return int(match.group(1))
+    return 9999
+
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
@@ -195,7 +202,6 @@ try:
 
     has_2025 = 'FOULEES 2025' in df.columns
     has_2024 = 'FOULEES 2024' in df.columns
-    has_boldair = 'BOL D\'AIR 2026' in df.columns or 'BOL D AIR 2026' in df.columns or 'BOL DAIR 2026' in df.columns
 
     col_boldair = None
     for c in df.columns:
@@ -416,22 +422,39 @@ try:
             )
 
         # -------------------------------------------------------------
-        # FOCUS BOL D'AIR 2026 (si colonne présente)
+        # FOCUS BOL D'AIR 2026 (RECAP STATS ET CLASSEMENT DU MEILLEUR AU MOINS BON)
         # -------------------------------------------------------------
         if col_boldair:
             st.markdown("---")
             st.markdown("### 🌲 Performances & Podiums au Bol d'Air 2026")
-            st.caption("Participants de cette édition ayant couru au Bol d'Air 2026 :")
             
             df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip() != "") & (df[col_boldair].astype(str).str.upper() != "NONE")].copy()
+            
             if not df_ba.empty:
+                # 1. RÉCAPITULATIF DU NOMBRE DE PARTICIPANTS (TOTAL ET PAR DISTANCE)
+                total_ba = len(df_ba)
+                dist_counts = df_ba['COURSE'].value_counts()
+                
+                cols_metrics = st.columns(1 + len(dist_counts))
+                cols_metrics[0].metric("🌲 Total Participants Bol d'Air", total_ba)
+                
+                for idx, (dist_name, count_val) in enumerate(dist_counts.items()):
+                    cols_metrics[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
+
+                st.markdown(" ")
+                
+                # 2. TRI ET CLASSEMENT DU MEILLEUR AU MOINS BON (TOUTES COURSES CONFONDUES)
+                df_ba['RANK_NUM'] = df_ba[col_boldair].apply(extract_rank_number)
                 df_ba['RÉSULTAT BOL D\'AIR'] = df_ba[col_boldair].apply(add_medal_prefix)
+                
+                df_ba_sorted = df_ba.sort_values(by=['RANK_NUM', 'NOM']).reset_index(drop=True)
+                
                 cols_ba = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT BOL D\'AIR']
-                if 'DOSSARD' in df_ba.columns and df_ba['DOSSARD'].notna().any():
+                if 'DOSSARD' in df_ba_sorted.columns and df_ba_sorted['DOSSARD'].notna().any():
                     cols_ba.insert(0, 'DOSSARD')
                 
                 st.dataframe(
-                    df_ba[cols_ba].sort_values(by='NOM').reset_index(drop=True),
+                    df_ba_sorted[cols_ba],
                     use_container_width=True,
                     hide_index=True,
                     column_config={
@@ -439,7 +462,7 @@ try:
                         "NOM": "Nom",
                         "PRENOM": "Prénom",
                         "COURSE": "Épreuve 2026",
-                        "RÉSULTAT BOL D'AIR": "Résultat Bol d'Air 2026"
+                        "RÉSULTAT BOL D'AIR": "Résultat Bol d'Air 2026 (Classé)"
                     }
                 )
             else:
@@ -799,7 +822,7 @@ try:
                         st.write("Aucun commentaire spécifique.")
 
                 with col_hist:
-                    st.markdown("### 📜 Historique éditions précédentes")
+                    st.markdown("### 📜 Historique éditions précédente")
                     f2025 = coureur.get('FOULEES 2025', None)
                     f2024 = coureur.get('FOULEES 2024', None)
                     
