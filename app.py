@@ -87,7 +87,7 @@ def add_medal_prefix(res_str):
     if pd.isna(res_str) or str(res_str).strip() == "" or str(res_str).upper() == "NONE":
         return "-"
     s = str(res_str).strip()
-    match = re.search(r'^\s*(\d+)\s*([MF])', s, re.IGNORECASE)
+    match = re.search(r'^\s*(\d+)\s*([MF]?)', s, re.IGNORECASE)
     if match:
         rank = int(match.group(1))
         if rank == 1:
@@ -102,14 +102,33 @@ def add_medal_prefix(res_str):
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
     
+    # Nettoyage des noms de colonnes (suppression des espaces superflus)
+    df.columns = [str(c).strip() for c in df.columns]
+
     if 'NOM' in df.columns:
         df = df[df['NOM'].notna() & (df['NOM'].astype(str).str.strip() != "")]
-        
-    df['DOSSARD'] = pd.to_numeric(df['DOSSARD'], errors='coerce')
-    df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
+
+    # Sécurisation de la colonne DOSSARD
+    col_dossard = None
+    for c in df.columns:
+        if c.upper() in ['DOSSARD', 'DOS', 'N° DOSSARD', 'N°DOSSARD']:
+            col_dossard = c
+            break
+
+    if col_dossard:
+        df['DOSSARD'] = pd.to_numeric(df[col_dossard], errors='coerce')
+    else:
+        df['DOSSARD'] = None
+
+    if 'Indice BETRAIL' in df.columns:
+        df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
+    else:
+        df['Indice BETRAIL'] = None
     
     if 'SEXE' in df.columns:
         df['SEXE'] = df['SEXE'].astype(str).str.strip().str.upper()
+    else:
+        df['SEXE'] = ""
 
     def extract_club(val):
         if pd.isna(val):
@@ -130,8 +149,9 @@ def load_and_process_data():
             return nom_ville, cp
         return ville_part, None
 
-    df['CLUB'] = df['VILLE'].apply(extract_club)
-    res_villes = df['VILLE'].apply(extract_ville_cp)
+    ville_col = df['VILLE'] if 'VILLE' in df.columns else pd.Series([""] * len(df))
+    df['CLUB'] = ville_col.apply(extract_club)
+    res_villes = ville_col.apply(extract_ville_cp)
     df['NOM_VILLE'] = [r[0] for r in res_villes]
     df['CODE_POSTAL'] = [r[1] for r in res_villes]
     df['VILLE_CLEAN'] = df.apply(lambda r: f"{r['NOM_VILLE']} ({r['CODE_POSTAL']})" if pd.notna(r['CODE_POSTAL']) else r['NOM_VILLE'], axis=1)
@@ -173,6 +193,16 @@ def geolocaliser_communes(df_villes):
 try:
     df = load_and_process_data()
 
+    has_2025 = 'FOULEES 2025' in df.columns
+    has_2024 = 'FOULEES 2024' in df.columns
+    has_boldair = 'BOL D\'AIR 2026' in df.columns or 'BOL D AIR 2026' in df.columns or 'BOL DAIR 2026' in df.columns
+
+    col_boldair = None
+    for c in df.columns:
+        if "BOL" in c.upper() and "2026" in c.upper():
+            col_boldair = c
+            break
+
     # -------------------------------------------------------------
     # ⏱️ BARRE DU HAUT : COMPTE À REBOURS SAMEDI 3 OCTOBRE 2026
     # -------------------------------------------------------------
@@ -213,11 +243,10 @@ try:
     st.markdown("---")
 
     # -------------------------------------------------------------
-    # ⚡ BARRE LATERALE : RECHERCHE, MAJ & RECHARGEMENT CSV
+    # ⚡ BARRE LATERALE : RECHERCHE & RECHARGEMENT CSV & DATE MAJ
     # -------------------------------------------------------------
     st.sidebar.header("⚡ Outils Rapides Speaker")
     
-    # Affichage de la date de dernière modification de coureurs.csv
     if os.path.exists("coureurs.csv"):
         mtime = os.path.getmtime("coureurs.csv")
         last_mod_dt = datetime.fromtimestamp(mtime, tz=tz_france)
@@ -234,7 +263,7 @@ try:
     quick_query = st.sidebar.text_input("🔍 N° Dossard ou Nom :", placeholder="Tapez ici...").strip()
     
     if quick_query:
-        if quick_query.isdigit():
+        if quick_query.isdigit() and 'DOSSARD' in df.columns:
             res_q = df[df['DOSSARD'] == int(quick_query)]
         else:
             res_q = df[df['NOM_COMPLET'].str.contains(quick_query.upper(), na=False)]
@@ -242,17 +271,22 @@ try:
         if not res_q.empty:
             if len(res_q) > 1:
                 st.sidebar.info(f"{len(res_q)} trouvés :")
-                opts_q = {f"#{r['DOSSARD']} {r['NOM']} {r['PRENOM']}": idx for idx, r in res_q.iterrows()}
+                opts_q = {f"#{int(r['DOSSARD']) if pd.notna(r.get('DOSSARD')) else 'N/A'} {r.get('NOM','')} {r.get('PRENOM','')}": idx for idx, r in res_q.iterrows()}
                 sel_q = st.sidebar.selectbox("Choisir :", options=list(opts_q.keys()))
                 c_q = res_q.loc[opts_q[sel_q]]
             else:
                 c_q = res_q.iloc[0]
                 
             st.sidebar.success(f"🏃 **{c_q.get('NOM','')} {c_q.get('PRENOM','')}**")
-            st.sidebar.write(f"• **Dossard :** #{int(c_q['DOSSARD']) if pd.notna(c_q['DOSSARD']) else 'N/A'}")
+            dos_val = int(c_q['DOSSARD']) if pd.notna(c_q.get('DOSSARD')) else 'N/A'
+            st.sidebar.write(f"• **Dossard :** #{dos_val}")
             st.sidebar.write(f"• **Course :** {c_q.get('COURSE','N/A')}")
             st.sidebar.write(f"• **Catégorie :** {c_q.get('Catégorie','N/A')}")
             st.sidebar.write(f"• **Ville/Club :** {c_q.get('VILLE_CLEAN','N/A')}")
+            
+            if col_boldair and pd.notna(c_q.get(col_boldair)) and str(c_q.get(col_boldair)).strip() != "":
+                st.sidebar.info(f"🌲 **Bol d'Air 2026 :** {c_q.get(col_boldair)}")
+                
             if pd.notna(c_q.get('Indice BETRAIL')):
                 st.sidebar.write(f"• **Betrail :** {c_q['Indice BETRAIL']}")
             if pd.notna(c_q.get('COMMENTAIRES')):
@@ -296,9 +330,6 @@ try:
             total_h = len(df_epreuves[df_epreuves['SEXE'] == 'H'])
             total_f = len(df_epreuves[df_epreuves['SEXE'] == 'F'])
             total_global = len(df_epreuves)
-            
-            has_2025 = 'FOULEES 2025' in df_epreuves.columns
-            has_2024 = 'FOULEES 2024' in df_epreuves.columns
             
             tot_p2025 = len(df_epreuves[df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")]) if has_2025 else 0
             tot_p2024 = len(df_epreuves[df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")]) if has_2024 else 0
@@ -383,6 +414,36 @@ try:
                 use_container_width=True, 
                 hide_index=True
             )
+
+        # -------------------------------------------------------------
+        # FOCUS BOL D'AIR 2026 (si colonne présente)
+        # -------------------------------------------------------------
+        if col_boldair:
+            st.markdown("---")
+            st.markdown("### 🌲 Performances & Podiums au Bol d'Air 2026")
+            st.caption("Participants de cette édition ayant couru au Bol d'Air 2026 :")
+            
+            df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip() != "") & (df[col_boldair].astype(str).str.upper() != "NONE")].copy()
+            if not df_ba.empty:
+                df_ba['RÉSULTAT BOL D\'AIR'] = df_ba[col_boldair].apply(add_medal_prefix)
+                cols_ba = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT BOL D\'AIR']
+                if 'DOSSARD' in df_ba.columns and df_ba['DOSSARD'].notna().any():
+                    cols_ba.insert(0, 'DOSSARD')
+                
+                st.dataframe(
+                    df_ba[cols_ba].sort_values(by='NOM').reset_index(drop=True),
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "DOSSARD": "Dossard",
+                        "NOM": "Nom",
+                        "PRENOM": "Prénom",
+                        "COURSE": "Épreuve 2026",
+                        "RÉSULTAT BOL D'AIR": "Résultat Bol d'Air 2026"
+                    }
+                )
+            else:
+                st.write("Aucun participant identifié pour l'instant sur le Bol d'Air 2026.")
 
         # -------------------------------------------------------------
         # SECTION PODIUMS & RANGS DE FIN DE COURSE HISTORIQUES
@@ -481,15 +542,12 @@ try:
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
-        has_2025_col = 'FOULEES 2025' in df_epreuves.columns
-        has_2024_col = 'FOULEES 2024' in df_epreuves.columns
-
-        if has_2025_col and has_2024_col:
+        if has_2025 and has_2024:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
-            df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
-            df_fidele_at_least_1 = df_epreuves[cond_2025 | cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
+            df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
+            df_fidele_at_least_1 = df_epreuves[cond_2025 | cond_2024].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
             col_f3, col_f1 = st.columns(2)
             
@@ -498,7 +556,11 @@ try:
                 st.caption("A déjà participé aux éditions 2024 ET 2025 !")
                 
                 if not df_fidele_3.empty:
-                    disp_f3 = df_fidele_3[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']]
+                    cols_f3 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
+                    if 'DOSSARD' in df_fidele_3.columns and df_fidele_3['DOSSARD'].notna().any():
+                        cols_f3.insert(0, 'DOSSARD')
+                    
+                    disp_f3 = df_fidele_3[cols_f3]
                     st.dataframe(
                         disp_f3, 
                         use_container_width=True, 
@@ -520,7 +582,11 @@ try:
                 st.caption("A déjà participé en 2024 ou 2025 !")
                 
                 if not df_fidele_at_least_1.empty:
-                    disp_f1 = df_fidele_at_least_1[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']]
+                    cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
+                    if 'DOSSARD' in df_fidele_at_least_1.columns and df_fidele_at_least_1['DOSSARD'].notna().any():
+                        cols_f1.insert(0, 'DOSSARD')
+                        
+                    disp_f1 = df_fidele_at_least_1[cols_f1]
                     st.dataframe(
                         disp_f1, 
                         use_container_width=True, 
@@ -581,7 +647,10 @@ try:
                 )
                 
                 if selected_cat_code and selected_cat_code != "-- Choisir une catégorie --":
-                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='DOSSARD').reset_index(drop=True)
+                    cols_cat = ['NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']
+                    if 'DOSSARD' in df_epreuves.columns and df_epreuves['DOSSARD'].notna().any():
+                        cols_cat.insert(0, 'DOSSARD')
+                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][cols_cat].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
                     st.write(f"👥 **{len(df_cat_coureurs)} coureur(s)** dans la catégorie **{selected_cat_code}** ({CATEGORIES_AGE.get(selected_cat_code, '')}) :")
                     st.dataframe(df_cat_coureurs, use_container_width=True, hide_index=True)
                 else:
@@ -592,7 +661,7 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (MÉDAILLES)
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES
     # -------------------------------------------------------------
     with tab_raids:
         st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
@@ -604,14 +673,14 @@ try:
         
         df_raids_all = df[is_in_official_list | is_adherent_course].copy()
 
-        has_res_2025 = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE")
-        has_res_2024 = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE")
+        has_res_2025_r = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE") if has_2025 else pd.Series([False]*len(df_raids_all))
+        has_res_2024_r = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE") if has_2024 else pd.Series([False]*len(df_raids_all))
         
-        df_raids = df_raids_all[has_res_2025 | has_res_2024].copy()
+        df_raids = df_raids_all[has_res_2025_r | has_res_2024_r].copy()
 
         if not df_raids.empty:
-            df_raids['FOULEES 2025'] = df_raids['FOULEES 2025'].apply(add_medal_prefix)
-            df_raids['FOULEES 2024'] = df_raids['FOULEES 2024'].apply(add_medal_prefix)
+            if has_2025: df_raids['FOULEES 2025'] = df_raids['FOULEES 2025'].apply(add_medal_prefix)
+            if has_2024: df_raids['FOULEES 2024'] = df_raids['FOULEES 2024'].apply(add_medal_prefix)
             
             df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
@@ -630,8 +699,8 @@ try:
                 df_raids_disp = df_raids_sorted
 
             cols_show = ['NOM', 'PRENOM']
-            if 'FOULEES 2025' in df.columns: cols_show.append('FOULEES 2025')
-            if 'FOULEES 2024' in df.columns: cols_show.append('FOULEES 2024')
+            if has_2025: cols_show.append('FOULEES 2025')
+            if has_2024: cols_show.append('FOULEES 2024')
             
             st.dataframe(
                 df_raids_disp[cols_show], 
@@ -659,7 +728,7 @@ try:
         ).strip()
 
         if query_input:
-            if query_input.isdigit():
+            if query_input.isdigit() and 'DOSSARD' in df.columns:
                 dossard_num = int(query_input)
                 resultats = df[df['DOSSARD'] == dossard_num]
             else:
@@ -670,7 +739,7 @@ try:
                 if len(resultats) > 1:
                     st.info(f"💡 {len(resultats)} participants correspondent à votre recherche :")
                     options_dict = {
-                        f"Dossard {r['DOSSARD']} - {r['NOM']} {r['PRENOM']} ({r['COURSE']})": idx 
+                        f"Dossard {int(r['DOSSARD']) if pd.notna(r.get('DOSSARD')) else 'N/A'} - {r.get('NOM','')} {r.get('PRENOM','')} ({r.get('COURSE','')})": idx 
                         for idx, r in resultats.iterrows()
                     }
                     selected_label = st.selectbox("Sélectionnez le participant :", options=list(options_dict.keys()))
@@ -687,7 +756,7 @@ try:
                 cat_code = str(coureur.get('Catégorie', 'N/A')).strip().upper()
                 cat_label = CATEGORIES_AGE.get(cat_code, cat_code)
                 
-                dossard_str = f"N° {int(coureur['DOSSARD'])}" if pd.notna(coureur['DOSSARD']) else "Non attribué"
+                dossard_str = f"N° {int(coureur['DOSSARD'])}" if pd.notna(coureur.get('DOSSARD')) else "Non attribué"
                 st.subheader(f"Dossard : **{dossard_str}** | Épreuve : **{coureur.get('COURSE', 'N/A')}** | Catégorie : **{cat_label}** ({coureur.get('SEXE', 'N/A')})")
                 
                 if is_club_valid:
@@ -719,15 +788,18 @@ try:
                 col_com, col_hist = st.columns(2)
                 
                 with col_com:
-                    st.markdown("### 📝 Commentaires / Notes Speaker")
+                    st.markdown("### 📝 Commentaires & Notes Speaker")
+                    if col_boldair and pd.notna(coureur.get(col_boldair)) and str(coureur.get(col_boldair)).strip() != "":
+                        st.info(f"🌲 **Bol d'Air 2026 :** {coureur.get(col_boldair)}")
+                    
                     commentaires = coureur.get('COMMENTAIRES', None)
                     if pd.notna(commentaires) and str(commentaires).strip() != "":
-                        st.info(f"**Note :** {commentaires}")
-                    else:
+                        st.info(f"📝 **Note :** {commentaires}")
+                    if (not col_boldair or pd.isna(coureur.get(col_boldair))) and (pd.isna(commentaires) or str(commentaires).strip() == ""):
                         st.write("Aucun commentaire spécifique.")
 
                 with col_hist:
-                    st.markdown("### 📜 Historique édition précédente")
+                    st.markdown("### 📜 Historique éditions précédentes")
                     f2025 = coureur.get('FOULEES 2025', None)
                     f2024 = coureur.get('FOULEES 2024', None)
                     
@@ -782,7 +854,10 @@ try:
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
                     st.markdown(f"📊 **Répartition :** {dist_str}")
                     
-                    df_v_display = df_ville_all[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_v = ['NOM', 'PRENOM', 'COURSE', 'Catégorie']
+                    if 'DOSSARD' in df_ville_all.columns and df_ville_all['DOSSARD'].notna().any(): 
+                        cols_v.insert(0, 'DOSSARD')
+                    df_v_display = df_ville_all[cols_v].sort_values(by='COURSE').reset_index(drop=True)
                     st.dataframe(df_v_display, use_container_width=True, hide_index=True)
 
                 if is_club_valid:
@@ -793,7 +868,10 @@ try:
                     dist_club_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_club_counts.items()])
                     st.markdown(f"📊 **Répartition par épreuve :** {dist_club_str}")
                     
-                    df_club_display = df_club_all[['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_c = ['NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']
+                    if 'DOSSARD' in df_club_all.columns and df_club_all['DOSSARD'].notna().any(): 
+                        cols_c.insert(0, 'DOSSARD')
+                    df_club_display = df_club_all[cols_c].sort_values(by='COURSE').reset_index(drop=True)
                     st.dataframe(df_club_display, use_container_width=True, hide_index=True)
 
             else:
@@ -827,7 +905,9 @@ try:
                     top5_f = df_course[df_course['SEXE'] == 'F'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
                     
                     if not top5_f.empty:
-                        top5_f_display = top5_f[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']].reset_index(drop=True)
+                        cols_f = ['NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']
+                        if 'DOSSARD' in top5_f.columns and top5_f['DOSSARD'].notna().any(): cols_f.insert(0, 'DOSSARD')
+                        top5_f_display = top5_f[cols_f].reset_index(drop=True)
                         top5_f_display.index += 1
                         st.dataframe(
                             top5_f_display, 
@@ -848,7 +928,9 @@ try:
                     top5_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
                     
                     if not top5_h.empty:
-                        top5_h_display = top5_h[['DOSSARD', 'NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']].reset_index(drop=True)
+                        cols_h = ['NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']
+                        if 'DOSSARD' in top5_h.columns and top5_h['DOSSARD'].notna().any(): cols_h.insert(0, 'DOSSARD')
+                        top5_h_display = top5_h[cols_h].reset_index(drop=True)
                         top5_h_display.index += 1
                         st.dataframe(
                             top5_h_display, 
@@ -885,7 +967,9 @@ try:
                 )
                 
                 if selected_club and selected_club != "-- Choisir un club --":
-                    coureurs_club = df[df['CLUB'] == selected_club][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_cb = ['NOM', 'PRENOM', 'COURSE', 'Catégorie', 'SEXE']
+                    if 'DOSSARD' in df.columns and df['DOSSARD'].notna().any(): cols_cb.insert(0, 'DOSSARD')
+                    coureurs_club = df[df['CLUB'] == selected_club][cols_cb].sort_values(by='COURSE').reset_index(drop=True)
                     st.write(f"👥 **{len(coureurs_club)} participant(s)** inscrit(s) pour **{selected_club}** :")
                     st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
                 else:
@@ -943,7 +1027,9 @@ try:
                 )
                 
                 if selected_ville and selected_ville != "-- Choisir une ville --":
-                    coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'Catégorie']].sort_values(by='COURSE').reset_index(drop=True)
+                    cols_vl = ['NOM', 'PRENOM', 'COURSE', 'Catégorie']
+                    if 'DOSSARD' in df.columns and df['DOSSARD'].notna().any(): cols_vl.insert(0, 'DOSSARD')
+                    coureurs_ville = df[df['VILLE_CLEAN'] == selected_ville][cols_vl].sort_values(by='COURSE').reset_index(drop=True)
                     st.write(f"🏘️ **{len(coureurs_ville)} participant(s)** originaire(s) de **{selected_ville}** :")
                     st.dataframe(coureurs_ville, use_container_width=True, hide_index=True)
                 else:
@@ -963,23 +1049,33 @@ try:
         # 1. SPONSORS ÉVÉNEMENTIELS
         st.markdown("### 🏆 Partenaires Événementiels")
         sponsors_evt = [
-            ("Hyper U", "HYPER U.png"),
-            ("Intersport", "Intersport.png"),
-            ("PAYS DE FONTENAY", "PAYS DE FONTENAY.png"),
-            ("LES VERGERS DE VENDEE", "VERGERS DE VENDEE.png")
+            ("Hyper U", "HYPER U.png", None),
+            ("Intersport", "Intersport.png", None),
+            ("Pays de Fontenay", "PAYS DE FONTENAY.png", None),
+            ("Les Vergers de Vendée", "VERGERS DE VENDEE.png", None),
+            ("TC Traiteur", "TC TRAITEUR.png", "150€ pour les dossards"),
+            ("La Cibulle", "LA CIBULL.png" if os.path.exists("LA CIBULL.png") else "LA CIBULLE.png", "-10% fûts + 6 réglettes"),
+            ("Vendée Marais Poitevin", "mvp.png", "Kits parcours orientation"),
+            ("Valega", "VALEGA.png", "Massage de 45 min"),
+            ("AXA", "AXA.png", "Une cafetière"),
+            ("Bioporc", "BIOPORC.png", "3 terrines"),
+            ("Pâtés Lison", "PATES LISON.png", "3 lots de pâtes"),
+            ("L'Escale", "L'ESCALE.png", None)
         ]
         
-        cols_evt = st.columns(len(sponsors_evt))
-        for idx, (sp_nom, sp_file) in enumerate(sponsors_evt):
-            with cols_evt[idx]:
+        cols_evt = st.columns(4)
+        for idx, (sp_nom, sp_file, sp_desc) in enumerate(sponsors_evt):
+            with cols_evt[idx % 4]:
                 if os.path.exists(sp_file):
                     st.image(sp_file, use_container_width=True)
                 else:
                     st.info(f"🏷️ **{sp_nom}**")
+                if sp_desc:
+                    st.caption(f"🎁 {sp_desc}")
 
         st.markdown("---")
         
-        # 2. SPONSORS ANNUELS
+        # 2. SPONSORS ANNUELS (SANTE DIFFUSION RETIRÉ)
         st.markdown("### 🌟 Sponsors Annuels")
         sponsors_annuels = [
             ("BERNARD JOHANNE", "BERNARD JOHANNE.png"),
@@ -990,7 +1086,6 @@ try:
             ("MAISON BAUDRY", "MAISON BAUDRY.png"),
             ("MAISON GOUIN", "MAISON GOUIN.png"),
             ("ROBIN", "ROBIN.png"),
-            ("SANTE DIFFUSION", "SANTE DIFFUSION.png"),
             ("SIGNALISATION 85", "SIGNALISATION 85.png"),
             ("SYMTA PIECES", "SYMTA PIECES.png"),
             ("VINCENDEAU AGENCEMENT", "VICENDEAU AGENCEMENT.png")
