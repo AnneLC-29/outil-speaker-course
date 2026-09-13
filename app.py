@@ -105,11 +105,20 @@ def load_and_process_data():
     if 'NOM' in df.columns:
         df = df[df['NOM'].notna() & (df['NOM'].astype(str).str.strip() != "")]
         
-    df['DOSSARD'] = pd.to_numeric(df['DOSSARD'], errors='coerce')
-    df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
+    if 'DOSSARD' in df.columns:
+        df['DOSSARD'] = pd.to_numeric(df['DOSSARD'], errors='coerce')
+    else:
+        df['DOSSARD'] = None
+        
+    if 'Indice BETRAIL' in df.columns:
+        df['Indice BETRAIL'] = pd.to_numeric(df['Indice BETRAIL'], errors='coerce')
+    else:
+        df['Indice BETRAIL'] = None
     
     if 'SEXE' in df.columns:
         df['SEXE'] = df['SEXE'].astype(str).str.strip().str.upper()
+    else:
+        df['SEXE'] = ""
 
     def extract_club(val):
         if pd.isna(val):
@@ -130,8 +139,9 @@ def load_and_process_data():
             return nom_ville, cp
         return ville_part, None
 
-    df['CLUB'] = df['VILLE'].apply(extract_club)
-    res_villes = df['VILLE'].apply(extract_ville_cp)
+    ville_col = df['VILLE'] if 'VILLE' in df.columns else pd.Series([""] * len(df))
+    df['CLUB'] = ville_col.apply(extract_club)
+    res_villes = ville_col.apply(extract_ville_cp)
     df['NOM_VILLE'] = [r[0] for r in res_villes]
     df['CODE_POSTAL'] = [r[1] for r in res_villes]
     df['VILLE_CLEAN'] = df.apply(lambda r: f"{r['NOM_VILLE']} ({r['CODE_POSTAL']})" if pd.notna(r['CODE_POSTAL']) else r['NOM_VILLE'], axis=1)
@@ -217,7 +227,6 @@ try:
     # -------------------------------------------------------------
     st.sidebar.header("⚡ Outils Rapides Speaker")
     
-    # RUPTURE / DATE DE DERNIÈRE MODIFICATION DU CSV
     if os.path.exists("coureurs.csv"):
         mtime = os.path.getmtime("coureurs.csv")
         last_mod_dt = datetime.fromtimestamp(mtime, tz=tz_france)
@@ -242,7 +251,7 @@ try:
         if not res_q.empty:
             if len(res_q) > 1:
                 st.sidebar.info(f"{len(res_q)} trouvés :")
-                opts_q = {f"#{r['DOSSARD']} {r['NOM']} {r['PRENOM']}": idx for idx, r in res_q.iterrows()}
+                opts_q = {f"#{int(r['DOSSARD']) if pd.notna(r['DOSSARD']) else 'N/A'} {r.get('NOM','')} {r.get('PRENOM','')}": idx for idx, r in res_q.iterrows()}
                 sel_q = st.sidebar.selectbox("Choisir :", options=list(opts_q.keys()))
                 c_q = res_q.loc[opts_q[sel_q]]
             else:
@@ -485,8 +494,8 @@ try:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
-            df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
-            df_fidele_at_least_1 = df_epreuves[cond_2025 | cond_2024].sort_values(by='DOSSARD').reset_index(drop=True)
+            df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by='NOM').reset_index(drop=True)
+            df_fidele_at_least_1 = df_epreuves[cond_2025 | cond_2024].sort_values(by='NOM').reset_index(drop=True)
             
             col_f3, col_f1 = st.columns(2)
             
@@ -578,7 +587,7 @@ try:
                 )
                 
                 if selected_cat_code and selected_cat_code != "-- Choisir une catégorie --":
-                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='DOSSARD').reset_index(drop=True)
+                    df_cat_coureurs = df_epreuves[df_epreuves['Catégorie'].astype(str).str.strip().str.upper() == selected_cat_code][['DOSSARD', 'NOM', 'PRENOM', 'COURSE', 'SEXE', 'VILLE_CLEAN']].sort_values(by='NOM').reset_index(drop=True)
                     st.write(f"👥 **{len(df_cat_coureurs)} coureur(s)** dans la catégorie **{selected_cat_code}** ({CATEGORIES_AGE.get(selected_cat_code, '')}) :")
                     st.dataframe(df_cat_coureurs, use_container_width=True, hide_index=True)
                 else:
@@ -589,7 +598,7 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES (MÉDAILLES)
+    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES
     # -------------------------------------------------------------
     with tab_raids:
         st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
@@ -667,7 +676,7 @@ try:
                 if len(resultats) > 1:
                     st.info(f"💡 {len(resultats)} participants correspondent à votre recherche :")
                     options_dict = {
-                        f"Dossard {r['DOSSARD']} - {r['NOM']} {r['PRENOM']} ({r['COURSE']})": idx 
+                        f"Dossard {int(r['DOSSARD']) if pd.notna(r['DOSSARD']) else 'N/A'} - {r.get('NOM','')} {r.get('PRENOM','')} ({r.get('COURSE','')})": idx 
                         for idx, r in resultats.iterrows()
                     }
                     selected_label = st.selectbox("Sélectionnez le participant :", options=list(options_dict.keys()))
