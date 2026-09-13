@@ -213,10 +213,18 @@ try:
     st.markdown("---")
 
     # -------------------------------------------------------------
-    # ⚡ BARRE LATERALE : RECHERCHE & RECHARGEMENT CSV
+    # ⚡ BARRE LATERALE : RECHERCHE & RECHARGEMENT CSV & DATE MAJ
     # -------------------------------------------------------------
     st.sidebar.header("⚡ Outils Rapides Speaker")
     
+    # RUPTURE / DATE DE DERNIÈRE MODIFICATION DU CSV
+    if os.path.exists("coureurs.csv"):
+        mtime = os.path.getmtime("coureurs.csv")
+        last_mod_dt = datetime.fromtimestamp(mtime, tz=tz_france)
+        st.sidebar.caption(f"📅 **Dernier import CSV :** {last_mod_dt.strftime('%d/%m/%Y à %H:%M:%S')}")
+    else:
+        st.sidebar.caption("📅 **Dernier import CSV :** Inconnu")
+
     if st.sidebar.button("🔄 Force Recharger CSV (GitHub)", use_container_width=True):
         st.cache_data.clear()
         st.sidebar.success("Données rechargées !")
