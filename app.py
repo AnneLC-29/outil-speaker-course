@@ -12,7 +12,7 @@ from streamlit_folium import st_folium
 # Configuration de la page
 st.set_page_config(page_title="Outil Speaker Course", layout="wide")
 
-st.title("🎙️ Outil Speaker - Foulées Raids Dingues")
+st.title("🎙️ Samedi 03 Octobre 2026 - 3ème édition des Foulées des Raids Dingues")
 
 # Dictionnaire des catégories FFA avec tranches d'âge
 CATEGORIES_AGE = {
