@@ -246,6 +246,40 @@ try:
     with col_h3:
         st.metric("🚩 8 KM & Marche (03/10 à 16h45)", format_td(diff_1645))
 
+    # -------------------------------------------------------------
+    # 📊 BARRES DE CHARGE / REMPLISSAGE COURSES (150 PLACES / COURSE)
+    # -------------------------------------------------------------
+    st.markdown("##### 🎯 Taux de Remplissage des Épreuves (Quota : 150 places / course)")
+    
+    MAX_PLACES = 150
+    df_real_courses = df[df['COURSE'].notna() & (~df['COURSE'].astype(str).str.upper().str.contains("ADHERENT"))] if 'COURSE' in df.columns else pd.DataFrame()
+    
+    # Calcul des effectifs par course
+    def get_count(pattern):
+        if df_real_courses.empty: return 0
+        return len(df_real_courses[df_real_courses['COURSE'].astype(str).str.contains(pattern, case=False, na=False)])
+
+    nb_8k = get_count("8")
+    nb_15k = get_count("15")
+    nb_25k = get_count("25")
+
+    c_c1, c_c2, c_c3 = st.columns(3)
+    
+    with c_c1:
+        pct_8k = min(1.0, nb_8k / MAX_PLACES)
+        st.write(f"🏃 **8 KM** : **{nb_8k} / {MAX_PLACES}** inscrits (**{pct_8k*100:.1f}%**)")
+        st.progress(pct_8k)
+        
+    with c_c2:
+        pct_15k = min(1.0, nb_15k / MAX_PLACES)
+        st.write(f"🏃 **15 KM** : **{nb_15k} / {MAX_PLACES}** inscrits (**{pct_15k*100:.1f}%**)")
+        st.progress(pct_15k)
+        
+    with c_c3:
+        pct_25k = min(1.0, nb_25k / MAX_PLACES)
+        st.write(f"🏃 **25 KM** : **{nb_25k} / {MAX_PLACES}** inscrits (**{pct_25k*100:.1f}%**)")
+        st.progress(pct_25k)
+
     st.markdown("---")
 
     # -------------------------------------------------------------
