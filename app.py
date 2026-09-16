@@ -1091,7 +1091,7 @@ try:
                     top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
                     st.dataframe(top10_villes, use_container_width=True, hide_index=True)
 
-    # -------------------------------------------------------------
+   # -------------------------------------------------------------
     # ONGLET 6 : SPONSORS & PARTENAIRES
     # -------------------------------------------------------------
     with tab_sponsors:
@@ -1102,12 +1102,11 @@ try:
         
         # 1. SPONSORS ÉVÉNEMENTIELS
         st.markdown("### 🏆 Partenaires Événementiels")
+        
         sponsors_evt = [
-            ("Hyper U", "HYPER U.png", "Paniers garnis (récompense course)"),
+            ("L'Entrepote", "L'ENTREPOTE.png" if os.path.exists("L'ENTREPOTE.png") else "TC TRAITEUR.png", "150€ pour les dossards"),
             ("Intersport", "Intersport.png", "300€ de lots"),
             ("Pays de Fontenay", "PAYS DE FONTENAY.png", "Subvention de 400€"),
-            ("Les Vergers de Vendée", "VERGERS DE VENDEE.png", "Paniers garnis (récompense course)"),
-            ("L'Entrepote", "L'ENTREPOTE.png" if os.path.exists("L'ENTREPOTE.png") else "TC TRAITEUR.png", "150€ pour les dossards"),
             ("La Cibulle", "LA CIBULLE.png" if os.path.exists("LA CIBULLE.png") else "LA CIBULL.png", "10% sur les fûts + 6 réglettes (lot)"),
             ("Vendée Marais Poitevin", "mvp.png", "Kit parcours orientation (lot)"),
             ("Valega", "VALEGA.png", "Massage de 45' (lot)"),
@@ -1115,6 +1114,8 @@ try:
             ("Bioporc", "BIOPORC.png", "3 terrines (lot)"),
             ("Les Pâtés de Lison", "PATES LISON.png", "3 lots de pâtes (lot)"),
             ("Vins Mercier", "VINS MERCIER.png", "3 bouteilles (lot)"),
+            ("Hyper U", "HYPER U.png", "Paniers garnis (récompense course)"),
+            ("Les Vergers de Vendée", "VERGERS DE VENDEE.png", "Paniers garnis (récompense course)"),
             ("Boucherie Gouin", "MAISON GOUIN.png", "Paniers garnis (récompense course)"),
             ("New Loc", "NEW LOC.png", "Lumière et groupe électrogène"),
             ("Édition du Chemin des Crêtes", "CHEMIN DES CRETES.png", "Livres (lot)"),
@@ -1122,19 +1123,27 @@ try:
             ("L'Escale des Ponts", "L'ESCALE.png", "Mise à disposition de l'emplacement")
         ]
         
-        cols_evt = st.columns(4)
-        for idx, (sp_nom, sp_file, sp_desc) in enumerate(sponsors_evt):
-            with cols_evt[idx % 4]:
-                if os.path.exists(sp_file):
-                    st.image(sp_file, use_container_width=True)
-                else:
-                    st.info(f"🏷️ **{sp_nom}**")
-                if sp_desc:
-                    st.caption(f"🎁 {sp_desc}")
+        for sp_nom, sp_file, sp_desc in sponsors_evt:
+            with st.container():
+                c_logo, c_info = st.columns([1, 4])
+                
+                with c_logo:
+                    if os.path.exists(sp_file):
+                        # Largeur fixe pour harmoniser tous les logos
+                        st.image(sp_file, width=130)
+                    else:
+                        st.info(f"🏷️ **{sp_nom}**")
+                        
+                with c_info:
+                    st.markdown(f"#### **{sp_nom}**")
+                    if sp_desc:
+                        st.markdown(f"##### 🎁 **Participation :** {sp_desc}")
+                
+                st.markdown("<hr style='margin: 8px 0; border-top: 1px solid #eee;'>", unsafe_allow_html=True)
 
-        st.markdown("---")
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        # 2. SPONSORS ANNUELS (SANTE DIFFUSION RETIRÉ, MAISON GOUIN MAINTENU)
+        # 2. SPONSORS ANNUELS
         st.markdown("### 🌟 Sponsors Annuels")
         sponsors_annuels = [
             ("BERNARD JOHANNE", "BERNARD JOHANNE.png"),
@@ -1154,10 +1163,9 @@ try:
         for idx, (sp_nom, sp_file) in enumerate(sponsors_annuels):
             with cols_ann[idx % 3]:
                 if os.path.exists(sp_file):
-                    st.image(sp_file, width=220)
+                    st.image(sp_file, width=180)
                 else:
                     st.info(f"🏷️ **{sp_nom}**")
-
     # -------------------------------------------------------------
     # 🔄 RAFRAÎCHISSEMENT AUTOMATIQUE DU TEMPS
     # -------------------------------------------------------------
