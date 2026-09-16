@@ -1,737 +1,487 @@
-NB ,COURSE,DOSSARD,NOM,PRENOM,SEXE,Catégorie,VILLE,Lien BETRAIL,Indice BETRAIL,"CLASSEMENT
-COTE BETRAIL",COMMENTAIRES,FOULEES 2025,FOULEES 2024,BOL D'AIR 2026
-1,8 KM,301,MERCIER,Serenella,F,M4,DOIX LES FONTAINES (85200),https://www.betrail.run/runner/mercier.serenella/overview,29.90,7,,,,
-2,8 KM,302,BREVET,Marie-amelie,F,SE,CHOLET (49300),https://www.betrail.run/runner/brevet.marie-amelie/overview,31.99,6,,,,
-3,8 KM,303,TESSIER,Sabrina,F,M2,LONGEVES (85200),,,,Pas trouvé,,,
-4,8 KM,304,BOUTET,Rudy,H,SE,POITIERS (86000),,,,Pas trouvé,,,
-5,8 KM,305,POUDRET,Enzo,H,SE,BOIVRE-LA-VALLEE (86470),,,,Pas trouvé,,,
-6,8 KM,306,LENA,Melanie,F,M2,CHAUCHE (85140),https://www.betrail.run/runner/lena.melanie/overview,29.36,8,,,,
-7,8 KM,307,MORICE,Dominique,F,M1,FONTAINES (85200),https://www.betrail.run/runner/morice.dominique/overview,33.08,4,Homonyme ? pas de course ds le secteur,,,
-8,8 KM,308,CHABIRAND,Fanny,F,M1,SAINT PIERRE LE VIEUX (85420),,,,Pas trouvé,,,
-9,8 KM,309,GIRAUDEAU,Valerie,F,M4,MONTREUIL (85200),https://www.betrail.run/runner/giraudeau.valerie/overview,35.48,2,Homonyme ? pas de course ds le secteur,,,
-10,8 KM,310,LESOING,Patrick,H,M3,SAINT JEAN DE BEUGNE (85210),,,,Pas trouvé,,,
-11,8 KM,311,DEPRE,Djovani,H,SE,CHOLET (49300),https://www.betrail.run/runner/depre.djovani/overview,44.10,3,,,,
-12,8 KM,312,RECAGNO,Nadege,F,M3,TAUGON (17170),https://www.betrail.run/runner/recagno.nadege/overview,,,Pas trouvé,,,84.F F - 13 Km
-13,8 KM,313,LEGRAS,Deborah,F,SE,LONGEVES (85200),https://www.betrail.run/runner/legras.deborah/overview,28.95,9,,,,
-14,8 KM,314,NOYAU,Laurine,F,SE,NALLIERS (85370),https://www.betrail.run/runner/noyau.laurine/overview,,,Pas trouvé,,,
-15,8 KM,315,BERNARD,Philippe,H,M5,ST JEAN D'ANGELY (17400),https://www.betrail.run/runner/bernard.philippe/overview,40.48,5,,,,
-16,8 KM,316,PERICO,Maxence,H,M1,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/perico.maxence/overview,39.58,7,,,,
-17,8 KM,317,DELRIVE,Sebastien,H,M2,AUZAY (85200),https://www.betrail.run/runner/delrive.sebastien/overview,,,Pas trouvé,,,
-18,8 KM,318,REGNIER,Corentin,H,SE,AUCHAY SUR VENDEE (85200),https://www.betrail.run/runner/regnier.corentin/overview,46.19,2,2026 : Trail de minuit (63Km - nocturne),,,
-19,8 KM,319,JOUBERT,Charlotte,F,M0,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/joubert.charlotte/overview,,,Pas trouvé,,,
-20,8 KM,320,THIBAUD,Virginie,F,M1,DOIX LES FONTAINES (85200),https://www.betrail.run/runner/thibaud.virginie/overview,32.77,5,,,,79.F F - 13 Km
-21,8 KM,321,LE POTIER,Magali,F,M4,LE LANGON (85370),https://www.betrail.run/runner/le.potier.magali/overview,40.46,1,,15F - en 00:49:50 sur 7Km,,20.F F - 8 Km
-22,8 KM,322,BEUCHILLOT,Beatrice,F,M6,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/beuchillot.beatrice/overview,27.88,10,Foulées des géants en 2024 et 2025 (10Km),,,
-23,8 KM,323,BEUCHILLOT,Frederic,H,M5,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/beuchillot.frederic/overview,27.89,10,Foulées des géants en 2024 et 2025 (10Km),,,
-24,8 KM,324,GUILBAUD,Stephane,H,M2,LONGEVES (85200),https://www.betrail.run/runner/guilbaud.stephane/overview,,,Pas trouvé,,,
-25,8 KM,325,CAILLAUD,Guillaume,H,M0,NIORT (79000),https://www.betrail.run/runner/caillaud.guillaume/overview,43.55,4,,,,
-26,8 KM,326,FORTIN,Cyril,H,M2,AUBIGNY LES CLOUZEAUX (85430) / RAID'APTE,https://www.betrail.run/runner/fortin.cyril/overview,40.02,6,2025 : GRP 53Km,,,
-27,8 KM,327,SERVANT,Mathieu,H,M2,AUBIGNY LES CLOUZEAUX (85430) / RAID'APTE,https://www.betrail.run/runner/servant.mathieu/overview,37.31,9,"2025 : GRP 53 Km
-2022 : GRP 63 Km",,,
-28,8 KM,328,SERVANT,Lydie,F,M3,AUBIGNY LES CLOUZEAUX (85430),https://www.betrail.run/runner/servant.lydie/overview,27.87,11,,,,
-29,8 KM,329,DUCLOUET,Morgane,F,M2,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/duclouet.morgane/overview,,,Pas trouvé,,,
-30,8 KM,330,LUCIEN,Mathieu,H,M1,FOURAS (17450),https://www.betrail.run/runner/lucien.mathieu/overview,37.69,8,,,,
-31,8 KM,331,POUPIN-VIGIER,Lina,F,SE,CHOLET (49300) / SAINT-HERBLAIN,https://www.betrail.run/runner/poupin.vigier.lina/overview,,,Pas trouvé,,,
-32,8 KM,332,ARNOU,Nathan,H,SE,CHOLET (49300) / LES HERBIERS,https://www.betrail.run/runner/arnou.nathan/overview,,,Pas trouvé,,,
-33,8 KM,333,MARTIN,Julien,H,M1,LA ROCHELLE (17000),https://www.betrail.run/runner/martin.julien/overview,,,Pas trouvé,,,28.M M - 8 Km
-34,8 KM,334,DE PERETTI,Solenn,F,M0,AUZAY (85200),https://www.betrail.run/runner/de.peretti.solenn/overview,,,,,,
-35,8 KM,335,CHARRIER,Jean Michel,H,M5,85240 (85240) / TEAM CAPTAIN,https://www.betrail.run/runner/charrier.jean.michel/overview,46.75,1,"2026 : 42KM du champ du loup
-2025 : GRP 128Km
-2024 : Trail du pere noel 133Km",,56 M - 18KM en 01:51:20,194.M M - 25 Km
-36,8 KM,336,GOIN,Melodie,F,M1,SERIGNE (85200),https://www.betrail.run/runner/goin.melodie/overview,34.81,3,,,,75.F F - 13 Km
-37,8 KM,337,CHAMPENOIS,Swann,F,SE,GOUESNAC'H (29950),https://www.betrail.run/runner/champenois.swann/overview,,,Pas trouvé,,,
-38,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-39,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-40,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-41,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-42,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-43,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-44,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-45,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-46,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-47,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-48,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-49,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-50,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-51,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-52,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-53,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-54,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-55,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-56,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-57,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-58,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-59,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-60,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-61,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-62,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-63,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-64,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-65,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-66,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-67,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-68,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-69,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-70,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-71,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-72,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-73,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-74,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-75,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-76,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-77,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-78,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-79,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-80,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-81,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-82,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-83,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-84,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-85,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-86,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-87,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-88,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-89,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-90,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-91,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-92,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-93,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-94,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-95,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-96,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-97,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-98,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-99,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-100,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-101,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-102,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-103,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-104,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-105,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-106,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-107,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-108,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-109,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-110,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-111,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-112,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-113,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-114,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-115,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-116,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-117,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-118,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-119,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-120,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-121,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-122,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-123,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-124,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-125,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-126,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-127,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-128,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-129,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-130,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-131,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-132,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-133,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-134,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-135,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-136,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-137,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-138,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-139,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-140,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-141,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-142,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-143,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-144,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-145,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-146,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-147,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-148,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-149,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-150,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-151,8 KM,,,,,,,Prénom ou nom manquant,,,,,,
-152,,,,,,,,,,,,,,
-153,,,,,,,,,,,,,,
-154,,,,,,,,,,,,,,
-155,,,,,,,,,,,,,,
-156,,,,,,,,,,,,,,
-157,,,,,,,,,,,,,,
-158,,,,,,,,,,,,,,
-159,,,,,,,,,,,,,,
-160,,,,,,,,,,,,,,
-161,,,,,,,,,,,,,,
-162,,,,,,,,,,,,,,
-163,,,,,,,,,,,,,,
-164,,,,,,,,,,,,,,
-165,,,,,,,,,,,,,,
-166,,,,,,,,,,,,,,
-167,,,,,,,,,,,,,,
-168,,,,,,,,,,,,,,
-169,,,,,,,,,,,,,,
-170,,,,,,,,,,,,,,
-171,,,,,,,,,,,,,,
-172,,,,,,,,,,,,,,
-173,,,,,,,,,,,,,,
-174,,,,,,,,,,,,,,
-175,,,,,,,,,,,,,,
-176,,,,,,,,,,,,,,
-177,,,,,,,,,,,,,,
-178,,,,,,,,,,,,,,
-179,,,,,,,,,,,,,,
-180,,,,,,,,,,,,,,
-181,,,,,,,,,,,,,,
-182,,,,,,,,,,,,,,
-183,,,,,,,,,,,,,,
-184,,,,,,,,,,,,,,
-185,,,,,,,,,,,,,,
-186,,,,,,,,,,,,,,
-187,,,,,,,,,,,,,,
-188,,,,,,,,,,,,,,
-189,,,,,,,,,,,,,,
-190,,,,,,,,,,,,,,
-191,,,,,,,,,,,,,,
-192,,,,,,,,,,,,,,
-193,,,,,,,,,,,,,,
-194,,,,,,,,,,,,,,
-195,,,,,,,,,,,,,,
-196,,,,,,,,,,,,,,
-197,,,,,,,,,,,,,,
-198,,,,,,,,,,,,,,
-199,,,,,,,,,,,,,,
-200,,,,,,,,,,,,,,
-1,15 KM,151,VILLAUME,Jessy,H,M0,L'HERMENAULT (85570) / FCPB L'HERMENAULT,https://www.betrail.run/runner/villaume.jessy/overview,36.86,14,"2025 : 174 Km Ultra Marin
-2026 : 101 Km Tour de l'ile d'oleron",,,33.M M - 13 Km
-2,15 KM,152,KORMANN,Remi,H,M2,SERIGNE (85200),https://www.betrail.run/runner/kormann.remi/overview,38.67,12,"2025 : 174 Km Ultra Marin
-2026 : 101 Km Ultra Marin",,,
-3,15 KM,153,DEVOST,Gaetan,H,M1,BENON (17170),https://www.betrail.run/runner/devost.gaetan/overview,36.13,16,,,,
-4,15 KM,154,LE GARREC,Emilie,F,M2,PERIGNY (17180),https://www.betrail.run/runner/le.garrec.emilie/overview,38.23,6,,,,
-5,15 KM,155,CHAPILLON,Florian,H,M1,L'ORBRIE (85200),https://www.betrail.run/runner/chapillon.florian/overview,44.96,5,1 seule course => foulées des géants,,,82.M M - 13 Km
-6,15 KM,156,DION,Marion,F,SE,SAINTE RADEGONDE DES NOYERS (85450),https://www.betrail.run/runner/dion.marion/overview,33.82,9,,,,63.F F - 13 Km
-7,15 KM,157,ARNAUD,Romain,H,SE,SAINTE GEMME LA PLAINE (85400),https://www.betrail.run/runner/arnaud.romain/overview,55.59,1,"2025 : 100Km Tarn Valley Trail
-2024 : 160 Km GRP (DNF)",,,
-8,15 KM,158,COUSSEAU,Pierre,H,SE,MAREUIL SUR LAY (85320),https://www.betrail.run/runner/cousseau.pierre/overview,53.53,2,,,,
-9,15 KM,159,BOUTET,Axelle,F,SE,SAINTE-GEMME-LA-PLAINE (85400),https://www.betrail.run/runner/boutet.axelle/overview,36.22,8,,,,
-10,15 KM,160,MARTINEAU,Victor,H,SE,LA BRETONNIERE LA CLAYE (85320),,,,Pas trouvé,,,
-11,15 KM,161,MARTINEAU,Baptiste,H,M1,MAREUIL SUR LAY (85320) / RAID'YON,https://www.betrail.run/runner/martineau.baptiste/overview,40.68,10,Homonyme ? pas de course ds le secteur,,,
-12,15 KM,162,BERTHE,Philippe,H,M6,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/berthe.philippe/overview,34.72,17,,33M - en 00:54:55 sur 7Km,57 M - 9KM en 00:51:32,
-13,15 KM,163,LABBAYE,Clement,H,M1,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/labbaye.clement/overview,27.44,19,,,,
-14,15 KM,164,PICAUVILLE,Manon,F,M0,BENET (85490),https://www.betrail.run/runner/picauville.manon/overview,36.57,7,,,,56.F F - 13 Km
-15,15 KM,165,RAPHEL,Thony,H,M4,LONGEVES (85200),https://www.betrail.run/runner/raphel.thony/overview,40.8,9,Homonyme ? pas de course ds le secteur,,,
-16,15 KM,166,GAUDIN,Stanislas,H,M2,SAINTE-RADEGONDE-DES-NOYERS (85450),https://www.betrail.run/runner/gaudin.stanislas/overview,40.21,11,,,,
-17,15 KM,167,DEVISE,Lucie,F,SE,MONTREUIL (85200),https://www.betrail.run/runner/devise.lucie/overview,33.72,10,,9F - en 01:53:41 sur 14Km,,
-18,15 KM,168,MEUNIER,Celine,F,M1,BENET (85490),https://www.betrail.run/runner/meunier.celine/overview,38.81,5,Homonyme ? pas de course ds le secteur,,,
-19,15 KM,169,LE GALL,Morgan,H,CA,LA ROCHELLE (17000),https://www.betrail.run/runner/le.gall.morgan/overview,,1,"Trop d'homonyme, compliqué de savoir qui est qui",,,
-20,15 KM,170,SAUVETRE,Mylene,F,M0,FOUGERE (85480),,,,Pas trouvé,,,
-21,15 KM,171,BARBE,Lucie,F,SE,ST FLAIVE DES LOUPS (85150),https://www.betrail.run/runner/barbe.lucie/overview,39.51,4,Homonyme ? pas de course ds le secteur,,,
-22,15 KM,172,VOLLARD POIRAUD,Audrey,F,SE,LA BOISSIERE-DES-LANDES (85430),,,,Pas trouvé,,,
-23,15 KM,173,HERLEZ,Ulrich,H,M1,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/herlez.ulrich/overview,31.84,18,Homonyme ? pas de course ds le secteur,58M - en 01:55:46 sur 14Km,56 M - 9KM en 00:51:27,
-24,15 KM,174,CHIRON,Romain,H,SE,DOMPIERRE SUR MER (17139),https://www.betrail.run/runner/chiron.romain/overview,47.20,3,,,,
-25,15 KM,175,ROTUREAU,Adrien,H,SE,NIEUL-SUR-MER (17540),https://www.betrail.run/runner/rotureau.adrien/overview,45.41,4,,,,
-26,15 KM,176,MILET,Alban,H,SE,NANTES (44300),,,,Pas trouvé,,,
-27,15 KM,177,EMEREAU,Elsa,F,ES,LA GAUBRETIERE (85130),,,,Pas trouvé,,,
-28,15 KM,178,PERTHUIS,Estelle,F,M2,PERIGNY (17180),,,,Pas trouvé,,,
-29,15 KM,179,FRELAND,Herve,H,M4,L'ORBRIE (85200) / SAF,https://www.betrail.run/runner/freland.herve/overview,38.59,13,,45M - en 01:34:20 sur 14Km,,87.M M - 13 Km
-30,15 KM,180,ROBIN,Marion,F,M2,NUAILLE D AUNIS (17540),https://www.betrail.run/runner/robin.marion/overview,42.14,2,,,,
-31,15 KM,181,RAUTUREAU,Betty,F,M4,SAINTE GEMME LA PLAINE (85400),,,,Pas trouvé,,,
-32,15 KM,182,TEXIER,Mathieu,H,SE,VELLUIRE (85770),,,,3ème sur le 9 en 2024. Fait essentiellement de la route. A fait notre manche de CO avec Axelle,,3 M - 9KM en 00:34:51,1.M M - 8 Km
-33,15 KM,183,CIRERA,Cindy,F,M1,LA ROCHELLE (17000),https://www.betrail.run/runner/cirera.cindy/overview,40.46,3,,,,
-34,15 KM,184,ANTONELLI,Alexandra,F,M0,EPANNES (79270),https://www.betrail.run/runner/antonelli.alexandra/overview,31.65,12,,,,
-35,15 KM,185,CHABIRAND,Blandine,F,M0,EPANNES (79270),https://www.betrail.run/runner/chabirand.blandine/overview,32.34,11,,,,
-36,15 KM,186,BONNIN,Elisabeth,F,M4,POUILLE (85570),https://www.betrail.run/runner/bonnin.elisabeth/overview,29.16,14,,,,96.F F - 13 Km
-37,15 KM,187,TRIQUET,Philippe,H,M3,BERNAY (17330),https://www.betrail.run/runner/triquet.philippe/overview,,,Pas trouvé,,,
-38,15 KM,188,JOULAIN,Anthony,H,M0,SERIGNE (85200) / SAF,https://www.betrail.run/runner/joulain.anthony/overview,43.66,6,,,,
-39,15 KM,189,PETORIN,Laurie,F,M0,TALMONT-SAINT-HILAIRE (85440),https://www.betrail.run/runner/petorin.laurie/overview,29.81,13,,,,
-40,15 KM,190,MOULIC,Esteban,H,SE,LES SABLES D'OLONNE (85100),https://www.betrail.run/runner/moulic.esteban/overview,,,Pas trouvé,,,
-41,15 KM,191,BONNARD,Pascal,H,M4,DOMPIERRE SUR MER (17139) / ASPR 17,https://www.betrail.run/runner/bonnard.pascal/overview,36.36,15,"2025 : Trail de la Grande Champagne 55KM
-2024 : Festi Trail 64Km",,,
-42,15 KM,192,CHEVALIER,Mathilde,F,ES,SAINTE-SOULLE (17220),https://www.betrail.run/runner/chevalier.mathilde/overview,43.19,1,,,,
-43,15 KM,193,VRIGNAUD,Christophe,H,M3,LA CAILLERE ST HILAIRE (85410)  / LES POT'TRAILEURS 85,https://www.betrail.run/runner/vrignaud.christophe/overview,43.61,7,2024 : 80Km des Templiers,36M - en 02:50:02 sur 24Km,49 M - 18KM en 01:48:56,
-44,15 KM,194,POMMIER,Antoine,H,SE,LA ROCHELLE (17000),https://www.betrail.run/runner/pommier.antoine/overview,40.85,8,Homonyme ? pas de course ds le secteur,,,
-45,15 KM,195,BACHELLEREAU,Cedric,H,M3,LA CAILLERE ST HILAIRE (85410),https://www.betrail.run/runner/bachellereau.cedric/overview,,,Pas trouvé,36M - en 02:50:02 sur 24Km,,
-46,15 KM,196,GILBERT,Alexandre,H,M1,RIVES DU FOUGERAIS (85410) / LES POT'TRAILEURS 85,https://www.betrail.run/runner/gilbert.alexandre/overview,44.99,5,"2026 : VVX 108KM
-2025 : HOKA LES TEMPLIERS 80 KM",14M - en 02:11:11 sur 24Km,,51.M M - 52 Km
-47,15 KM,197,MALIGNY,Melanie,F,M2,MAILLEZAIS (85420),https://www.betrail.run/runner/maligny.melanie/overview,38.18,7,,,,22.F F - 13 Km
-48,15 KM,198,GAUSSE,Alexis,H,SE,LA ROCHE-SUR-YON (85000),https://www.betrail.run/runner/gausse.alexis/overview,,,Pas trouvé,,,
-49,15 KM,199,PHONASA,Erwann,H,ES,ESSARTS (85140),https://www.betrail.run/runner/phonasa.erwann/overview,45.89,4,,,,
-50,15 KM,200,PARADIS,Corentin,H,SE,PARIS (75005),https://www.betrail.run/runner/paradis.corentin/overview,,,Pas trouvé,,,
-51,15 KM,201,LE MANACH,Valérie,F,M2,RIVES D AUTISE (85240),https://www.betrail.run/runner/le.manach.valerie/overview,35.25,9,,,,
-52,15 KM,202,LE MANACH,Guillaume,H,M2,RIVES D'AUTISE (85240),https://www.betrail.run/runner/le.manach.guillaume/overview,37.77,14,2017 : LES TEMPLIERS 76Km,,,
-53,15 KM,203,HEVREAU,Florestan,H,M1,MOUZEUIL SAINT MARTIN (85370),https://www.betrail.run/runner/hevreau.florestan/overview,,,Pas trouvé,,,
-54,15 KM,204,JAUDRONNET,Francois,H,M1,FONTENAY LE COMTE (85 200),https://www.betrail.run/runner/jaudronnet.francois/overview,33.29,18,,,,161.M M - 13 Km
-55,15 KM,205,PICARD,Lilian,F,SE,SAINT MARTIN DES NOYERS (85140),https://www.betrail.run/runner/picard.lilian/overview,42.06,3,2026 : 2ème sur le 10KM du trail du lac,,,
-56,15 KM,206,PORTAL,Clementine,F,SE,LES SABLES DOLONNE (85340),https://www.betrail.run/runner/portal.clementine/overview,35.77,9,,,,
-57,15 KM,207,GAIGNET,Didier,H,M4,VELLUIRE (85770),https://www.betrail.run/runner/gaignet.didier/overview,43.59,8,,15M - en 01:21:58 sur 14Km,,
-58,15 KM,208,LELOUP,Margot,F,SE,ANGERS (49000),https://www.betrail.run/runner/leloup.margot/overview,39.77,4,2026 : 30KM de la 6000D,,,
-59,15 KM,209,LOUE,Nora,F,SE,FALLERON (85670),https://www.betrail.run/runner/loue.nora/overview,,,Pas trouvé,,,
-60,15 KM,210,THIBAUD,Florian,H,M2,DOIX LES FONTAINES (85200),https://www.betrail.run/runner/thibaud.florian/overview,43.52,8,"2026 : GRP 43KM , VVX 46KM",12M - en 01:20:19 sur 14Km,26 M - 18KM en 01:44:53,161.M M - 25 Km
-61,15 KM,211,GELOT,Gaetan,H,M1,AUCHAY SUR VENDEE (85200) / AS4VF,https://www.betrail.run/runner/gelot.gaetan/overview,43.83,6,,20M - en 01:24:16 sur 14Km,,75.M M - 25 Km
-62,15 KM,212,BROUARD,Xavier,H,M2,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/brouard.xavier/overview,44.07,6,,11M - en 00:40:54 sur 7Km,,106.M M - 13 Km
-63,15 KM,213,FOUR,Camille,F,M0,LIEZ (85420),https://www.betrail.run/runner/four.camille/overview,42.75,2,2026 : 2nde du TRAIL DES BUIS (12KM),2F - en 01:31:43 sur 14Km,,
-64,15 KM,214,NAULT,Marien,H,SE,SAINT OUEN DAUNIS (17230),https://www.betrail.run/runner/nault.marien/overview,,,Pas trouvé,,,
-65,15 KM,215,HUAU,Dimitri,H,M3,MARANS (17230),https://www.betrail.run/runner/huau.dimitri/overview,,,Pas trouvé,,,
-66,15 KM,216,LEONARD,Pierre-henri,H,M0,FRONTENAY ROHAN ROHAN (79270) / SEP ATHLETISME FRONTENAY-ROHAN-ROHAN,https://www.betrail.run/runner/leonard.pierre.henri/overview,,,Pas trouvé,,,
-67,15 KM,217,PELEAU,Severine,F,M3,PUILBOREAU (17138) / COURS'SON NATURE,https://www.betrail.run/runner/peleau.severine/overview,41.83,3,2026 : Trail du lac de Paladru (46KM),,,
-68,15 KM,218,BISSON,Emmanuel,H,M4,LA RONDE (17170) / COURS'SON NATURE,https://www.betrail.run/runner/bisson.emmanuel/overview,46.95,4,2026 : Train de Vulcain (78KM),,,
-69,15 KM,219,JAUMIER,Quentin,H,ES,AUCHAY-SUR-VENDEE (85200) ,https://www.betrail.run/runner/jaumier.quentin/overview,30.95,19,,52M - en 01:40:07 sur 14Km,,
-70,15 KM,220,BOCQUIER,Adao,H,CA,LE BERNARD (85560),https://www.betrail.run/runner/bocquier.adao/overview,,,Pas trouvé,,,
-71,15 KM,221,CHOUTEAU,Lea,F,SE,LES LUCS SUR BOULOGNE (85170),https://www.betrail.run/runner/chouteau.lea/overview,39.78,4,,,,
-72,15 KM,222,BELLION,Eugenie,F,SE,LE POIRE SUR VIE (85170),https://www.betrail.run/runner/bellion.eugenie/overview,,,Pas trouvé,,,
-73,15 KM,223,RIFFAULT,Florent,H,M5,FONTENAY LE COMTE (85200) / SAF,https://www.betrail.run/runner/riffault.florent/overview,42.24,8,,,58 M - 18KM en 01:51:32,
-74,15 KM,224,ZOBDA,Raphael,H,M3,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/zobda.raphael/overview,47.31,3,,11M - en 01:19:51 sur 14Km,,36.M M - 13 Km
-75,15 KM,225,CARLIER,Aaron,H,CA,JARD SUR MER (85520),https://www.betrail.run/runner/carlier.aaron/overview,,,Pas trouvé,,,
-76,15 KM,226,GUYONNET,Yoann,H,M3,SAINT CYR DU DORET (17170) / COURS'SON NATURE,https://www.betrail.run/runner/guyonnet.yoann/overview,40.27,11,,40M - en 01:33:00 sur 14Km,,
-77,15 KM,227,COULON,Elodie,F,M2,SAINT-JEAN-DE-LIVERSAY (17170) / COURS'SON NATURE,https://www.betrail.run/runner/coulon.elodie/overview,43.43,1,2026 : EUSKAL TRAILS 51KM,,,7.F F - 8 Km
-78,15 KM,228,LEJEUNE,Armand,H,M2,SAINT-JEAN-DE-LIVERSAY (17170) / COURS'SON NATURE,https://www.betrail.run/runner/lejeune.armand/overview,40.45,11,2022 : 102 Km Grand Raid des Cathares,,,21.M M - 8 Km
-79,15 KM,229,SERVANT,Thomas,H,M1,XANTON-CHASSENON (85240),https://www.betrail.run/runner/servant.thomas/overview,43.14,8,Homonyme ? pas de course ds le secteur,,,14.M M - 8 Km
-80,15 KM,230,LHENAFF,Nicolas,H,M2,ST SAUVEUR D AUNIS (17540),https://www.betrail.run/runner/lhenaff.nicolas/overview,,,Pas trouvé,,,
-81,15 KM,231,PEROCHAIN,Cecile,F,M2,DAMVIX (85420) / VENDEE RUNNING 85,https://www.betrail.run/runner/perochain.cecile/overview,37.62,7,,2F - en 00:40:41 sur 7Km,5 F - 9KM en 00:45:10,19.F F - 13 Km
-82,15 KM,232,MARZELIERE,Lise,F,M0,NANTES (44300),https://www.betrail.run/runner/marzeliere.lise/overview,,,Pas trouvé,,,
-83,15 KM,233,RAVARD,Leopold,H,SE,AUCHAY-SUR-VENDEE (85200),https://www.betrail.run/runner/ravard.leopold/overview,,,Pas trouvé,,,150.M M - 13 Km
-84,15 KM,234,MAZOUE,William,H,M1,FONTENAY-LE-COMTE (85200) / CAP OU PAS CAP FONTENAY,https://www.betrail.run/runner/mazoue.william/overview,37.89,14,,,,92.M M - 13 Km
-85,15 KM,235,COUE,Freddy,H,M5,L'ORBRIE (85200) / ASV,https://www.betrail.run/runner/coue.freddy/overview,53.47,3,,,,
-86,15 KM,236,MALLET,Sabrina,F,M2,FONTENAY LE COMTE (85200) / FONTENAY TRIATHLON,https://www.betrail.run/runner/mallet.sabrina/overview,38.31,6,,,10 F - 18KM en 01:59:12,
-87,15 KM,237,BOUZIANI,Frederic,H,M4,FONTENAY LE COMTE (85200) / FONTENAY TRIATHLON,https://www.betrail.run/runner/bouziani.frederic/overview,50.68,3,"Des podiums, notamment le 13Km du bol d'air en 2017 (3ème)",,15 M - 18KM en 01:33:13,
-88,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-89,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-90,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-91,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-92,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-93,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-94,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-95,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-96,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-97,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-98,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-99,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-100,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-101,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-102,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-103,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-104,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-105,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-106,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-107,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-108,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-109,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-110,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-111,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-112,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-113,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-114,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-115,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-116,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-117,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-118,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-119,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-120,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-121,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-122,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-123,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-124,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-125,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-126,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-127,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-128,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-129,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-130,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-131,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-132,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-133,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-134,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-135,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-136,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-137,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-138,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-139,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-140,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-141,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-142,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-143,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-144,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-145,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-146,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-147,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-148,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-149,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-150,15 KM,,,,,,,Prénom ou nom manquant,,,,,,
-151,,,,,,,,,,,,,,
-152,,,,,,,,,,,,,,
-153,,,,,,,,,,,,,,
-154,,,,,,,,,,,,,,
-155,,,,,,,,,,,,,,
-156,,,,,,,,,,,,,,
-157,,,,,,,,,,,,,,
-158,,,,,,,,,,,,,,
-159,,,,,,,,,,,,,,
-160,,,,,,,,,,,,,,
-161,,,,,,,,,,,,,,
-162,,,,,,,,,,,,,,
-163,,,,,,,,,,,,,,
-164,,,,,,,,,,,,,,
-165,,,,,,,,,,,,,,
-166,,,,,,,,,,,,,,
-167,,,,,,,,,,,,,,
-168,,,,,,,,,,,,,,
-169,,,,,,,,,,,,,,
-170,,,,,,,,,,,,,,
-171,,,,,,,,,,,,,,
-172,,,,,,,,,,,,,,
-173,,,,,,,,,,,,,,
-174,,,,,,,,,,,,,,
-175,,,,,,,,,,,,,,
-176,,,,,,,,,,,,,,
-177,,,,,,,,,,,,,,
-178,,,,,,,,,,,,,,
-179,,,,,,,,,,,,,,
-180,,,,,,,,,,,,,,
-181,,,,,,,,,,,,,,
-182,,,,,,,,,,,,,,
-183,,,,,,,,,,,,,,
-184,,,,,,,,,,,,,,
-185,,,,,,,,,,,,,,
-186,,,,,,,,,,,,,,
-187,,,,,,,,,,,,,,
-188,,,,,,,,,,,,,,
-189,,,,,,,,,,,,,,
-190,,,,,,,,,,,,,,
-191,,,,,,,,,,,,,,
-192,,,,,,,,,,,,,,
-193,,,,,,,,,,,,,,
-194,,,,,,,,,,,,,,
-195,,,,,,,,,,,,,,
-196,,,,,,,,,,,,,,
-197,,,,,,,,,,,,,,
-198,,,,,,,,,,,,,,
-199,,,,,,,,,,,,,,
-200,,,,,,,,,,,,,,
-1,25 KM,1,POULTEAU,Antonin,H,SE,MONTREUIL (85200),https://www.betrail.run/runner/poulteau.antonin/overview,43.29,18,,,,
-2,25 KM,2,HOUAS,Stephane,H,M3,L'AIGUILLON LA PRESQU'ILE (85460),https://www.betrail.run/runner/houas.stephane/overview,54.74,1,Homonyme ? pas de course ds le secteur,,,
-3,25 KM,3,JADAUD,Thomas,H,M0,MONTREUIL (85200),https://www.betrail.run/runner/jadaud.thomas/overview,37.54,32,,,,
-4,25 KM,4,POUPONNEAU,Jean Marie,H,M2,ETAMPES (91150),https://www.betrail.run/runner/pouponneau.jean.marie/overview,40.37,25,,,,
-5,25 KM,5,POIRIER,Pierrick,H,M2,FONTENAY LE COMTE (85200) / SAF,https://www.betrail.run/runner/poirier.pierrick/overview,54.63,2,2022 :3ème sur le 21Km de martinoyenne,,,16.M M - 52 Km
-6,25 KM,6,LIEVRE,Alexandre,H,M0,PUYRAVAULT (85450),https://www.betrail.run/runner/lievre.alexandre/overview,45.09,15,,,,
-7,25 KM,7,GENEVE,David,H,M3,LA CAILLERE ST HILAIRE (85410),https://www.betrail.run/runner/geneve.david/overview,39.71,27,2025 : 80Km HOKA Les Templiers,,,
-8,25 KM,8,PIZON,Arthur,H,SE,LA CHAIZE-LE-VICOMTE (85310),https://www.betrail.run/runner/pizon.arthur/overview,47.49,9,,,,
-9,25 KM,9,GAUBERT,Christelle,F,M1,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/gaubert.christelle/overview,29.81,6,,,,35.F F - 8 Km
-10,25 KM,10,AUGEREAU,Oceane,F,SE,LONGEVES (85200),https://www.betrail.run/runner/augereau.oceane/overview,38.08,3,2025 : 7ème sur le 53Km du Bol d'Air,,,
-11,25 KM,11,AUGEREAU,Aurelie,F,SE,MERVENT (85200),https://www.betrail.run/runner/augereau.aurelie/overview,40.32,2,2025 : 7ème sur le 53Km du Bol d'Air,,,14.F F - 52 Km
-12,25 KM,12,BEAUPEU,Laurent,H,M2,THORIGNY (85480),https://www.betrail.run/runner/beaupeu.laurent/overview,49.9,6,"2025 : 80Km du trail des ballons de cauterets
-2024 : 84 Km de l'Aquaterra
-2023 : 76 Km du Festival des hospitaliers
-2022 : 108 Km de l'UTPMA
-2021 : 133Km de la HOT du pere Noel
-",,,
-13,25 KM,13,ROCHETEAU,Benjamin,H,SE,LA ROCHE SUR YON (85000),https://www.betrail.run/runner/rocheteau.benjamin/overview,35.69,33,,1M - en 01:41:49 sur 24Km,,
-14,25 KM,14,ROUGER,Clara,F,ES,CHAIX (85200),https://www.betrail.run/runner/rouger.clara/overview,30.01,5,,,,
-15,25 KM,15,DEVISE,Jordan,H,SE,MONTREUIL (85200),https://www.betrail.run/runner/devise.jordan/overview,40.47,24,,47M - en 01:34:53 sur 14Km,,203.M M - 25 Km
-16,25 KM,16,LEFEBVRE,Florie,F,M1,AUCHAY SUR VENDEE (85200),,,1,,10F - en 01:56:10 sur 14Km,,67.F F - 13 Km
-17,25 KM,17,LUCAS,Mark,H,M1,NIORT (79000),https://www.betrail.run/runner/lucas.mark/overview,41.43,21,,,,
-18,25 KM,18,TALLINEAU,Murielle,F,M5,LA ROCHE SUR YON (85000) / ASPTT LA ROCHE-SUR-YON,https://www.betrail.run/runner/tallineau.murielle/overview,36.07,4,,,,
-19,25 KM,19,MILET,Elea,F,SE,PARIS (75014),,,1,,,,
-20,25 KM,20,EMEREAU,Gaetan,H,M4,LA GAUBRETIERE (85130),https://www.betrail.run/runner/emereau.gaetan/overview,41.01,22,,,,
-21,25 KM,21,GOUGNARD,Florent,H,M2,NIORT (79000),https://www.betrail.run/runner/gougnard.florent/overview,41.94,20,,,,
-22,25 KM,22,BONNEAU,Kevin,H,SE,POITIERS (86009),https://www.betrail.run/runner/bonneau.kevin/overview,37.72,30,,,,
-23,25 KM,23,RASSANT,Yann,H,SE,VERINES (17540),https://www.betrail.run/runner/rassant.yann/overview,47.23,10,,,,
-24,25 KM,24,GIRAUDON,Vincent,H,SE,PARTHENAY (79200) / LES POULETS,https://www.betrail.run/runner/giraudon.vincent/overview,48.85,7,,,,
-25,25 KM,25,HERITEAU,David,H,M1,LUCON (85400),https://www.betrail.run/runner/heriteau.david/overview,46.23,13,,,,
-26,25 KM,26,POUVREAU,Lilian,H,ES,SAINT-JEAN-DE-LIVERSAY (17170),https://www.betrail.run/runner/pouvreau.lilian/overview,45,16,,,,
-27,25 KM,27,GAIGNON,Charles,H,M0,NANTES (44000),https://www.betrail.run/runner/gaignon.charles/overview,54.1,3,,,,
-28,25 KM,28,ALLETRU,Baptiste,H,SE,VERINES (17540) / AIGREFEUILLE ATHLETISME,https://www.betrail.run/runner/alletru.baptiste/overview,50.71,4,,,,
-29,25 KM,29,ALLAIN,Thomas,H,M1,CHAUCHE (85140),https://www.betrail.run/runner/allain.thomas/overview,43.44,17,,,,
-30,25 KM,30,DROUAUD,Tanguy,H,SE,BELLEVILLE SUR VIE (85170),https://www.betrail.run/runner/drouaud.tanguy/overview,40.27,26,,,,
-31,25 KM,31,REMAUD,Bastien,H,SE,LA GENETOUZE (85190),https://www.betrail.run/runner/remaud.bastien/overview,38.72,28,,,,
-32,25 KM,32,DUBOSC FROMENTIN,Aurelien,H,SE,LA CHAIZE LE VICOMTE (85150),https://www.betrail.run/runner/dubosc.fromentin.aurelien/overview,37.82,29,,,,
-33,25 KM,33,BOULANGER,Andrey,H,ES,VALLET (44330),,,,Pas trouvé,,,
-34,25 KM,34,BOULANGER,Francois,H,M4,VALLET (44330),https://www.betrail.run/runner/boulanger.francois/overview,48.14,8,,,,
-35,25 KM,35,GALLAS,Florian,H,M0,FONTIVILLIE (79500),https://www.betrail.run/runner/gallas.florian/overview,37.69,31,,,,
-36,25 KM,36,GROUSSARD,Romain,H,M1,LA CHAPELLE POUILLOUX (79190),https://www.betrail.run/runner/groussard.romain/overview,40.81,23,,,,
-37,25 KM,37,BONNET,Tom,H,ES,MONTAIGU-VENDEE (85600),https://www.betrail.run/runner/bonnet.tom/overview,45.42,14,,,,
-38,25 KM,38,GUILMINEAU,Capucine,F,SE,SERIGNE (85200),https://www.betrail.run/runner/guilmineau.capucine/overview,41.37,1,2026 : GRP 83 Km,,,
-39,25 KM,39,GUILMINEAU,Herve,H,M4,SERIGNE (85200),https://www.betrail.run/runner/guilmineau.herve/overview,46.42,12,"2026 : GRP 83 Km
-2025 & 2023 : GRP 168Km
-2021 : GRP 235 Km
-2019 : GRP 220 Km",,,
-40,25 KM,40,GUILMINEAU,Eliott,H,SE,SERIGNE (85200),https://www.betrail.run/runner/guilmineau.eliott/overview,49.95,5,,,,
-41,25 KM,41,EROUX,Ludovic,H,M1,FONTENAY LE COMTE (85200),,,,Pas trouvé,,,
-42,25 KM,42,MICHELIN,Alexandre,H,M1,MARSEILLE (13001) / MARSEILLE TRAIL CLUB,https://www.betrail.run/runner/michelin.alexandre/overview,46.55,11,2025 : Sainté Lyon 79Km & MAXI RACE 99Km,,,
-43,25 KM,43,VICIANA,Robin,H,M0,LA ROCHELLE (17000),,,,Pas trouvé,,,
-44,25 KM,33,OULANGER,Andrey,H,ES,VALLET (44330),,,,Pas trouvé,,,
-45,25 KM,45,PAILLAT,Francois,H,M1,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/paillat.francois/overview,42.68,19,2025 : VVX 113Km,25M - en 02:30:36 sur 24Km,31 M - 18KM en 01:45:15,55.M M - 52 Km
-46,25 KM,46,CHAILLOLEAU,Antoine,H,M3,FONTENAY LE COMTE (85200) / SAF,https://www.betrail.run/runner/chailloleau.antoine/overview,65.47,1,"2026 : 3ème de la MARSI TRAIL 45Km, 2nd de l'ultra de l'ile d'oleron 110Km, 2nd du trail des pays de monts 53Km
-2025 :4ème du 130Km de la HOT
-(entre autre ..top 15 sur toutes les courses référencées sur BETRAIL)
-",2M - en 01:51:33 sur 24Km,,42.M M - 25 Km
-47,25 KM,47,MOUCHARD,Loic,H,M3,FONTENAY LE COMTE (85200),,,,Pas trouvé,,,155.M M - 25 Km
-48,25 KM,48,MOUCHARD,Maguy,F,M2,FONTENAY LE COMTE (85200),https://www.betrail.run/runner/mouchard.maguy/overview,40.67,2,,,,
-49,25 KM,49,GUILMINEAU,Adrien,H,M0,DOIX (85200) / SAF,https://www.betrail.run/runner/guilmineau.adrien/overview,49.31,7,,13M - en 02:10:13 sur 24Km,,21.M M - 52 Km
-50,25 KM,50,RAOUL,Romain,H,M1,LA CAILLERE SAINT HILAIRE (85410),https://www.betrail.run/runner/raoul.romain/overview,48.03,9,,,,
-51,25 KM,51,LEFORT,Freddy,H,M2,SERIGNE (85200),https://www.betrail.run/runner/lefort.freddy/overview,56.9,1,"2025 : 17Km Trail de la vallée de l'yon 4ème , 17Km trail de la source 5ème,  8Km du Bol d'air 2nd",3M - en 01:51:37 sur 24Km,,2.M M - 8 Km
-52,25 KM,52,BROSSARD,Aurore,F,M2,COURCON (17170) / COURS'SON NATURE,https://www.betrail.run/runner/brossard.aurore/overview,47.14,1,"2026 : 10ème du 130Km de l'EUSKA TRAIL, 3ème du 26KM DU VAL d'EGRAY
-2025 : 3ème du 26Km des BOSSES DE ST PAUL",,,
-53,25 KM,53,MOLLE,Yoann,H,M1,ST MICHEL LE CLOUCQ (85200),https://www.betrail.run/runner/molle.yoann/overview,41.82,21,,,54 M - 18KM en 01:50:59,
-54,25 KM,54,BATY,Florian,H,SE,COULONGES SUR LAUTIZE (79160) / SNT,https://www.betrail.run/runner/baty.florian/overview,44.73,17,,,,
-55,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-56,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-57,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-58,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-59,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-60,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-61,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-62,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-63,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-64,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-65,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-66,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-67,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-68,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-69,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-70,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-71,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-72,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-73,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-74,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-75,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-76,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-77,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-78,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-79,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-80,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-81,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-82,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-83,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-84,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-85,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-86,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-87,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-88,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-89,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-90,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-91,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-92,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-93,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-94,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-95,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-96,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-97,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-98,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-99,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-100,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-101,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-102,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-103,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-104,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-105,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-106,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-107,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-108,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-109,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-110,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-111,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-112,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-113,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-114,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-115,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-116,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-117,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-118,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-119,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-120,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-121,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-122,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-123,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-124,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-125,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-126,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-127,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-128,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-129,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-130,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-131,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-132,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-133,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-134,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-135,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-136,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-137,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-138,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-139,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-140,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-141,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-142,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-143,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-144,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-145,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-146,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-147,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-148,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-149,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-150,25 KM,,,,,,,Prénom ou nom manquant,,,,,,
-151,,,,,,,,,,,,,,
-152,,,,,,,,,,,,,,
-153,,,,,,,,,,,,,,
-154,,,,,,,,,,,,,,
-155,,,,,,,,,,,,,,
-156,,,,,,,,,,,,,,
-157,,,,,,,,,,,,,,
-158,,,,,,,,,,,,,,
-159,,,,,,,,,,,,,,
-160,,,,,,,,,,,,,,
-161,,,,,,,,,,,,,,
-162,,,,,,,,,,,,,,
-163,,,,,,,,,,,,,,
-164,,,,,,,,,,,,,,
-165,,,,,,,,,,,,,,
-166,,,,,,,,,,,,,,
-167,,,,,,,,,,,,,,
-168,,,,,,,,,,,,,,
-169,,,,,,,,,,,,,,
-170,,,,,,,,,,,,,,
-171,,,,,,,,,,,,,,
-172,,,,,,,,,,,,,,
-173,,,,,,,,,,,,,,
-174,,,,,,,,,,,,,,
-175,,,,,,,,,,,,,,
-176,,,,,,,,,,,,,,
-177,,,,,,,,,,,,,,
-178,,,,,,,,,,,,,,
-179,,,,,,,,,,,,,,
-180,,,,,,,,,,,,,,
-181,,,,,,,,,,,,,,
-182,,,,,,,,,,,,,,
-183,,,,,,,,,,,,,,
-184,,,,,,,,,,,,,,
-185,,,,,,,,,,,,,,
-186,,,,,,,,,,,,,,
-187,,,,,,,,,,,,,,
-188,,,,,,,,,,,,,,
-189,,,,,,,,,,,,,,
-190,,,,,,,,,,,,,,
-191,,,,,,,,,,,,,,
-192,,,,,,,,,,,,,,
-193,,,,,,,,,,,,,,
-194,,,,,,,,,,,,,,
-195,,,,,,,,,,,,,,
-196,,,,,,,,,,,,,,
-197,,,,,,,,,,,,,,
-198,,,,,,,,,,,,,,
-199,,,,,,,,,,,,,,
-200,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-1,MARCHE 12 Km,,ANNE MARIE,Vanderlinden,F,M3,L ILE D ELLE (85770),,,,,,,
-2,MARCHE 12 Km,,BONNARD,Sylvia,F,M4,DOMPIERRE SUR MER (17139),,,,,,,
-3,MARCHE 12 Km,,BONNIN,Stéphane,H,M4,POUILLE (85 570),,,,,,,
-4,MARCHE 12 Km,,BONNIN,Malo,H,JU,POUILLE (85 570),,,,,,,
-5,MARCHE 12 Km,,BONNIN,Maxime,H,M2,MAILLE (85420),,,,,,,
-6,MARCHE 12 Km,,BONNIN,Hélène,F,M2,MAILLE (Maille (85420)),,,,,,,
-7,MARCHE 12 Km,,BREVET,Johanna,F,M4,LA CHAIZE LE VICOMTE (85310),,,,,,,
-8,MARCHE 12 Km,,BREVET,Francois-regis,H,M4,LA CHAIZE LE VICOMTE (85310),,,,,,,
-9,MARCHE 12 Km,,CARAT,Frédéric,H,M3,TAUGON,,,,,,,
-10,MARCHE 12 Km,,FORESTIER,Karine,F,M3,ECHIRE (79410),,,,,,,
-11,MARCHE 12 Km,,GUIGNET,Pascal,H,M4,L ILE D ELLE (85770),,,,,,,
-12,MARCHE 12 Km,,NIVAU,Nicolas,H,M2,L ILE D ELLE (85770),,,,,,,
-13,MARCHE 12 Km,,NIVAU,Thaïs,F,MI,L ILE D ELLE (85770),,,,,,,
-14,MARCHE 12 Km,,RENAUDEAU,Francky,H,M3,L ILE D ELLE (85770),,,,,,,
-15,MARCHE 12 Km,,RENAUDEAU,Sabrina,F,M3,L ILE D ELLE (85770),,,,,,,
-16,MARCHE 12 Km,,ROUSSEAU,Auryane,F,SE,POUZAUGES (85700),,,,,,,
-17,MARCHE 12 Km,,ROUSSEAU,Emilie,F,M2,VIX (85770),,,,,,,
-18,MARCHE 12 Km,,GUYONNET,Audrey,F,M3,SAINT CYR DU DORET (17170),,,,,,,
-19,MARCHE 12 Km,,MENATORY,Eva,F,SE,COURCON (17170) / COURS'SON NATURE,,,,,,,
-20,MARCHE 12 Km,,,,,,,,,,,,,
-21,MARCHE 12 Km,,,,,,,,,,,,,
-22,MARCHE 12 Km,,,,,,,,,,,,,
-23,MARCHE 12 Km,,,,,,,,,,,,,
-24,MARCHE 12 Km,,,,,,,,,,,,,
-25,MARCHE 12 Km,,,,,,,,,,,,,
-26,MARCHE 12 Km,,,,,,,,,,,,,
-27,MARCHE 12 Km,,,,,,,,,,,,,
-28,MARCHE 12 Km,,,,,,,,,,,,,
-29,MARCHE 12 Km,,,,,,,,,,,,,
-30,MARCHE 12 Km,,,,,,,,,,,,,
-31,MARCHE 12 Km,,,,,,,,,,,,,
-32,MARCHE 12 Km,,,,,,,,,,,,,
-33,MARCHE 12 Km,,,,,,,,,,,,,
-34,MARCHE 12 Km,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,
-1,ADHERENT,,BAUDRY,Gaetan,,,,,,,,,,
-2,ADHERENT,,BONNIN,Gregory,,,,,,,,,,
-3,ADHERENT,,GUILLON,Geoffroy,,,,,,,,,,
-4,ADHERENT,,PARADIS,Caroline,,,,,,,,,,
-5,ADHERENT,,RENAUD,Stéphane,,,,,,,,,,
-6,ADHERENT,,GUÉRY,Mederick,,,,,,,,,,
-7,ADHERENT,,LE COZ,Anne,,,,,,,,,,
-8,ADHERENT,,BOBIN,Mathieu,,,,,,,,,,
-9,ADHERENT,,CHARRON,Giovanni,,,,,,,,,,
-10,ADHERENT,,PUAUD,Delphine,,,,,,,,,,
-11,ADHERENT,,BRIAND,Mathieu,,,,,,,,,,
-12,ADHERENT,,RENAUD,David,,,,,,,,,67 M - 18KM en 02:00:48,
-13,ADHERENT,,DESLANDES,Michael,,,,,,,,27M - en 00:47:43 sur 7Km,,
-14,ADHERENT,,BLANCHET,Lilian,,,,,,,,6M - en 01:17:55 sur 14Km,,
-15,ADHERENT,,CHEVOLEAU,Anne,,,,,,,,,,
-16,ADHERENT,,TRUTEAU,Pierre,,,,,,,,34M - en 02:48:49 sur 24Km,,
-17,ADHERENT,,FAUGER,Axelle,,,,,,,,1F - en 00:34:09 sur 7Km,,
-18,ADHERENT,,LE MOULLEC,Kyllian,,,,,,,,,,
-19,ADHERENT,,COUE,Jean-Francois,,,,,,,,,,
-20,ADHERENT,,MANTEAU,Pierre,,,,,,,,,,
-21,ADHERENT,,RENOU,Julien,,,,,,,,,16 M - 18KM en 01:42:36,
-22,ADHERENT,,FOLIARD LE GAL,Helene,,,,,,,,,42 F - 9KM en 01:11:46,
-23,ADHERENT,,RENAUD,Jean-Francois,,,,,,,,,,
-24,ADHERENT,,JANVIER,Ludovic,,,,,,,,,,
-25,ADHERENT,,DELALANDRE,Cyril,,,,,,,,,,
-26,ADHERENT,,MANTEAU,Aline,,,,,,,,,,
-27,ADHERENT,,CHAPELET,Joachim,,,,,,,,,,
-28,ADHERENT,,MENARD,Adeline,,,,,,,,,,
-29,ADHERENT,,BLANCHET,Noel,,,,,,,,,,
-30,ADHERENT,,BAUDRY,Julie,,,,,,,,,,
-31,ADHERENT,,GOUIN,Frederic,,,,,,,,,,
-32,ADHERENT,,FOLIARD LE GAL,Sebastien,,,,,,,,,,
-33,ADHERENT,,GUERY,Axel,,,,,,,,,,
-34,ADHERENT,,AUBRY,Christophe,,,,,,,,,,
-35,ADHERENT,,HUMBERT-DROZ-LAURENT,Emmanuelle,,,,,,,,,3 F - 9KM en 00:42:58,
-36,ADHERENT,,BOUTEILLER,Francois,,,,,,,,,17 M - 18KM en 01:43:17,
-37,ADHERENT,,BONNIN,Berengere,,,,,,,,,,
-38,ADHERENT,,MATHIEU,Sebastien,,,,,,,,,,
-39,ADHERENT,,BRIAND,Charlotte,,,,,,,,,,
-40,ADHERENT,,BOUDAUD,Amelie,,,,,,,,,27 F - 9KM en 00:58:29,
-41,ADHERENT,,SOUCHARD,Céline,,,,,,,,,,
-42,ADHERENT,,TOUMI,Tony,,,,,,,,,14 M - 9KM en 00:39:31,
-43,ADHERENT,,RENOU,Mathieu,,,,,,,,,22 M - 18KM en 01:44:26,
-44,ADHERENT,,BONNIN,Elodie,,,,,,,,,,
-45,ADHERENT,,BONNIN,Anthony,,,,,,,,,,
-46,ADHERENT,,GANTIER,Aurélie,,,,,,,,,,
-47,ADHERENT,,BERNARD,Johanne,,,,,,,,,,
-48,ADHERENT,,DOBIGNY,Aurore,,,,,,,,,,
-49,ADHERENT,,JORET,Isabelle,,,,,,,,,,
-50,ADHERENT,,BONNIN,Aloïs,,,,,,,,,,
-51,ADHERENT,,TANGATCHY,Stephane,,,,,,,,,,
-52,ADHERENT,,RIVE,Sebastien,,,,,,,,,67 M - 9KM en 00:58:43,
-53,ADHERENT,,ROY,Bernard,,,,,,,,,,
-54,ADHERENT,,BLANCHET,Quentin,,,,,,,,,,
-55,ADHERENT,,GABORIAU,Freddy,,,,,,,,,,
-56,ADHERENT,,BLUTEAU,Simon,,,,,,,,,,
-57,ADHERENT,,BLANCHET,Romain,,,,,,,,,,
-58,ADHERENT,,BIRONNEAU,Stéphanie,,,,,,,,,,
-59,ADHERENT,,ROUSSEAU,Cecile,,,,,,,,27F - en 00:55:27 sur 7Km,,
-60,ADHERENT,,GUILLON,Arnaud,,,,,,,,,,
-61,ADHERENT,,LE GOFF,Yohan,,,,,,,,,,
-62,ADHERENT,,NEAU,Gaetan,,,,,,,,,,
-63,ADHERENT,,CHARRON,Virginie,,,,,,,,,,
-64,ADHERENT,,GABORIT,Maxime,,,,,,,,,,
-65,ADHERENT,,MORIN,Raphaël,,,,,,,,,,
-66,ADHERENT,,PARADIS,Therese,,,,,,,,,,
-67,ADHERENT,,PARADIS,Jean-Michel,,,,,,,,,,
-68,ADHERENT,,BAUDRY,Noel,,,,,,,,,,
-69,ADHERENT,,BAUDRY,Therese,,,,,,,,,,
-70,ADHERENT,,BLANCHET,Isabelle,,,,,,,,,,
-71,ADHERENT,,BONNIN,Pascal,,,,,,,,,,
-72,ADHERENT,,GUILLON,Yolaine,,,,,,,,,,
+,,,,,,,,,
+1,8 KM,MERCIER Serenella,301,F,M4,DOIX LES FONTAINES (85200),Validé,MERCIER,Serenella
+2,8 KM,BREVET Marie-amelie,302,F,SE,CHOLET (49300),Validé,BREVET,Marie-amelie
+3,8 KM,TESSIER Sabrina,303,F,M2,LONGEVES (85200),Validé,TESSIER,Sabrina
+4,8 KM,BOUTET Rudy,304,H,SE,POITIERS (86000),Validé,BOUTET,Rudy
+5,8 KM,POUDRET Enzo,305,H,SE,BOIVRE-LA-VALLEE (86470),Validé,POUDRET,Enzo
+6,8 KM,LENA Melanie,306,F,M2,CHAUCHE (85140),Validé,LENA,Melanie
+7,8 KM,MORICE Dominique,307,F,M1,FONTAINES (85200),Validé,MORICE,Dominique
+8,8 KM,CHABIRAND Fanny,308,F,M1,SAINT PIERRE LE VIEUX (85420),Validé,CHABIRAND,Fanny
+9,8 KM,GIRAUDEAU Valerie,309,F,M4,MONTREUIL (85200),Validé,GIRAUDEAU,Valerie
+10,8 KM,LESOING Patrick,310,H,M3,SAINT JEAN DE BEUGNE (85210),Validé,LESOING,Patrick
+11,8 KM,DEPRE Djovani,311,H,SE,CHOLET (49300),Validé,DEPRE,Djovani
+12,8 KM,RECAGNO Nadege,312,F,M3,TAUGON (17170),Valid,RECAGNO,Nadege
+13,8 KM,LEGRAS Deborah,313,F,SE,LONGEVES (85200),Validé,LEGRAS,Deborah
+14,8 KM,NOYAU Laurine,314,F,SE,NALLIERS (85370),Validé,NOYAU,Laurine
+15,8 KM,BERNARD Philippe,315,H,M5,ST JEAN D'ANGELY (17400),Validé,BERNARD,Philippe
+16,8 KM,PERICO Maxence,316,H,M1,FONTENAY LE COMTE (85200),Validé,PERICO,Maxence
+17,8 KM,DELRIVE Sebastien,317,H,M2,AUZAY (85200),Validé,DELRIVE,Sebastien
+18,8 KM,REGNIER Corentin,318,H,SE,AUCHAY SUR VENDEE (85200),Validé,REGNIER,Corentin
+19,8 KM,JOUBERT Charlotte,319,F,M0,FONTENAY LE COMTE (85200),Validé,JOUBERT,Charlotte
+20,8 KM,THIBAUD Virginie,320,F,M1,DOIX LES FONTAINES (85200),Validé,THIBAUD,Virginie
+21,8 KM,LE POTIER Magali,321,F,M4,LE LANGON (85370),Validé,LE POTIER,Magali
+22,8 KM,BEUCHILLOT Beatrice,322,F,M6,FONTENAY LE COMTE (85200),Validé,BEUCHILLOT,Beatrice
+23,8 KM,BEUCHILLOT Frederic,323,H,M5,FONTENAY LE COMTE (85200),Validé,BEUCHILLOT,Frederic
+24,8 KM,GUILBAUD Stephane,324,H,M2,LONGEVES (85200),Validé,GUILBAUD,Stephane
+25,8 KM,CAILLAUD Guillaume,325,H,M0,NIORT (79000),Validé,CAILLAUD,Guillaume
+26,8 KM,FORTIN Cyril,326,H,M2,AUBIGNY LES CLOUZEAUX (85430) / RAID'APTE,Validé,FORTIN,Cyril
+27,8 KM,SERVANT Mathieu,327,H,M2,AUBIGNY LES CLOUZEAUX (85430) / RAID'APTE,Validé,SERVANT,Mathieu
+28,8 KM,SERVANT Lydie,328,F,M3,AUBIGNY LES CLOUZEAUX (85430),Validé,SERVANT,Lydie
+29,8 KM,DUCLOUET Morgane,329,F,M2,FONTENAY LE COMTE (85200),Validé,DUCLOUET,Morgane
+30,8 KM,LUCIEN Mathieu,330,H,M1,FOURAS (17450),Validé,LUCIEN,Mathieu
+31,8 KM,POUPIN-VIGIER Lina,331,F,SE,CHOLET (49300) / SAINT-HERBLAIN,Validé,POUPIN-VIGIER,Lina
+32,8 KM,ARNOU Nathan,332,H,SE,CHOLET (49300) / LES HERBIERS,Validé,ARNOU,Nathan
+33,8 KM,MARTIN Julien,333,H,M1,LA ROCHELLE (17000),Validé,MARTIN,Julien
+34,8 KM,DE PERETTI Solenn,334,F,M0,AUZAY (85200),Validé,DE PERETTI,Solenn
+35,8 KM,CHARRIER Jean Michel,335,H,M5,85240 (85240) / TEAM CAPTAIN,Validé,CHARRIER,Jean Michel
+36,8 KM,GOIN Melodie,336,F,M1,SERIGNE (85200),Validé,GOIN,Melodie
+37,8 KM,CHAMPENOIS Swann,337,F,SE,GOUESNAC'H (29950),Validé,CHAMPENOIS,Swann
+38,8 KM,,,,,,,,
+39,8 KM,,,,,,,,
+40,8 KM,,,,,,,,
+41,8 KM,,,,,,,,
+42,8 KM,,,,,,,,
+43,8 KM,,,,,,,,
+44,8 KM,,,,,,,,
+45,8 KM,,,,,,,,
+46,8 KM,,,,,,,,
+47,8 KM,,,,,,,,
+48,8 KM,,,,,,,,
+49,8 KM,,,,,,,,
+50,8 KM,,,,,,,,
+51,8 KM,,,,,,,,
+52,8 KM,,,,,,,,
+53,8 KM,,,,,,,,
+54,8 KM,,,,,,,,
+55,8 KM,,,,,,,,
+56,8 KM,,,,,,,,
+57,8 KM,,,,,,,,
+58,8 KM,,,,,,,,
+59,8 KM,,,,,,,,
+60,8 KM,,,,,,,,
+61,8 KM,,,,,,,,
+62,8 KM,,,,,,,,
+63,8 KM,,,,,,,,
+64,8 KM,,,,,,,,
+65,8 KM,,,,,,,,
+66,8 KM,,,,,,,,
+67,8 KM,,,,,,,,
+68,8 KM,,,,,,,,
+69,8 KM,,,,,,,,
+70,8 KM,,,,,,,,
+71,8 KM,,,,,,,,
+72,8 KM,,,,,,,,
+73,8 KM,,,,,,,,
+74,8 KM,,,,,,,,
+75,8 KM,,,,,,,,
+76,8 KM,,,,,,,,
+77,8 KM,,,,,,,,
+78,8 KM,,,,,,,,
+79,8 KM,,,,,,,,
+80,8 KM,,,,,,,,
+81,8 KM,,,,,,,,
+82,8 KM,,,,,,,,
+83,8 KM,,,,,,,,
+84,8 KM,,,,,,,,
+85,8 KM,,,,,,,,
+86,8 KM,,,,,,,,
+87,8 KM,,,,,,,,
+88,8 KM,,,,,,,,
+89,8 KM,,,,,,,,
+90,8 KM,,,,,,,,
+91,8 KM,,,,,,,,
+92,8 KM,,,,,,,,
+93,8 KM,,,,,,,,
+94,8 KM,,,,,,,,
+95,8 KM,,,,,,,,
+96,8 KM,,,,,,,,
+97,8 KM,,,,,,,,
+98,8 KM,,,,,,,,
+99,8 KM,,,,,,,,
+100,8 KM,,,,,,,,
+101,8 KM,,,,,,,,
+102,8 KM,,,,,,,,
+103,8 KM,,,,,,,,
+104,8 KM,,,,,,,,
+105,8 KM,,,,,,,,
+106,8 KM,,,,,,,,
+107,8 KM,,,,,,,,
+108,8 KM,,,,,,,,
+109,8 KM,,,,,,,,
+110,8 KM,,,,,,,,
+111,8 KM,,,,,,,,
+112,8 KM,,,,,,,,
+113,8 KM,,,,,,,,
+114,8 KM,,,,,,,,
+115,8 KM,,,,,,,,
+116,8 KM,,,,,,,,
+117,8 KM,,,,,,,,
+118,8 KM,,,,,,,,
+119,8 KM,,,,,,,,
+120,8 KM,,,,,,,,
+121,8 KM,,,,,,,,
+122,8 KM,,,,,,,,
+123,8 KM,,,,,,,,
+124,8 KM,,,,,,,,
+125,8 KM,,,,,,,,
+126,8 KM,,,,,,,,
+127,8 KM,,,,,,,,
+128,8 KM,,,,,,,,
+129,8 KM,,,,,,,,
+130,8 KM,,,,,,,,
+131,8 KM,,,,,,,,
+132,8 KM,,,,,,,,
+133,8 KM,,,,,,,,
+134,8 KM,,,,,,,,
+135,8 KM,,,,,,,,
+136,8 KM,,,,,,,,
+137,8 KM,,,,,,,,
+138,8 KM,,,,,,,,
+139,8 KM,,,,,,,,
+140,8 KM,,,,,,,,
+141,8 KM,,,,,,,,
+142,8 KM,,,,,,,,
+143,8 KM,,,,,,,,
+144,8 KM,,,,,,,,
+145,8 KM,,,,,,,,
+146,8 KM,,,,,,,,
+147,8 KM,,,,,,,,
+148,8 KM,,,,,,,,
+149,8 KM,,,,,,,,
+150,8 KM,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+1,15 KM,VILLAUME Jessy,151,H,M0,L'HERMENAULT (85570) / FCPB L'HERMENAULT,Validé,VILLAUME,Jessy
+2,15 KM,KORMANN Remi,152,H,M2,SERIGNE (85200),Validé,KORMANN,Remi
+3,15 KM,DEVOST Gaetan,153,H,M1,BENON (17170),Validé,DEVOST,Gaetan
+4,15 KM,LE GARREC Emilie,154,F,M2,PERIGNY (17180),Validé,LE GARREC,Emilie
+5,15 KM,CHAPILLON Florian,155,H,M1,L'ORBRIE (85200),Validé,CHAPILLON,Florian
+6,15 KM,DION Marion,156,F,SE,SAINTE RADEGONDE DES NOYERS (85450),Validé,DION,Marion
+7,15 KM,ARNAUD Romain,157,H,SE,SAINTE GEMME LA PLAINE (85400),Validé,ARNAUD,Romain
+8,15 KM,COUSSEAU Pierre,158,H,SE,MAREUIL SUR LAY (85320),Validé,COUSSEAU,Pierre
+9,15 KM,BOUTET Axelle,159,F,SE,SAINTE-GEMME-LA-PLAINE (85400),Validé,BOUTET,Axelle
+10,15 KM,MARTINEAU Victor,160,H,SE,LA BRETONNIERE LA CLAYE (85320),Validé,MARTINEAU,Victor
+11,15 KM,MARTINEAU Baptiste,161,H,M1,MAREUIL SUR LAY (85320) / RAID'YON,Validé,MARTINEAU,Baptiste
+12,15 KM,BERTHE Philippe,162,H,M6,FONTENAY LE COMTE (85200),Validé,BERTHE,Philippe
+13,15 KM,LABBAYE Clement,163,H,M1,FONTENAY LE COMTE (85200),Validé,LABBAYE,Clement
+14,15 KM,PICAUVILLE Manon,164,F,M0,BENET (85490),Validé,PICAUVILLE,Manon
+15,15 KM,RAPHEL Thony,165,H,M4,LONGEVES (85200),Validé,RAPHEL,Thony
+16,15 KM,GAUDIN Stanislas,166,H,M2,SAINTE-RADEGONDE-DES-NOYERS (85450),Validé,GAUDIN,Stanislas
+17,15 KM,DEVISE Lucie,167,F,SE,MONTREUIL (85200),Validé,DEVISE,Lucie
+18,15 KM,MEUNIER Celine,168,F,M1,BENET (85490),Validé,MEUNIER,Celine
+19,15 KM,LE GALL Morgan,169,H,CA,LA ROCHELLE (17000),En cours de validationCompléter,LE GALL,Morgan
+20,15 KM,SAUVETRE Mylene,170,F,M0,FOUGERE (85480),Validé,SAUVETRE,Mylene
+21,15 KM,BARBE Lucie,171,F,SE,ST FLAIVE DES LOUPS (85150),Validé,BARBE,Lucie
+22,15 KM,VOLLARD POIRAUD Audrey,172,F,SE,LA BOISSIERE-DES-LANDES (85430),Validé,VOLLARD POIRAUD,Audrey
+23,15 KM,HERLEZ Ulrich,173,H,M1,FONTENAY LE COMTE (85200),Validé,HERLEZ,Ulrich
+24,15 KM,CHIRON Romain,174,H,SE,DOMPIERRE SUR MER (17139),Validé,CHIRON,Romain
+25,15 KM,ROTUREAU Adrien,175,H,SE,NIEUL-SUR-MER (17540),Validé,ROTUREAU,Adrien
+26,15 KM,MILET Alban,176,H,SE,NANTES (44300),Validé,MILET,Alban
+27,15 KM,EMEREAU Elsa,177,F,ES,LA GAUBRETIERE (85130),Validé,EMEREAU,Elsa
+28,15 KM,PERTHUIS Estelle,178,F,M2,PERIGNY (17180),Validé,PERTHUIS,Estelle
+29,15 KM,FRELAND Herve,179,H,M4,L'ORBRIE (85200) / SAF,Validé,FRELAND,Herve
+30,15 KM,ROBIN Marion,180,F,M2,NUAILLE D AUNIS (17540),Validé,ROBIN,Marion
+31,15 KM,RAUTUREAU Betty,181,F,M4,SAINTE GEMME LA PLAINE (85400),Validé,RAUTUREAU,Betty
+32,15 KM,TEXIER Mathieu,182,H,SE,VELLUIRE (85770),En cours de validation,TEXIER,Mathieu
+33,15 KM,CIRERA Cindy,183,F,M1,LA ROCHELLE (17000),Validé,CIRERA,Cindy
+34,15 KM,ANTONELLI Alexandra,184,F,M0,EPANNES (79270),Validé,ANTONELLI,Alexandra
+35,15 KM,CHABIRAND Blandine,185,F,M0,EPANNES (79270),Validé,CHABIRAND,Blandine
+36,15 KM,BONNIN Elisabeth,186,F,M4,POUILLE (85570),Validé,BONNIN,Elisabeth
+37,15 KM,TRIQUET Philippe,187,H,M3,BERNAY (17330),Validé,TRIQUET,Philippe
+38,15 KM,JOULAIN Anthony,188,H,M0,SERIGNE (85200) / SAF,Validé,JOULAIN,Anthony
+39,15 KM,PETORIN Laurie,189,F,M0,TALMONT-SAINT-HILAIRE (85440),Validé,PETORIN,Laurie
+40,15 KM,MOULIC Esteban,190,H,SE,LES SABLES D'OLONNE (85100),Validé,MOULIC,Esteban
+41,15 KM,BONNARD Pascal,191,H,M4,DOMPIERRE SUR MER (17139) / ASPR 17,Validé,BONNARD,Pascal
+42,15 KM,CHEVALIER Mathilde,192,F,ES,SAINTE-SOULLE (17220),Validé,CHEVALIER,Mathilde
+43,15 KM,VRIGNAUD Christophe,193,H,M3,LA CAILLERE ST HILAIRE (85410)  / LES POT'TRAILEURS 85,Validé,VRIGNAUD,Christophe
+44,15 KM,POMMIER Antoine,194,H,SE,LA ROCHELLE (17000),Validé,POMMIER,Antoine
+45,15 KM,BACHELLEREAU Cedric,195,H,M3,LA CAILLERE ST HILAIRE (85410),Validé,BACHELLEREAU,Cedric
+46,15 KM,GILBERT Alexandre,196,H,M1,RIVES DU FOUGERAIS (85410) / LES POT'TRAILEURS 85,Validé,GILBERT,Alexandre
+47,15 KM,MALIGNY Melanie,197,F,M2,MAILLEZAIS (85420),Validé,MALIGNY,Melanie
+48,15 KM,GAUSSE Alexis,198,H,SE,LA ROCHE-SUR-YON (85000),Validé,GAUSSE,Alexis
+49,15 KM,PHONASA Erwann,199,H,ES,ESSARTS (85140),Validé,PHONASA,Erwann
+50,15 KM,PARADIS Corentin,200,H,SE,PARIS (75005),Validé,PARADIS,Corentin
+51,15 KM,LE MANACH Valérie,201,F,M2,RIVES D AUTISE (85240),En cours de validation,LE MANACH,Valérie
+52,15 KM,LE MANACH Guillaume,202,H,M2,RIVES D'AUTISE (85240),Validé,LE MANACH,Guillaume
+53,15 KM,HEVREAU Florestan,203,H,M1,MOUZEUIL SAINT MARTIN (85370),Validé,HEVREAU,Florestan
+54,15 KM,JAUDRONNET Francois,204,H,M1,FONTENAY LE COMTE (85 200),Validé,JAUDRONNET,Francois
+55,15 KM,PICARD Lilian,205,F,SE,SAINT MARTIN DES NOYERS (85140),Validé,PICARD,Lilian
+56,15 KM,PORTAL Clementine,206,F,SE,LES SABLES DOLONNE (85340),Validé,PORTAL,Clementine
+57,15 KM,GAIGNET Didier,207,H,M4,VELLUIRE (85770),Validé,GAIGNET,Didier
+58,15 KM,LELOUP Margot,208,F,SE,ANGERS (49000),Validé,LELOUP,Margot
+59,15 KM,LOUE Nora,209,F,SE,FALLERON (85670),Validé,LOUE,Nora
+60,15 KM,THIBAUD Florian,210,H,M2,DOIX LES FONTAINES (85200),Validé,THIBAUD,Florian
+61,15 KM,GELOT Gaetan,211,H,M1,AUCHAY SUR VENDEE (85200) / AS4VF,Validé,GELOT,Gaetan
+62,15 KM,BROUARD Xavier,212,H,M2,FONTENAY LE COMTE (85200),Validé,BROUARD,Xavier
+63,15 KM,FOUR Camille,213,F,M0,LIEZ (85420),Validé,FOUR,Camille
+64,15 KM,NAULT Marien,214,H,SE,SAINT OUEN DAUNIS (17230),Validé,NAULT,Marien
+65,15 KM,HUAU Dimitri,215,H,M3,MARANS (17230),Validé,HUAU,Dimitri
+66,15 KM,LEONARD Pierre-henri,216,H,M0,FRONTENAY ROHAN ROHAN (79270) / SEP ATHLETISME FRONTENAY-ROHAN-ROHAN,Validé,LEONARD,Pierre-henri
+67,15 KM,PELEAU Severine,217,F,M3,PUILBOREAU (17138) / COURS'SON NATURE,Validé,PELEAU,Severine
+68,15 KM,BISSON Emmanuel,218,H,M4,LA RONDE (17170) / COURS'SON NATURE,Validé,BISSON,Emmanuel
+69,15 KM,JAUMIER Quentin,219,H,ES,AUCHAY-SUR-VENDEE (85200) ,Validé,JAUMIER,Quentin
+70,15 KM,BOCQUIER Adao,220,H,CA,LE BERNARD (85560),En cours de validation,BOCQUIER,Adao
+71,15 KM,CHOUTEAU Lea,221,F,SE,LES LUCS SUR BOULOGNE (85170),Validé,CHOUTEAU,Lea
+72,15 KM,BELLION Eugenie,222,F,SE,LE POIRE SUR VIE (85170),Validé,BELLION,Eugenie
+73,15 KM,RIFFAULT Florent,223,H,M5,FONTENAY LE COMTE (85200) / SAF,En cours de validation,RIFFAULT,Florent
+74,15 KM,ZOBDA Raphael,224,H,M3,FONTENAY LE COMTE (85200),Validé,ZOBDA,Raphael
+75,15 KM,CARLIER Aaron,225,H,CA,JARD SUR MER (85520),En cours de validation,CARLIER,Aaron
+76,15 KM,GUYONNET Yoann,226,H,M3,SAINT CYR DU DORET (17170) / COURS'SON NATURE,Validé,GUYONNET,Yoann
+77,15 KM,COULON Elodie,227,F,M2,SAINT-JEAN-DE-LIVERSAY (17170) / COURS'SON NATURE,Validé,COULON,Elodie
+78,15 KM,LEJEUNE Armand,228,H,M2,SAINT-JEAN-DE-LIVERSAY (17170) / COURS'SON NATURE,Validé,LEJEUNE,Armand
+79,15 KM,SERVANT Thomas,229,H,M1,XANTON-CHASSENON (85240),Validé,SERVANT,Thomas
+80,15 KM,LHENAFF Nicolas,230,H,M2,ST SAUVEUR D AUNIS (17540),Validé,LHENAFF,Nicolas
+81,15 KM,PEROCHAIN Cecile,231,F,M2,DAMVIX (85420) / VENDEE RUNNING 85,Validé,PEROCHAIN,Cecile
+82,15 KM,MARZELIERE Lise,232,F,M0,NANTES (44300),Validé,MARZELIERE,Lise
+83,15 KM,RAVARD Leopold,233,H,SE,AUCHAY-SUR-VENDEE (85200),Validé,RAVARD,Leopold
+84,15 KM,MAZOUE William,234,H,M1,FONTENAY-LE-COMTE (85200) / CAP OU PAS CAP FONTENAY,Validé,MAZOUE,William
+85,15 KM,COUE Freddy,235,H,M5,L'ORBRIE (85200) / ASV,En cours de validation,COUE,Freddy
+86,15 KM,MALLET Sabrina,236,F,M2,FONTENAY LE COMTE (85200) / FONTENAY TRIATHLON,Validé,MALLET,Sabrina
+87,15 KM,BOUZIANI Frederic,237,H,M4,FONTENAY LE COMTE (85200) / FONTENAY TRIATHLON,Validé,BOUZIANI,Frederic
+88,15 KM,,,,,,,,
+89,15 KM,,,,,,,,
+90,15 KM,,,,,,,,
+91,15 KM,,,,,,,,
+92,15 KM,,,,,,,,
+93,15 KM,,,,,,,,
+94,15 KM,,,,,,,,
+95,15 KM,,,,,,,,
+96,15 KM,,,,,,,,
+97,15 KM,,,,,,,,
+98,15 KM,,,,,,,,
+99,15 KM,,,,,,,,
+100,15 KM,,,,,,,,
+101,15 KM,,,,,,,,
+102,15 KM,,,,,,,,
+103,15 KM,,,,,,,,
+104,15 KM,,,,,,,,
+105,15 KM,,,,,,,,
+106,15 KM,,,,,,,,
+107,15 KM,,,,,,,,
+108,15 KM,,,,,,,,
+109,15 KM,,,,,,,,
+110,15 KM,,,,,,,,
+111,15 KM,,,,,,,,
+112,15 KM,,,,,,,,
+113,15 KM,,,,,,,,
+114,15 KM,,,,,,,,
+115,15 KM,,,,,,,,
+116,15 KM,,,,,,,,
+117,15 KM,,,,,,,,
+118,15 KM,,,,,,,,
+119,15 KM,,,,,,,,
+120,15 KM,,,,,,,,
+121,15 KM,,,,,,,,
+122,15 KM,,,,,,,,
+123,15 KM,,,,,,,,
+124,15 KM,,,,,,,,
+125,15 KM,,,,,,,,
+126,15 KM,,,,,,,,
+127,15 KM,,,,,,,,
+128,15 KM,,,,,,,,
+129,15 KM,,,,,,,,
+130,15 KM,,,,,,,,
+131,15 KM,,,,,,,,
+132,15 KM,,,,,,,,
+133,15 KM,,,,,,,,
+134,15 KM,,,,,,,,
+135,15 KM,,,,,,,,
+136,15 KM,,,,,,,,
+137,15 KM,,,,,,,,
+138,15 KM,,,,,,,,
+139,15 KM,,,,,,,,
+140,15 KM,,,,,,,,
+141,15 KM,,,,,,,,
+142,15 KM,,,,,,,,
+143,15 KM,,,,,,,,
+144,15 KM,,,,,,,,
+145,15 KM,,,,,,,,
+146,15 KM,,,,,,,,
+147,15 KM,,,,,,,,
+148,15 KM,,,,,,,,
+149,15 KM,,,,,,,,
+150,15 KM,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+1,25 KM,POULTEAU Antonin,1,H,SE,MONTREUIL (85200),Validé,POULTEAU,Antonin
+2,25 KM,HOUAS Stephane,2,H,M3,L'AIGUILLON LA PRESQU'ILE (85460),Validé,HOUAS,Stephane
+3,25 KM,JADAUD Thomas,3,H,M0,MONTREUIL (85200),Validé,JADAUD,Thomas
+4,25 KM,POUPONNEAU Jean Marie,4,H,M2,ETAMPES (91150),Validé,POUPONNEAU,Jean Marie
+5,25 KM,POIRIER Pierrick,5,H,M2,FONTENAY LE COMTE (85200) / SAF,En cours de validationCompléter,POIRIER,Pierrick
+6,25 KM,LIEVRE Alexandre,6,H,M0,PUYRAVAULT (85450),Validé,LIEVRE,Alexandre
+7,25 KM,GENEVE David,7,H,M3,LA CAILLERE ST HILAIRE (85410),Validé,GENEVE,David
+8,25 KM,PIZON Arthur,8,H,SE,LA CHAIZE-LE-VICOMTE (85310),Validé,PIZON,Arthur
+9,25 KM,GAUBERT Christelle,9,F,M1,FONTENAY LE COMTE (85200),Validé,GAUBERT,Christelle
+10,25 KM,AUGEREAU Oceane,10,F,SE,LONGEVES (85200),Validé,AUGEREAU,Oceane
+11,25 KM,AUGEREAU Aurelie,11,F,SE,MERVENT (85200),Validé,AUGEREAU,Aurelie
+12,25 KM,BEAUPEU Laurent,12,H,M2,THORIGNY (85480),Validé,BEAUPEU,Laurent
+13,25 KM,ROCHETEAU Benjamin,13,H,SE,LA ROCHE SUR YON (85000),Validé,ROCHETEAU,Benjamin
+14,25 KM,ROUGER Clara,14,F,ES,CHAIX (85200),Validé,ROUGER,Clara
+15,25 KM,DEVISE Jordan,15,H,SE,MONTREUIL (85200),Validé,DEVISE,Jordan
+16,25 KM,LEFEBVRE Florie,16,F,M1,AUCHAY SUR VENDEE (85200),Validé,LEFEBVRE,Florie
+17,25 KM,LUCAS Mark,17,H,M1,NIORT (79000),Validé,LUCAS,Mark
+18,25 KM,TALLINEAU Murielle,18,F,M5,LA ROCHE SUR YON (85000) / ASPTT LA ROCHE-SUR-YON,Validé,TALLINEAU,Murielle
+19,25 KM,MILET Elea,19,F,SE,PARIS (75014),Validé,MILET,Elea
+20,25 KM,EMEREAU Gaetan,20,H,M4,LA GAUBRETIERE (85130),Validé,EMEREAU,Gaetan
+21,25 KM,GOUGNARD Florent,21,H,M2,NIORT (79000),Validé,GOUGNARD,Florent
+22,25 KM,BONNEAU Kevin,22,H,SE,POITIERS (86009),Validé,BONNEAU,Kevin
+23,25 KM,RASSANT Yann,23,H,SE,VERINES (17540),Validé,RASSANT,Yann
+24,25 KM,GIRAUDON Vincent,24,H,SE,PARTHENAY (79200) / LES POULETS,Validé,GIRAUDON,Vincent
+25,25 KM,HERITEAU David,25,H,M1,LUCON (85400),Validé,HERITEAU,David
+26,25 KM,POUVREAU Lilian,26,H,ES,SAINT-JEAN-DE-LIVERSAY (17170),Validé,POUVREAU,Lilian
+27,25 KM,GAIGNON Charles,27,H,M0,NANTES (44000),Validé,GAIGNON,Charles
+28,25 KM,ALLETRU Baptiste,28,H,SE,VERINES (17540) / AIGREFEUILLE ATHLETISME,En cours de validation,ALLETRU,Baptiste
+29,25 KM,ALLAIN Thomas,29,H,M1,CHAUCHE (85140),Validé,ALLAIN,Thomas
+30,25 KM,DROUAUD Tanguy,30,H,SE,BELLEVILLE SUR VIE (85170),Validé,DROUAUD,Tanguy
+31,25 KM,REMAUD Bastien,31,H,SE,LA GENETOUZE (85190),Validé,REMAUD,Bastien
+32,25 KM,DUBOSC FROMENTIN Aurelien,32,H,SE,LA CHAIZE LE VICOMTE (85150),Validé,DUBOSC FROMENTIN,Aurelien
+33,25 KM,BOULANGER Andrey,33,H,ES,VALLET (44330),Validé,BOULANGER,Andrey
+34,25 KM,BOULANGER Francois,34,H,M4,VALLET (44330),Validé,BOULANGER,Francois
+35,25 KM,GALLAS Florian,35,H,M0,FONTIVILLIE (79500),Validé,GALLAS,Florian
+36,25 KM,GROUSSARD Romain,36,H,M1,LA CHAPELLE POUILLOUX (79190),Validé,GROUSSARD,Romain
+37,25 KM,BONNET Tom,37,H,ES,MONTAIGU-VENDEE (85600),Validé,BONNET,Tom
+38,25 KM,GUILMINEAU Capucine,38,F,SE,SERIGNE (85200),Validé,GUILMINEAU,Capucine
+39,25 KM,GUILMINEAU Herve,39,H,M4,SERIGNE (85200),Validé,GUILMINEAU,Herve
+40,25 KM,GUILMINEAU Eliott,40,H,SE,SERIGNE (85200),Validé,GUILMINEAU,Eliott
+41,25 KM,EROUX Ludovic,41,H,M1,FONTENAY LE COMTE (85200),Validé,EROUX,Ludovic
+42,25 KM,MICHELIN Alexandre,42,H,M1,MARSEILLE (13001) / MARSEILLE TRAIL CLUB,Validé,MICHELIN,Alexandre
+43,25 KM,VICIANA Robin,43,H,M0,LA ROCHELLE (17000),Validé,VICIANA,Robin
+44,25 KM,OULANGER Andrey,33,H,ES,VALLET (44330),Validé,OULANGER,Andrey
+45,25 KM,PAILLAT Francois,45,H,M1,FONTENAY LE COMTE (85200),Validé,PAILLAT,Francois
+46,25 KM,CHAILLOLEAU Antoine,46,H,M3,FONTENAY LE COMTE (85200) / SAF,Validé,CHAILLOLEAU,Antoine
+47,25 KM,MOUCHARD Loic,47,H,M3,FONTENAY LE COMTE (85200),Validé,MOUCHARD,Loic
+48,25 KM,MOUCHARD Maguy,48,F,M2,FONTENAY LE COMTE (85200),Validé,MOUCHARD,Maguy
+49,25 KM,GUILMINEAU Adrien,49,H,M0,DOIX (85200) / SAF,Validé,GUILMINEAU,Adrien
+50,25 KM,RAOUL Romain,50,H,M1,LA CAILLERE SAINT HILAIRE (85410),Validé,RAOUL,Romain
+51,25 KM,LEFORT Freddy,51,H,M2,SERIGNE (85200),Validé,LEFORT,Freddy
+52,25 KM,BROSSARD Aurore,52,F,M2,COURCON (17170) / COURS'SON NATURE,Validé,BROSSARD,Aurore
+53,25 KM,MOLLE Yoann,53,H,M1,ST MICHEL LE CLOUCQ (85200),Validé,MOLLE,Yoann
+54,25 KM,BATY Florian,54,H,SE,COULONGES SUR LAUTIZE (79160) / SNT,Validé,BATY,Florian
+55,25 KM,,,,,,,,
+56,25 KM,,,,,,,,
+57,25 KM,,,,,,,,
+58,25 KM,,,,,,,,
+59,25 KM,,,,,,,,
+60,25 KM,,,,,,,,
+61,25 KM,,,,,,,,
+62,25 KM,,,,,,,,
+63,25 KM,,,,,,,,
+64,25 KM,,,,,,,,
+65,25 KM,,,,,,,,
+66,25 KM,,,,,,,,
+67,25 KM,,,,,,,,
+68,25 KM,,,,,,,,
+69,25 KM,,,,,,,,
+70,25 KM,,,,,,,,
+71,25 KM,,,,,,,,
+72,25 KM,,,,,,,,
+73,25 KM,,,,,,,,
+74,25 KM,,,,,,,,
+75,25 KM,,,,,,,,
+76,25 KM,,,,,,,,
+77,25 KM,,,,,,,,
+78,25 KM,,,,,,,,
+79,25 KM,,,,,,,,
+80,25 KM,,,,,,,,
+81,25 KM,,,,,,,,
+82,25 KM,,,,,,,,
+83,25 KM,,,,,,,,
+84,25 KM,,,,,,,,
+85,25 KM,,,,,,,,
+86,25 KM,,,,,,,,
+87,25 KM,,,,,,,,
+88,25 KM,,,,,,,,
+89,25 KM,,,,,,,,
+90,25 KM,,,,,,,,
+91,25 KM,,,,,,,,
+92,25 KM,,,,,,,,
+93,25 KM,,,,,,,,
+94,25 KM,,,,,,,,
+95,25 KM,,,,,,,,
+96,25 KM,,,,,,,,
+97,25 KM,,,,,,,,
+98,25 KM,,,,,,,,
+99,25 KM,,,,,,,,
+100,25 KM,,,,,,,,
+101,25 KM,,,,,,,,
+102,25 KM,,,,,,,,
+103,25 KM,,,,,,,,
+104,25 KM,,,,,,,,
+105,25 KM,,,,,,,,
+106,25 KM,,,,,,,,
+107,25 KM,,,,,,,,
+108,25 KM,,,,,,,,
+109,25 KM,,,,,,,,
+110,25 KM,,,,,,,,
+111,25 KM,,,,,,,,
+112,25 KM,,,,,,,,
+113,25 KM,,,,,,,,
+114,25 KM,,,,,,,,
+115,25 KM,,,,,,,,
+116,25 KM,,,,,,,,
+117,25 KM,,,,,,,,
+118,25 KM,,,,,,,,
+119,25 KM,,,,,,,,
+120,25 KM,,,,,,,,
+121,25 KM,,,,,,,,
+122,25 KM,,,,,,,,
+123,25 KM,,,,,,,,
+124,25 KM,,,,,,,,
+125,25 KM,,,,,,,,
+126,25 KM,,,,,,,,
+127,25 KM,,,,,,,,
+128,25 KM,,,,,,,,
+129,25 KM,,,,,,,,
+130,25 KM,,,,,,,,
+131,25 KM,,,,,,,,
+132,25 KM,,,,,,,,
+133,25 KM,,,,,,,,
+134,25 KM,,,,,,,,
+135,25 KM,,,,,,,,
+136,25 KM,,,,,,,,
+137,25 KM,,,,,,,,
+138,25 KM,,,,,,,,
+139,25 KM,,,,,,,,
+140,25 KM,,,,,,,,
+141,25 KM,,,,,,,,
+142,25 KM,,,,,,,,
+143,25 KM,,,,,,,,
+144,25 KM,,,,,,,,
+145,25 KM,,,,,,,,
+146,25 KM,,,,,,,,
+147,25 KM,,,,,,,,
+148,25 KM,,,,,,,,
+149,25 KM,,,,,,,,
+150,25 KM,,,,,,,,
+,,,,,,,,,
+1,MARCHE,ANNE MARIE Vanderlinden,,F,M3,L ILE D ELLE (85770),Validé,ANNE MARIE,Vanderlinden
+2,MARCHE,BONNARD Sylvia,,F,M4,DOMPIERRE SUR MER (17139),Validé,BONNARD,Sylvia
+3,MARCHE,BONNIN Stéphane,,H,M4,POUILLE (85 570),Validé,BONNIN,Stéphane
+4,MARCHE,BONNIN Malo,,H,JU,POUILLE (85 570),Validé,BONNIN,Malo
+5,MARCHE,BONNIN Maxime,,H,M2,MAILLE (85420),Validé,BONNIN,Maxime
+6,MARCHE,BONNIN Hélène,,F,M2,MAILLE (Maille (85420)),Validé,BONNIN,Hélène
+7,MARCHE,BREVET Johanna,,F,M4,LA CHAIZE LE VICOMTE (85310),Validé,BREVET,Johanna
+8,MARCHE,BREVET Francois-regis,,H,M4,LA CHAIZE LE VICOMTE (85310),Validé,BREVET,Francois-regis
+9,MARCHE,CARAT Frédéric,,H,M3,TAUGON,Validé,CARAT,Frédéric
+10,MARCHE,FORESTIER Karine,,F,M3,ECHIRE (79410),Validé,FORESTIER,Karine
+11,MARCHE,GUIGNET Pascal,,H,M4,L ILE D ELLE (85770),Validé,GUIGNET,Pascal
+12,MARCHE,GUYONNET Audrey,,F,M3,SAINT CYR DU DORET (17170),Validé,GUYONNET,Audrey
+13,MARCHE,MENATORY Eva,,F,SE,COURCON (17170) / COURS'SON NATURE,En cours de validationCompléter,MENATORY,Eva
+14,MARCHE,MEZIL Stephane,,H,M4,COULOMBIERS (86600),En cours de validationCompléter,MEZIL,Stephane
+15,MARCHE,NIVAU Nicolas,,H,M2,L ILE D ELLE (85770),Validé,NIVAU,Nicolas
+16,MARCHE,NIVAU Thaïs,,F,MI,L ILE D ELLE (85770),Validé,NIVAU,Thaïs
+17,MARCHE,RENAUDEAU Francky,,H,M3,L ILE D ELLE (85770),Validé,RENAUDEAU,Francky
+18,MARCHE,RENAUDEAU Sabrina,,F,M3,L ILE D ELLE (85770),Validé,RENAUDEAU,Sabrina
+19,MARCHE,ROUSSEAU Auryane,,F,SE,POUZAUGES (85700),Validé,ROUSSEAU,Auryane
+20,MARCHE,ROUSSEAU Emilie,,F,M2,VIX (85770),Validé,ROUSSEAU,Emilie
+21,MARCHE,,,,,,,,
+22,MARCHE,,,,,,,,
+23,MARCHE,,,,,,,,
+24,MARCHE,,,,,,,,
+25,MARCHE,,,,,,,,
+26,MARCHE,,,,,,,,
+27,MARCHE,,,,,,,,
+28,MARCHE,,,,,,,,
