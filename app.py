@@ -254,7 +254,6 @@ try:
     MAX_PLACES = 150
     df_real_courses = df[df['COURSE'].notna() & (~df['COURSE'].astype(str).str.upper().str.contains("ADHERENT"))] if 'COURSE' in df.columns else pd.DataFrame()
     
-    # Calcul des effectifs par course
     def get_count(pattern):
         if df_real_courses.empty: return 0
         return len(df_real_courses[df_real_courses['COURSE'].astype(str).str.contains(pattern, case=False, na=False)])
@@ -465,7 +464,6 @@ try:
             df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip() != "") & (df[col_boldair].astype(str).str.upper() != "NONE")].copy()
             
             if not df_ba.empty:
-                # 1. RÉCAPITULATIF DU NOMBRE DE PARTICIPANTS (TOTAL ET PAR DISTANCE)
                 total_ba = len(df_ba)
                 dist_counts = df_ba['COURSE'].value_counts()
                 
@@ -477,7 +475,6 @@ try:
 
                 st.markdown(" ")
                 
-                # 2. TRI ET CLASSEMENT DU MEILLEUR AU MOINS BON (TOUTES COURSES CONFONDUES)
                 df_ba['RANK_NUM'] = df_ba[col_boldair].apply(extract_rank_number)
                 df_ba['RÉSULTAT BOL D\'AIR'] = df_ba[col_boldair].apply(add_medal_prefix)
                 
@@ -1106,18 +1103,23 @@ try:
         # 1. SPONSORS ÉVÉNEMENTIELS
         st.markdown("### 🏆 Partenaires Événementiels")
         sponsors_evt = [
-            ("Hyper U", "HYPER U.png", None),
-            ("Intersport", "Intersport.png", None),
-            ("Pays de Fontenay", "PAYS DE FONTENAY.png", None),
-            ("Les Vergers de Vendée", "VERGERS DE VENDEE.png", None),
-            ("TC Traiteur", "TC TRAITEUR.png", "150€ pour les dossards"),
-            ("La Cibulle", "LA CIBULL.png" if os.path.exists("LA CIBULL.png") else "LA CIBULLE.png", "-10% fûts + 6 réglettes"),
-            ("Vendée Marais Poitevin", "mvp.png", "Kits parcours orientation"),
-            ("Valega", "VALEGA.png", "Massage de 45 min"),
-            ("AXA", "AXA.png", "Une cafetière"),
-            ("Bioporc", "BIOPORC.png", "3 terrines"),
-            ("Pâtés Lison", "PATES LISON.png", "3 lots de pâtes"),
-            ("L'Escale", "L'ESCALE.png", None)
+            ("Hyper U", "HYPER U.png", "Paniers garnis (récompense course)"),
+            ("Intersport", "Intersport.png", "300€ de lots"),
+            ("Pays de Fontenay", "PAYS DE FONTENAY.png", "Subvention de 400€"),
+            ("Les Vergers de Vendée", "VERGERS DE VENDEE.png", "Paniers garnis (récompense course)"),
+            ("L'Entrepote", "L'ENTREPOTE.png" if os.path.exists("L'ENTREPOTE.png") else "TC TRAITEUR.png", "150€ pour les dossards"),
+            ("La Cibulle", "LA CIBULLE.png" if os.path.exists("LA CIBULLE.png") else "LA CIBULL.png", "10% sur les fûts + 6 réglettes (lot)"),
+            ("Vendée Marais Poitevin", "mvp.png", "Kit parcours orientation (lot)"),
+            ("Valega", "VALEGA.png", "Massage de 45' (lot)"),
+            ("AXA", "AXA.png", "1 cafetière (lot)"),
+            ("Bioporc", "BIOPORC.png", "3 terrines (lot)"),
+            ("Les Pâtés de Lison", "PATES LISON.png", "3 lots de pâtes (lot)"),
+            ("Vins Mercier", "VINS MERCIER.png", "3 bouteilles (lot)"),
+            ("Boucherie Gouin", "MAISON GOUIN.png", "Paniers garnis (récompense course)"),
+            ("New Loc", "NEW LOC.png", "Lumière et groupe électrogène"),
+            ("Édition du Chemin des Crêtes", "CHEMIN DES CRETES.png", "Livres (lot)"),
+            ("Végétal 85", "VEGETAL85.png" if os.path.exists("VEGETAL85.png") else "VEGETAL 85.png", "Agapanthes (dotation coureurs)"),
+            ("L'Escale des Ponts", "L'ESCALE.png", "Mise à disposition de l'emplacement")
         ]
         
         cols_evt = st.columns(4)
@@ -1132,7 +1134,7 @@ try:
 
         st.markdown("---")
         
-        # 2. SPONSORS ANNUELS (SANTE DIFFUSION RETIRÉ)
+        # 2. SPONSORS ANNUELS (SANTE DIFFUSION RETIRÉ, MAISON GOUIN MAINTENU)
         st.markdown("### 🌟 Sponsors Annuels")
         sponsors_annuels = [
             ("BERNARD JOHANNE", "BERNARD JOHANNE.png"),
