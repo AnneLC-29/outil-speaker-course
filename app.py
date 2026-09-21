@@ -105,6 +105,27 @@ def extract_rank_number(res_str):
         return int(match.group(1))
     return 9999
 
+def extract_club(val):
+    if pd.isna(val):
+        return "Indépendant / Non renseigné"
+    parts = str(val).split('/')
+    if len(parts) > 1 and parts[1].strip() != "":
+        return parts[1].strip()
+    return "Indépendant / Non renseigné"
+
+def extract_ville_cp(val):
+    if pd.isna(val):
+        return "Inconnue", None
+    ville_part = str(val).split('/')[0].strip()
+    match = re.search(r'^(.*?)\s*\(\s*([\d\s]{5,6})\s*\)', ville_part)
+    if match:
+        nom_ville = match.group(1).strip()
+        cp = re.sub(r'\s+', '', match.group(2).strip())
+        return nom_ville, cp
+    if "TAUGON" in ville_part.upper():
+        return "TAUGON", "17170"
+    return ville_part, None
+
 @st.cache_data
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
@@ -136,24 +157,6 @@ def load_and_process_data():
         df['SEXE'] = df['SEXE'].astype(str).str.strip().str.upper()
     else:
         df['SEXE'] = ""
-
-    def extract_ville_cp(val):
-        if pd.isna(val):
-            return "Inconnue", None
-        ville_part = str(val).split('/')[0].strip()
-        
-        # Extrait le nom et le code postal en nettoyant tous les espaces inutiles dans le CP
-        match = re.search(r'^(.*?)\s*\(\s*([\d\s]{5,6})\s*\)', ville_part)
-        if match:
-            nom_ville = match.group(1).strip()
-            cp = re.sub(r'\s+', '', match.group(2).strip())
-            return nom_ville, cp
-        
-        # Secours pour les communes sans CP dans le CSV (ex: TAUGON -> 17170)
-        if "TAUGON" in ville_part.upper():
-            return "TAUGON", "17170"
-            
-        return ville_part, None
 
     ville_col = df['VILLE'] if 'VILLE' in df.columns else pd.Series([""] * len(df))
     df['CLUB'] = ville_col.apply(extract_club)
@@ -1090,7 +1093,7 @@ try:
                     top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
                     st.dataframe(top10_villes, use_container_width=True, hide_index=True)
 
-   # -------------------------------------------------------------
+    # -------------------------------------------------------------
     # ONGLET 6 : SPONSORS & PARTENAIRES
     # -------------------------------------------------------------
     with tab_sponsors:
@@ -1128,7 +1131,6 @@ try:
                 
                 with c_logo:
                     if os.path.exists(sp_file):
-                        # Largeur fixe pour harmoniser tous les logos
                         st.image(sp_file, width=130)
                     else:
                         st.info(f"🏷️ **{sp_nom}**")
@@ -1165,6 +1167,7 @@ try:
                     st.image(sp_file, width=180)
                 else:
                     st.info(f"🏷️ **{sp_nom}**")
+
     # -------------------------------------------------------------
     # 🔄 RAFRAÎCHISSEMENT AUTOMATIQUE DU TEMPS
     # -------------------------------------------------------------
