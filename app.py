@@ -137,23 +137,22 @@ def load_and_process_data():
     else:
         df['SEXE'] = ""
 
-    def extract_club(val):
-        if pd.isna(val):
-            return "Indépendant / Non renseigné"
-        parts = str(val).split('/')
-        if len(parts) > 1 and parts[1].strip() != "":
-            return parts[1].strip()
-        return "Indépendant / Non renseigné"
-
     def extract_ville_cp(val):
         if pd.isna(val):
             return "Inconnue", None
         ville_part = str(val).split('/')[0].strip()
-        match = re.search(r'^(.*?)\s*\((\d{5})\)', ville_part)
+        
+        # Extrait le nom et le code postal en nettoyant tous les espaces inutiles dans le CP
+        match = re.search(r'^(.*?)\s*\(\s*([\d\s]{5,6})\s*\)', ville_part)
         if match:
             nom_ville = match.group(1).strip()
-            cp = match.group(2).strip()
+            cp = re.sub(r'\s+', '', match.group(2).strip())
             return nom_ville, cp
+        
+        # Secours pour les communes sans CP dans le CSV (ex: TAUGON -> 17170)
+        if "TAUGON" in ville_part.upper():
+            return "TAUGON", "17170"
+            
         return ville_part, None
 
     ville_col = df['VILLE'] if 'VILLE' in df.columns else pd.Series([""] * len(df))
