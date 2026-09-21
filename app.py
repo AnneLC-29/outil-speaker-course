@@ -84,7 +84,7 @@ def calc_vitesse(dist_km, time_str):
     return ""
 
 def add_medal_prefix(res_str):
-    if pd.isna(res_str) or str(res_str).strip() in ["", "-", "NONE", "NaN"]:
+    if pd.isna(res_str) or str(res_str).strip() in ["", "-", "NONE", "NAN"]:
         return "-"
     s = str(res_str).strip()
     match = re.search(r'^\s*(\d+)\s*([MF]?)', s, re.IGNORECASE)
@@ -108,7 +108,7 @@ def extract_rank_number(res_str):
 def extract_club(val):
     if pd.isna(val):
         return "Indépendant / Non renseigné"
-    parts = str(val).split('/')
+    parts = str(val).split('/', 1) # Découpage uniquement sur le PREMIER slash
     if len(parts) > 1 and parts[1].strip() != "":
         return parts[1].strip()
     return "Indépendant / Non renseigné"
@@ -334,10 +334,10 @@ try:
             st.sidebar.write(f"• **Catégorie :** {c_q.get('Catégorie','N/A')}")
             st.sidebar.write(f"• **Ville/Club :** {c_q.get('VILLE_CLEAN','N/A')}")
             
-            if col_boldair and pd.notna(c_q.get(col_boldair)) and str(c_q.get(col_boldair)).strip() not in ["", "-", "NONE", "NaN"]:
+            if col_boldair and pd.notna(c_q.get(col_boldair)) and str(c_q.get(col_boldair)).strip() not in ["", "-", "NONE", "NAN"]:
                 st.sidebar.info(f"🌲 **Bol d'Air 2026 :** {c_q.get(col_boldair)}")
 
-            if col_renaissance and pd.notna(c_q.get(col_renaissance)) and str(c_q.get(col_renaissance)).strip() not in ["", "-", "NONE", "NaN"]:
+            if col_renaissance and pd.notna(c_q.get(col_renaissance)) and str(c_q.get(col_renaissance)).strip() not in ["", "-", "NONE", "NAN"]:
                 st.sidebar.info(f"🏰 **Renaissance 2026 :** {c_q.get(col_renaissance)}")
                 
             if pd.notna(c_q.get('Indice BETRAIL')):
