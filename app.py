@@ -172,29 +172,31 @@ def load_and_process_data():
 def geolocaliser_communes(df_villes):
     coords = []
     for _, row in df_villes.iterrows():
-        cp = row['CODE_POSTAL']
-        ville = row['NOM_VILLE']
+        cp = str(row['CODE_POSTAL']).strip() if pd.notna(row['CODE_POSTAL']) else None
+        ville = str(row['NOM_VILLE']).strip() if pd.notna(row['NOM_VILLE']) else ""
         
-        if pd.notna(cp):
+        if cp and cp != "None":
             try:
                 url = f"https://geo.api.gouv.fr/communes?codePostal={cp}&fields=centre,nom&format=json"
                 response = requests.get(url, timeout=3).json()
                 
                 if response:
+                    # On cherche la correspondance exacte ou on prend la 1ere commune du CP
                     commune_match = response[0]
                     for item in response:
-                        if item['nom'].lower() == str(ville).lower():
+                        if item.get('nom', '').lower() == ville.lower():
                             commune_match = item
                             break
                     
-                    lon, lat = commune_match['centre']['coordinates']
-                    coords.append({
-                        'NOM_VILLE': ville,
-                        'CODE_POSTAL': cp,
-                        'Ville_CP': f"{ville} ({cp})",
-                        'latitude': lat,
-                        'longitude': lon
-                    })
+                    if 'centre' in commune_match:
+                        lon, lat = commune_match['centre']['coordinates']
+                        coords.append({
+                            'NOM_VILLE': ville,
+                            'CODE_POSTAL': cp,
+                            'Ville_CP': f"{ville} ({cp})",
+                            'latitude': lat,
+                            'longitude': lon
+                        })
             except Exception:
                 pass
     return pd.DataFrame(coords)
