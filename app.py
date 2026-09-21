@@ -130,7 +130,7 @@ def extract_ville_cp(val):
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
     
-    # Nettoyage des noms de colonnes (suppression des espaces superflus)
+    # Nettoyage des noms de colonnes
     df.columns = [str(c).strip() for c in df.columns]
 
     if 'NOM' in df.columns:
@@ -181,7 +181,6 @@ def geolocaliser_communes(df_villes):
                 response = requests.get(url, timeout=3).json()
                 
                 if response:
-                    # On cherche la correspondance exacte ou on prend la 1ere commune du CP
                     commune_match = response[0]
                     for item in response:
                         if item.get('nom', '').lower() == ville.lower():
@@ -207,10 +206,18 @@ try:
     has_2025 = 'FOULEES 2025' in df.columns
     has_2024 = 'FOULEES 2024' in df.columns
 
+    # Détection dynamique de la colonne Bol d'Air
     col_boldair = None
     for c in df.columns:
         if "BOL" in c.upper() and "2026" in c.upper():
             col_boldair = c
+            break
+
+    # Détection dynamique de la colonne Trail de la Renaissance
+    col_renaissance = None
+    for c in df.columns:
+        if "RENAISSANCE" in c.upper():
+            col_renaissance = c
             break
 
     # -------------------------------------------------------------
@@ -329,6 +336,9 @@ try:
             
             if col_boldair and pd.notna(c_q.get(col_boldair)) and str(c_q.get(col_boldair)).strip() != "":
                 st.sidebar.info(f"🌲 **Bol d'Air 2026 :** {c_q.get(col_boldair)}")
+
+            if col_renaissance and pd.notna(c_q.get(col_renaissance)) and str(c_q.get(col_renaissance)).strip() != "":
+                st.sidebar.info(f"🏰 **Renaissance 2026 :** {c_q.get(col_renaissance)}")
                 
             if pd.notna(c_q.get('Indice BETRAIL')):
                 st.sidebar.write(f"• **Betrail :** {c_q['Indice BETRAIL']}")
@@ -459,7 +469,7 @@ try:
             )
 
         # -------------------------------------------------------------
-        # FOCUS BOL D'AIR 2026 (RECAP STATS ET CLASSEMENT DU MEILLEUR AU MOINS BON)
+        # FOCUS BOL D'AIR 2026
         # -------------------------------------------------------------
         if col_boldair:
             st.markdown("---")
@@ -469,13 +479,13 @@ try:
             
             if not df_ba.empty:
                 total_ba = len(df_ba)
-                dist_counts = df_ba['COURSE'].value_counts()
+                dist_counts_ba = df_ba['COURSE'].value_counts()
                 
-                cols_metrics = st.columns(1 + len(dist_counts))
-                cols_metrics[0].metric("🌲 Total Participants Bol d'Air", total_ba)
+                cols_m_ba = st.columns(1 + len(dist_counts_ba))
+                cols_m_ba[0].metric("🌲 Total Participants Bol d'Air", total_ba)
                 
-                for idx, (dist_name, count_val) in enumerate(dist_counts.items()):
-                    cols_metrics[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
+                for idx, (dist_name, count_val) in enumerate(dist_counts_ba.items()):
+                    cols_m_ba[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
 
                 st.markdown(" ")
                 
@@ -502,6 +512,51 @@ try:
                 )
             else:
                 st.write("Aucun participant identifié pour l'instant sur le Bol d'Air 2026.")
+
+        # -------------------------------------------------------------
+        # FOCUS TRAIL DE LA RENAISSANCE 2026
+        # -------------------------------------------------------------
+        if col_renaissance:
+            st.markdown("---")
+            st.markdown("### 🏰 Performances & Podiums au Trail de la Renaissance 2026")
+            
+            df_ren = df[df[col_renaissance].notna() & (df[col_renaissance].astype(str).str.strip() != "") & (df[col_renaissance].astype(str).str.upper() != "NONE")].copy()
+            
+            if not df_ren.empty:
+                total_ren = len(df_ren)
+                dist_counts_ren = df_ren['COURSE'].value_counts()
+                
+                cols_m_ren = st.columns(1 + len(dist_counts_ren))
+                cols_m_ren[0].metric("🏰 Total Trail de la Renaissance", total_ren)
+                
+                for idx, (dist_name, count_val) in enumerate(dist_counts_ren.items()):
+                    cols_m_ren[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
+
+                st.markdown(" ")
+                
+                df_ren['RANK_NUM'] = df_ren[col_renaissance].apply(extract_rank_number)
+                df_ren['RÉSULTAT RENAISSANCE'] = df_ren[col_renaissance].apply(add_medal_prefix)
+                
+                df_ren_sorted = df_ren.sort_values(by=['RANK_NUM', 'NOM']).reset_index(drop=True)
+                
+                cols_ren = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT RENAISSANCE']
+                if 'DOSSARD' in df_ren_sorted.columns and df_ren_sorted['DOSSARD'].notna().any():
+                    cols_ren.insert(0, 'DOSSARD')
+                
+                st.dataframe(
+                    df_ren_sorted[cols_ren],
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "DOSSARD": "Dossard",
+                        "NOM": "Nom",
+                        "PRENOM": "Prénom",
+                        "COURSE": "Épreuve 2026",
+                        "RÉSULTAT RENAISSANCE": "Résultat Renaissance 2026 (Classé)"
+                    }
+                )
+            else:
+                st.write("Aucun participant identifié pour l'instant sur le Trail de la Renaissance 2026.")
 
         # -------------------------------------------------------------
         # SECTION PODIUMS & RANGS DE FIN DE COURSE HISTORIQUES
@@ -850,10 +905,18 @@ try:
                     if col_boldair and pd.notna(coureur.get(col_boldair)) and str(coureur.get(col_boldair)).strip() != "":
                         st.info(f"🌲 **Bol d'Air 2026 :** {coureur.get(col_boldair)}")
                     
+                    if col_renaissance and pd.notna(coureur.get(col_renaissance)) and str(coureur.get(col_renaissance)).strip() != "":
+                        st.info(f"🏰 **Trail de la Renaissance 2026 :** {coureur.get(col_renaissance)}")
+                    
                     commentaires = coureur.get('COMMENTAIRES', None)
                     if pd.notna(commentaires) and str(commentaires).strip() != "":
                         st.info(f"📝 **Note :** {commentaires}")
-                    if (not col_boldair or pd.isna(coureur.get(col_boldair))) and (pd.isna(commentaires) or str(commentaires).strip() == ""):
+                    
+                    no_ba = (not col_boldair or pd.isna(coureur.get(col_boldair)))
+                    no_ren = (not col_renaissance or pd.isna(coureur.get(col_renaissance)))
+                    no_com = (pd.isna(commentaires) or str(commentaires).strip() == "")
+                    
+                    if no_ba and no_ren and no_com:
                         st.write("Aucun commentaire spécifique.")
 
                 with col_hist:
