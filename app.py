@@ -84,7 +84,7 @@ def calc_vitesse(dist_km, time_str):
     return ""
 
 def add_medal_prefix(res_str):
-    if pd.isna(res_str) or str(res_str).strip() == "" or str(res_str).upper() == "NONE":
+    if pd.isna(res_str) or str(res_str).strip() in ["", "-", "NONE", "NaN"]:
         return "-"
     s = str(res_str).strip()
     match = re.search(r'^\s*(\d+)\s*([MF]?)', s, re.IGNORECASE)
@@ -209,7 +209,7 @@ try:
     # Détection dynamique de la colonne Bol d'Air
     col_boldair = None
     for c in df.columns:
-        if "BOL" in c.upper() and "2026" in c.upper():
+        if "BOL" in c.upper():
             col_boldair = c
             break
 
@@ -334,10 +334,10 @@ try:
             st.sidebar.write(f"• **Catégorie :** {c_q.get('Catégorie','N/A')}")
             st.sidebar.write(f"• **Ville/Club :** {c_q.get('VILLE_CLEAN','N/A')}")
             
-            if col_boldair and pd.notna(c_q.get(col_boldair)) and str(c_q.get(col_boldair)).strip() != "":
+            if col_boldair and pd.notna(c_q.get(col_boldair)) and str(c_q.get(col_boldair)).strip() not in ["", "-", "NONE", "NaN"]:
                 st.sidebar.info(f"🌲 **Bol d'Air 2026 :** {c_q.get(col_boldair)}")
 
-            if col_renaissance and pd.notna(c_q.get(col_renaissance)) and str(c_q.get(col_renaissance)).strip() != "":
+            if col_renaissance and pd.notna(c_q.get(col_renaissance)) and str(c_q.get(col_renaissance)).strip() not in ["", "-", "NONE", "NaN"]:
                 st.sidebar.info(f"🏰 **Renaissance 2026 :** {c_q.get(col_renaissance)}")
                 
             if pd.notna(c_q.get('Indice BETRAIL')):
@@ -475,7 +475,7 @@ try:
             st.markdown("---")
             st.markdown("### 🌲 Performances & Podiums au Bol d'Air 2026")
             
-            df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip() != "") & (df[col_boldair].astype(str).str.upper() != "NONE")].copy()
+            df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)].copy()
             
             if not df_ba.empty:
                 total_ba = len(df_ba)
@@ -520,7 +520,7 @@ try:
             st.markdown("---")
             st.markdown("### 🏰 Performances & Podiums au Trail de la Renaissance 2026")
             
-            df_ren = df[df[col_renaissance].notna() & (df[col_renaissance].astype(str).str.strip() != "") & (df[col_renaissance].astype(str).str.upper() != "NONE")].copy()
+            df_ren = df[df[col_renaissance].notna() & (df[col_renaissance].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)].copy()
             
             if not df_ren.empty:
                 total_ren = len(df_ren)
@@ -902,18 +902,18 @@ try:
                 
                 with col_com:
                     st.markdown("### 📝 Commentaires & Notes Speaker")
-                    if col_boldair and pd.notna(coureur.get(col_boldair)) and str(coureur.get(col_boldair)).strip() != "":
+                    if col_boldair and pd.notna(coureur.get(col_boldair)) and str(coureur.get(col_boldair)).strip() not in ["", "-", "NONE", "NaN"]:
                         st.info(f"🌲 **Bol d'Air 2026 :** {coureur.get(col_boldair)}")
                     
-                    if col_renaissance and pd.notna(coureur.get(col_renaissance)) and str(coureur.get(col_renaissance)).strip() != "":
+                    if col_renaissance and pd.notna(coureur.get(col_renaissance)) and str(coureur.get(col_renaissance)).strip() not in ["", "-", "NONE", "NaN"]:
                         st.info(f"🏰 **Trail de la Renaissance 2026 :** {coureur.get(col_renaissance)}")
                     
                     commentaires = coureur.get('COMMENTAIRES', None)
                     if pd.notna(commentaires) and str(commentaires).strip() != "":
                         st.info(f"📝 **Note :** {commentaires}")
                     
-                    no_ba = (not col_boldair or pd.isna(coureur.get(col_boldair)))
-                    no_ren = (not col_renaissance or pd.isna(coureur.get(col_renaissance)))
+                    no_ba = (not col_boldair or pd.isna(coureur.get(col_boldair)) or str(coureur.get(col_boldair)).strip() in ["", "-", "NONE", "NaN"])
+                    no_ren = (not col_renaissance or pd.isna(coureur.get(col_renaissance)) or str(coureur.get(col_renaissance)).strip() in ["", "-", "NONE", "NaN"])
                     no_com = (pd.isna(commentaires) or str(commentaires).strip() == "")
                     
                     if no_ba and no_ren and no_com:
