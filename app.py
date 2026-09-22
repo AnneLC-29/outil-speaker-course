@@ -108,7 +108,7 @@ def extract_rank_number(res_str):
 def extract_club(val):
     if pd.isna(val):
         return "Indépendant / Non renseigné"
-    parts = str(val).split('/', 1) # Découpage uniquement sur le PREMIER slash
+    parts = str(val).split('/', 1)
     if len(parts) > 1 and parts[1].strip() != "":
         return parts[1].strip()
     return "Indépendant / Non renseigné"
@@ -130,8 +130,20 @@ def extract_ville_cp(val):
 def load_and_process_data():
     df = pd.read_csv("coureurs.csv")
     
-    # Nettoyage des noms de colonnes
+    # Nettoyage et normalisation des noms de colonnes
     df.columns = [str(c).strip() for c in df.columns]
+
+    # Normalisation souple de la colonne COURSE
+    col_course = None
+    for c in df.columns:
+        if c.upper().strip() in ['COURSE', 'ÉPREUVE', 'EPREUVE', 'DISTANCE']:
+            col_course = c
+            break
+            
+    if col_course and col_course != 'COURSE':
+        df.rename(columns={col_course: 'COURSE'}, inplace=True)
+    elif not col_course:
+        df['COURSE'] = "Non renseigné"
 
     if 'NOM' in df.columns:
         df = df[df['NOM'].notna() & (df['NOM'].astype(str).str.strip() != "")]
@@ -365,8 +377,9 @@ try:
     with tab_general:
         st.subheader("📈 Statistiques Générales & Fidélité")
         
-        if 'COURSE' in df.columns:
-            df_epreuves = df[df['COURSE'].notna() & (~df['COURSE'].astype(str).str.upper().str.contains("ADHERENT"))].copy()
+        df_epreuves = df[df['COURSE'].notna() & (~df['COURSE'].astype(str).str.upper().str.contains("ADHERENT"))].copy() if 'COURSE' in df.columns else pd.DataFrame()
+        
+        if not df_epreuves.empty:
             courses_raw = df_epreuves['COURSE'].unique()
             
             def sort_courses_key(course_str):
@@ -655,7 +668,7 @@ try:
         st.markdown("---")
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
-        if has_2025 and has_2024:
+        if has_2025 and has_2024 and not df_epreuves.empty:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
@@ -721,7 +734,7 @@ try:
         
         with c_left:
             st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
-            if 'COURSE' in df_epreuves.columns:
+            if not df_epreuves.empty and 'COURSE' in df_epreuves.columns:
                 df_courses = df_epreuves.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
                 if 'H' not in df_courses.columns: df_courses['H'] = 0
                 if 'F' not in df_courses.columns: df_courses['F'] = 0
@@ -730,7 +743,7 @@ try:
 
         with c_right:
             st.markdown("### 🏷️ Répartition par Catégorie (triée par âge)")
-            if 'Catégorie' in df_epreuves.columns:
+            if not df_epreuves.empty and 'Catégorie' in df_epreuves.columns:
                 df_cat = df_epreuves['Catégorie'].value_counts().reset_index()
                 df_cat.columns = ['Code_Cat', 'Nombre']
                 df_cat['Code_clean'] = df_cat['Code_Cat'].astype(str).str.strip().str.upper()
