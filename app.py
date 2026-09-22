@@ -579,14 +579,29 @@ try:
                 st.write("Aucun participant identifié pour l'instant sur le Trail de la Renaissance 2026.")
 
         # -------------------------------------------------------------
-        # SECTION PODIUMS & RANGS DE FIN DE COURSE HISTORIQUES
+        # SECTION PODIUMS, TEMPOS & STATISTIQUES HISTORIQUES
         # -------------------------------------------------------------
         st.markdown("---")
-        st.markdown("### 🥇 Podiums & Tempos de Fin de Course Historiques")
+        st.markdown("### 🥇 Podiums, Affluence & Tracés Historiques (Strava)")
         
-        tab_pod2025, tab_pod2024 = st.tabs(["🏆 Édition 2025 (7 / 14 / 21 KM)", "🏆 Édition 2024 (9 / 18 KM)"])
+        tab_pod2025, tab_pod2024 = st.tabs(["🏆 Édition 2025 (7 / 14 / 24 KM)", "🏆 Édition 2024 (9 / 18 KM)"])
         
         with tab_pod2025:
+            st.success("""
+            📊 **Statistiques Édition 2025 (284 Inscrits au total) :**
+            * 🏃 **7 KM :** **78** participants *(67 en ligne + 11 sur place)*
+            * 🏃 **14 KM :** **76** participants *(71 en ligne + 5 sur place)*
+            * 🏃 **24 KM :** **45** participants *(44 en ligne + 1 sur place)*
+            * 🥾 **Rando :** **116** participants *(42 en ligne + 43 sur place)*
+            """)
+            
+            st.info("""
+            📐 **Tracés Réels Strava 2025 :**
+            * **7 KM :** 7,0 km réels | **126 m D+**
+            * **14 KM :** 14,6 km réels | **233 m D+**
+            * **24 KM :** 24,4 km réels | **480 m D+**
+            """)
+            
             st.info("💡 **Note Speaker 2026 :** Axelle FAUGER (Vainqueure du 7 KM en 2025) a rejoint le club des **RAIDS DINGUES** cette année !")
             c7, c14, c21 = st.columns(3)
             
@@ -621,21 +636,34 @@ try:
                 st.caption(f"• Dernière F : **BARRE Marianne** - 02:10:11 {calc_vitesse(14, '02:10:11')}")
 
             with c21:
-                st.markdown("#### 🏃 21 KM (2025)")
+                st.markdown("#### 🏃 24 KM (2025)")
                 st.markdown("**Podium Hommes :**")
-                st.write(f"1. **ROCHETEAU Benjamin** - 01:41:49 {calc_vitesse(21, '01:41:49')} (La Roche sur Yon)")
+                st.write(f"1. **ROCHETEAU Benjamin** - 01:41:49 {calc_vitesse(24, '01:41:49')} (La Roche sur Yon)")
                 st.write("2. **CHAILLOLEAU Antoine** - 01:51:33 (SAF Fontenay le Comte)")
                 st.write("3. **LEFORT Freddy** - 01:51:37 (Sérigné)")
                 st.markdown("**Podium Femmes :**")
-                st.write(f"1. **BOUREAU Mathilde** - 02:24:31 {calc_vitesse(21, '02:24:31')} (Pouzauges)")
+                st.write(f"1. **BOUREAU Mathilde** - 02:24:31 {calc_vitesse(24, '02:24:31')} (Pouzauges)")
                 st.write("2. **GREDELU Flavie** - 02:35:50 (Mernel)")
                 st.write("3. **LUCAS Margaux** - 02:50:11 (Benet)")
                 
                 st.caption("🏁 **Fin de course 2025 :**")
-                st.caption(f"• Dernier H : **CALVET Christophe** - 03:02:14 {calc_vitesse(21, '03:02:14')}")
-                st.caption(f"• Dernière F : **FAUCHER RAYMOND Erika** - 03:18:59 {calc_vitesse(21, '03:18:59')}")
+                st.caption(f"• Dernier H : **CALVET Christophe** - 03:02:14 {calc_vitesse(24, '03:02:14')}")
+                st.caption(f"• Dernière F : **FAUCHER RAYMOND Erika** - 03:18:59 {calc_vitesse(24, '03:18:59')}")
 
         with tab_pod2024:
+            st.success("""
+            📊 **Statistiques Édition 2024 (288 Inscrits au total) :**
+            * 🏃 **9 KM :** **116** participants *(96 en ligne + 20 sur place)*
+            * 🏃 **18 KM :** **88** participants *(81 en ligne + 7 sur place)*
+            * 🥾 **Rando :** **84** participants *(28 en ligne + 56 sur place)*
+            """)
+            
+            st.info("""
+            📐 **Tracés Réels Strava 2024 :**
+            * **9 KM :** 8,9 km réels | **41 m D+**
+            * **18 KM :** 18,1 km réels | **289 m D+**
+            """)
+            
             st.info("💡 **Note Speaker 2026 :** Emmanuelle HUMBERT-DROZ-LAURENT (3e du 9 KM en 2024) & Hélène FOLIARD LE GAL (Fin de course 2024) ont rejoint les **RAIDS DINGUES** !")
             c9, c18 = st.columns(2)
             
@@ -922,18 +950,18 @@ try:
                 
                 with col_com:
                     st.markdown("### 📝 Commentaires & Notes Speaker")
-                    if col_boldair and pd.notna(coureur.get(col_boldair)) and str(coureur.get(col_boldair)).strip() not in ["", "-", "NONE", "NaN"]:
+                    if col_boldair and pd.notna(coureur.get(col_boldair)) and str(coureur.get(col_boldair)).strip() not in ["", "-", "NONE", "NAN"]:
                         st.info(f"🌲 **Bol d'Air 2026 :** {coureur.get(col_boldair)}")
                     
-                    if col_renaissance and pd.notna(coureur.get(col_renaissance)) and str(coureur.get(col_renaissance)).strip() not in ["", "-", "NONE", "NaN"]:
+                    if col_renaissance and pd.notna(coureur.get(col_renaissance)) and str(coureur.get(col_renaissance)).strip() not in ["", "-", "NONE", "NAN"]:
                         st.info(f"🏰 **Trail de la Renaissance 2026 :** {coureur.get(col_renaissance)}")
                     
                     commentaires = coureur.get('COMMENTAIRES', None)
                     if pd.notna(commentaires) and str(commentaires).strip() != "":
                         st.info(f"📝 **Note :** {commentaires}")
                     
-                    no_ba = (not col_boldair or pd.isna(coureur.get(col_boldair)) or str(coureur.get(col_boldair)).strip() in ["", "-", "NONE", "NaN"])
-                    no_ren = (not col_renaissance or pd.isna(coureur.get(col_renaissance)) or str(coureur.get(col_renaissance)).strip() in ["", "-", "NONE", "NaN"])
+                    no_ba = (not col_boldair or pd.isna(coureur.get(col_boldair)) or str(coureur.get(col_boldair)).strip() in ["", "-", "NONE", "NAN"])
+                    no_ren = (not col_renaissance or pd.isna(coureur.get(col_renaissance)) or str(coureur.get(col_renaissance)).strip() in ["", "-", "NONE", "NAN"])
                     no_com = (pd.isna(commentaires) or str(commentaires).strip() == "")
                     
                     if no_ba and no_ren and no_com:
