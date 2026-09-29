@@ -707,8 +707,12 @@ try:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
             
+            # Présents en 2024 ET en 2025 (3e participation d'affilée)
             df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
-            df_fidele_at_least_1 = df_epreuves[cond_2025 | cond_2024].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
+            
+            # Présents SEULEMENT en 2024 OU en 2025 (2e participation, 1 seule édition précédente)
+            cond_exclusif = (cond_2025 | cond_2024) & ~(cond_2025 & cond_2024)
+            df_fidele_1 = df_epreuves[cond_exclusif].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
             col_f3, col_f1 = st.columns(2)
             
@@ -739,15 +743,15 @@ try:
                     st.write("Aucun participant dans cette catégorie.")
                     
             with col_f1:
-                st.markdown(f"#### 🏅 Au moins 1 édition précédente ({len(df_fidele_at_least_1)} participants)")
-                st.caption("A déjà participé en 2024 ou 2025 !")
+                st.markdown(f"#### 🏅 2e Participation ({len(df_fidele_1)} participants)")
+                st.caption("A déjà participé en 2024 OU en 2025 (1 seule édition) !")
                 
-                if not df_fidele_at_least_1.empty:
+                if not df_fidele_1.empty:
                     cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
-                    if 'DOSSARD' in df_fidele_at_least_1.columns and df_fidele_at_least_1['DOSSARD'].notna().any():
+                    if 'DOSSARD' in df_fidele_1.columns and df_fidele_1['DOSSARD'].notna().any():
                         cols_f1.insert(0, 'DOSSARD')
                         
-                    disp_f1 = df_fidele_at_least_1[cols_f1]
+                    disp_f1 = df_fidele_1[cols_f1]
                     st.dataframe(
                         disp_f1, 
                         use_container_width=True, 
@@ -1074,8 +1078,10 @@ try:
                     top5_f = df_course[df_course['SEXE'] == 'F'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
                     
                     if not top5_f.empty:
-                        cols_f = ['NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']
-                        if 'DOSSARD' in top5_f.columns and top5_f['DOSSARD'].notna().any(): cols_f.insert(0, 'DOSSARD')
+                        cols_f = ['NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN', 'CLUB']
+                        if 'DOSSARD' in top5_f.columns and top5_f['DOSSARD'].notna().any(): 
+                            cols_f.insert(0, 'DOSSARD')
+                        
                         top5_f_display = top5_f[cols_f].reset_index(drop=True)
                         top5_f_display.index += 1
                         st.dataframe(
@@ -1086,7 +1092,34 @@ try:
                                 "NOM": "Nom",
                                 "PRENOM": "Prénom",
                                 "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
-                                "VILLE_CLEAN": "Ville / Origine"
+                                "VILLE_CLEAN": "Ville / Origine",
+                                "CLUB": "Club / Association"
+                            }
+                        )
+                    else:
+                        st.write("Aucune donnée disponible.")
+
+                with col_hommes:
+                    st.markdown("#### 👨 Top 5 Hommes")
+                    top5_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
+                    
+                    if not top5_h.empty:
+                        cols_h = ['NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN', 'CLUB']
+                        if 'DOSSARD' in top5_h.columns and top5_h['DOSSARD'].notna().any(): 
+                            cols_h.insert(0, 'DOSSARD')
+                        
+                        top5_h_display = top5_h[cols_h].reset_index(drop=True)
+                        top5_h_display.index += 1
+                        st.dataframe(
+                            top5_h_display, 
+                            use_container_width=True,
+                            column_config={
+                                "DOSSARD": "Dossard",
+                                "NOM": "Nom",
+                                "PRENOM": "Prénom",
+                                "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
+                                "VILLE_CLEAN": "Ville / Origine",
+                                "CLUB": "Club / Association"
                             }
                         )
                     else:
