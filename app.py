@@ -4,6 +4,7 @@ import re
 import requests
 import folium
 import os
+import json
 import time as time_lib
 from datetime import datetime, time
 import zoneinfo
@@ -11,6 +12,50 @@ from streamlit_folium import st_folium
 
 # Configuration de la page
 st.set_page_config(page_title="Outil Speaker Course", layout="wide")
+
+# -------------------------------------------------------------
+# 📊 COMPTEUR DE VISITES & ADRESSES IP UNIQUES
+# -------------------------------------------------------------
+STATS_FILE = "stats_visites.json"
+
+def obtenir_ip_client():
+    try:
+        headers = st.context.headers
+        if "X-Forwarded-For" in headers:
+            return headers["X-Forwarded-For"].split(",")[0].strip()
+        elif "Remote-Addr" in headers:
+            return headers["Remote-Addr"]
+    except Exception:
+        pass
+    return "IP_Inconnue"
+
+def enregistrer_visite():
+    ip = obtenir_ip_client()
+    
+    if os.path.exists(STATS_FILE):
+        try:
+            with open(STATS_FILE, "r") as f:
+                stats = json.load(f)
+        except Exception:
+            stats = {"total_vues": 0, "ips_uniques": []}
+    else:
+        stats = {"total_vues": 0, "ips_uniques": []}
+    
+    if "session_comptabilisee" not in st.session_state:
+        st.session_state["session_comptabilisee"] = True
+        stats["total_vues"] += 1
+        if ip not in stats["ips_uniques"]:
+            stats["ips_uniques"].append(ip)
+        
+        try:
+            with open(STATS_FILE, "w") as f:
+                json.dump(stats, f)
+        except Exception:
+            pass
+
+    return stats["total_vues"], len(stats["ips_uniques"])
+
+total_visites, total_ips = enregistrer_visite()
 
 st.title("🎙️ Samedi 03 Octobre 2026 - 3ème édition des Foulées des Raids Dingues")
 
@@ -312,7 +357,7 @@ try:
     st.markdown("---")
 
     # -------------------------------------------------------------
-    # ⚡ BARRE LATERALE : RECHERCHE & RECHARGEMENT CSV & DATE MAJ
+    # ⚡ BARRE LATERALE : RECHERCHE, STATS VISITES & RECHARGEMENT
     # -------------------------------------------------------------
     st.sidebar.header("⚡ Outils Rapides Speaker")
     
@@ -365,6 +410,10 @@ try:
                 st.sidebar.warning(f"📝 {c_q['COMMENTAIRES']}")
         else:
             st.sidebar.error("Aucun participant trouvé.")
+
+    st.sidebar.markdown("---")
+    st.sidebar.caption("📈 **Fréquentation de l'outil :**")
+    st.sidebar.caption(f"👀 **{total_visites}** pages vues | 👥 **{total_ips}** visiteurs uniques (IP)")
 
     # -------------------------------------------------------------
     # ONGLETS DE NAVIGATION PRINCIPAUX
@@ -714,7 +763,6 @@ try:
             cond_exclusif = (cond_2025 | cond_2024) & ~(cond_2025 & cond_2024)
             df_fidele_1 = df_epreuves[cond_exclusif].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
-            # Helper pour compter par distance
             def count_by_course(df_subset, pattern):
                 if df_subset.empty: return 0
                 return len(df_subset[df_subset['COURSE'].astype(str).str.contains(pattern, case=False, na=False)])
@@ -730,7 +778,7 @@ try:
                 f3_25 = count_by_course(df_fidele_3, "25")
                 f3_m = count_by_course(df_fidele_3, "MARCHE")
                 
-                st.info(f"📊 **Répartition 2026 :** 🥾 Marche : **{f3_m}** | 🏃 8 KM : **{f3_8}** | 🏃 15 KM : **{f3_15}** | 🏃 25 KM : **{f3_25}**")
+                st.success(f"🗣️ **Flash Speaker :** 🥾 Marche : **{f3_m}** | 🏃 8 KM : **{f3_8}** | 🏃 15 KM : **{f3_15}** | 🏃 25 KM : **{f3_25}**")
                 
                 if not df_fidele_3.empty:
                     cols_f3 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
@@ -763,7 +811,7 @@ try:
                 f1_25 = count_by_course(df_fidele_1, "25")
                 f1_m = count_by_course(df_fidele_1, "MARCHE")
                 
-                st.info(f"📊 **Répartition 2026 :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
+                st.info(f"🗣️ **Flash Speaker :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
                 
                 if not df_fidele_1.empty:
                     cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
@@ -1041,7 +1089,7 @@ try:
                         st.write("Carte non disponible.")
 
                 with col_info_c:
-                    st.markdown(f"#### 🏘️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} participants)")
+                    st.markdown(f"#### 🏘️️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} participants)")
                     dist_counts = df_ville_all['COURSE'].value_counts()
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
                     st.markdown(f"📊 **Répartition :** {dist_str}")
@@ -1309,7 +1357,7 @@ try:
                 if os.path.exists(sp_file):
                     st.image(sp_file, width=180)
                 else:
-                    st.info(f"🏷️ **{sp_nom}**")
+                    st.info(f"🏷️️ **{sp_nom}**")
 
     # -------------------------------------------------------------
     # 🔄 RAFRAÎCHISSEMENT AUTOMATIQUE DU TEMPS
