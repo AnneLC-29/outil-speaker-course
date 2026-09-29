@@ -771,7 +771,7 @@ try:
         c_left, c_right = st.columns(2)
         
         with c_left:
-            st.markdown("### 🏃‍♂️️ Inscrits par Épreuve / Distance")
+            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
             if not df_epreuves.empty and 'COURSE' in df_epreuves.columns:
                 df_courses = df_epreuves.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
                 if 'H' not in df_courses.columns: df_courses['H'] = 0
@@ -1162,7 +1162,7 @@ try:
                         st.write("Aucune donnée disponible.")
 
     # -------------------------------------------------------------
-    # ONGLET 5 : ORIGINES ET CLUBS
+    # ONGLET 5 : ORIGINES ET CLUBS (SANS LIMITATION DE TAILLE)
     # -------------------------------------------------------------
     with tab_stats:
         col_map, col_clubs = st.columns([3, 2])
@@ -1188,13 +1188,13 @@ try:
                     st.write(f"👥 **{len(coureurs_club)} participant(s)** inscrit(s) pour **{selected_club}** :")
                     st.dataframe(coureurs_club, use_container_width=True, hide_index=True)
                 else:
-                    st.markdown("**Top des clubs les plus représentés :**")
-                    st.dataframe(stats_clubs.head(10), use_container_width=True, hide_index=True)
+                    st.markdown("**Classement de TOUS les clubs représentés :**")
+                    st.dataframe(stats_clubs, use_container_width=True, hide_index=True)
             else:
                 st.write("Aucun club renseigné avec slash dans le fichier.")
 
         with col_map:
-            st.subheader("🗺️ Carte & Détail par Ville")
+            st.subheader("🗺️️ Carte & Détail par Ville")
             
             df_villes_uniques = df[['NOM_VILLE', 'CODE_POSTAL']].dropna().drop_duplicates()
             df_coords = geolocaliser_communes(df_villes_uniques)
@@ -1248,9 +1248,9 @@ try:
                     st.write(f"🏘️ **{len(coureurs_ville)} participant(s)** originaire(s) de **{selected_ville}** :")
                     st.dataframe(coureurs_ville, use_container_width=True, hide_index=True)
                 else:
-                    st.markdown("**Top 10 des villes les plus représentées :**")
-                    top10_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False).head(10)
-                    st.dataframe(top10_villes, use_container_width=True, hide_index=True)
+                    st.markdown("**Classement de TOUTES les villes représentées :**")
+                    top_villes = df_map_final[['Ville_CP', 'Nb Coureurs']].sort_values(by='Nb Coureurs', ascending=False)
+                    st.dataframe(top_villes, use_container_width=True, hide_index=True)
 
     # -------------------------------------------------------------
     # ONGLET 6 : SPONSORS & PARTENAIRES
