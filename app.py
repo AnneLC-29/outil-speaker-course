@@ -1125,29 +1125,6 @@ try:
                     else:
                         st.write("Aucune donnée disponible.")
 
-                with col_hommes:
-                    st.markdown("#### 👨 Top 5 Hommes")
-                    top5_h = df_course[df_course['SEXE'] == 'H'].sort_values(by="Indice BETRAIL", ascending=False).head(5)
-                    
-                    if not top5_h.empty:
-                        cols_h = ['NOM', 'PRENOM', 'Indice BETRAIL', 'VILLE_CLEAN']
-                        if 'DOSSARD' in top5_h.columns and top5_h['DOSSARD'].notna().any(): cols_h.insert(0, 'DOSSARD')
-                        top5_h_display = top5_h[cols_h].reset_index(drop=True)
-                        top5_h_display.index += 1
-                        st.dataframe(
-                            top5_h_display, 
-                            use_container_width=True,
-                            column_config={
-                                "DOSSARD": "Dossard",
-                                "NOM": "Nom",
-                                "PRENOM": "Prénom",
-                                "Indice BETRAIL": st.column_config.NumberColumn("Cote Betrail", format="%.2f"),
-                                "VILLE_CLEAN": "Ville / Origine"
-                            }
-                        )
-                    else:
-                        st.write("Aucune donnée disponible.")
-
     # -------------------------------------------------------------
     # ONGLET 5 : ORIGINES ET CLUBS
     # -------------------------------------------------------------
