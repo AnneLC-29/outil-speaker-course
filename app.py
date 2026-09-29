@@ -704,21 +704,33 @@ try:
         st.markdown("### 🌟 Les Piliers des Foulées (Fidélité & Historique)")
         
         if has_2025 and has_2024 and not df_epreuves.empty:
-            cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip() != "")
-            cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip() != "")
+            cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)
+            cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)
             
             # Présents en 2024 ET en 2025 (3e participation d'affilée)
             df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
-            # Présents SEULEMENT en 2024 OU en 2025 (2e participation, 1 seule édition précédente)
+            # Présents SEULEMENT en 2024 OU en 2025 (2e participation)
             cond_exclusif = (cond_2025 | cond_2024) & ~(cond_2025 & cond_2024)
             df_fidele_1 = df_epreuves[cond_exclusif].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
+            # Helper pour compter par distance
+            def count_by_course(df_subset, pattern):
+                if df_subset.empty: return 0
+                return len(df_subset[df_subset['COURSE'].astype(str).str.contains(pattern, case=False, na=False)])
+
             col_f3, col_f1 = st.columns(2)
             
             with col_f3:
                 st.markdown(f"#### 👑 3e Participation d'affilée ({len(df_fidele_3)} participants)")
                 st.caption("A déjà participé aux éditions 2024 ET 2025 !")
+                
+                f3_8 = count_by_course(df_fidele_3, "8")
+                f3_15 = count_by_course(df_fidele_3, "15")
+                f3_25 = count_by_course(df_fidele_3, "25")
+                f3_m = count_by_course(df_fidele_3, "MARCHE")
+                
+                st.info(f"📊 **Répartition 2026 :** 🥾 Marche : **{f3_m}** | 🏃 8 KM : **{f3_8}** | 🏃 15 KM : **{f3_15}** | 🏃 25 KM : **{f3_25}**")
                 
                 if not df_fidele_3.empty:
                     cols_f3 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
@@ -745,6 +757,13 @@ try:
             with col_f1:
                 st.markdown(f"#### 🏅 2e Participation ({len(df_fidele_1)} participants)")
                 st.caption("A déjà participé en 2024 OU en 2025 (1 seule édition) !")
+                
+                f1_8 = count_by_course(df_fidele_1, "8")
+                f1_15 = count_by_course(df_fidele_1, "15")
+                f1_25 = count_by_course(df_fidele_1, "25")
+                f1_m = count_by_course(df_fidele_1, "MARCHE")
+                
+                st.info(f"📊 **Répartition 2026 :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
                 
                 if not df_fidele_1.empty:
                     cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
