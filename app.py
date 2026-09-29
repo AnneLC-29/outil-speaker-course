@@ -14,6 +14,27 @@ from streamlit_folium import st_folium
 st.set_page_config(page_title="Outil Speaker Course", layout="wide")
 
 # -------------------------------------------------------------
+# 🎨 STYLISATION CSS POUR AGRANDIR LES ONGLETS (TABS)
+# -------------------------------------------------------------
+st.markdown("""
+<style>
+    /* Agrandissement et mise en valeur des boutons d'onglets */
+    button[data-baseweb="tab"] {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        padding: 12px 20px !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+    /* Style de l'onglet actif */
+    button[data-baseweb="tab"][aria-selected="true"] {
+        background-color: #f0f2f6 !important;
+        color: #ff4b4b !important;
+        border-bottom: 3px solid #ff4b4b !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------------------------------------------------
 # 📊 COMPTEUR DE VISITES & ADRESSES IP UNIQUES
 # -------------------------------------------------------------
 STATS_FILE = "stats_visites.json"
@@ -416,15 +437,16 @@ try:
     st.sidebar.caption(f"👀 **{total_visites}** pages vues | 👥 **{total_ips}** visiteurs uniques (IP)")
 
     # -------------------------------------------------------------
-    # ONGLETS DE NAVIGATION PRINCIPAUX
+    # ONGLETS DE NAVIGATION PRINCIPAUX (RÉORGANISÉS ET AGRANDIS)
     # -------------------------------------------------------------
-    tab_general, tab_raids, tab_search, tab_favoris, tab_stats, tab_sponsors = st.tabs([
+    tab_general, tab_vides_trails, tab_search, tab_favoris, tab_stats, tab_sponsors, tab_raids = st.tabs([
         "📈 Infos Générales & Stats",
-        "🛡️ Résultats Raids Dingues",
+        "🌲 Perf. Bol d'Air & Renaissance",
         "🔎 Recherche Participant", 
         "🏆 Favoris & Cotes Betrail", 
         "📊 Origine & Clubs",
-        "🤝 Sponsors & Partenaires"
+        "🤝 Sponsors & Partenaires",
+        "🛡️ Résultats Raids Dingues"
     ])
 
     # -------------------------------------------------------------
@@ -536,96 +558,6 @@ try:
                 use_container_width=True, 
                 hide_index=True
             )
-
-        # -------------------------------------------------------------
-        # FOCUS BOL D'AIR 2026
-        # -------------------------------------------------------------
-        if col_boldair:
-            st.markdown("---")
-            st.markdown("### 🌲 Performances & Podiums au Bol d'Air 2026")
-            
-            df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)].copy()
-            
-            if not df_ba.empty:
-                total_ba = len(df_ba)
-                dist_counts_ba = df_ba['COURSE'].value_counts()
-                
-                cols_m_ba = st.columns(1 + len(dist_counts_ba))
-                cols_m_ba[0].metric("🌲 Total Participants Bol d'Air", total_ba)
-                
-                for idx, (dist_name, count_val) in enumerate(dist_counts_ba.items()):
-                    cols_m_ba[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
-
-                st.markdown(" ")
-                
-                df_ba['RANK_NUM'] = df_ba[col_boldair].apply(extract_rank_number)
-                df_ba['RÉSULTAT BOL D\'AIR'] = df_ba[col_boldair].apply(add_medal_prefix)
-                
-                df_ba_sorted = df_ba.sort_values(by=['RANK_NUM', 'NOM']).reset_index(drop=True)
-                
-                cols_ba = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT BOL D\'AIR']
-                if 'DOSSARD' in df_ba_sorted.columns and df_ba_sorted['DOSSARD'].notna().any():
-                    cols_ba.insert(0, 'DOSSARD')
-                
-                st.dataframe(
-                    df_ba_sorted[cols_ba],
-                    use_container_width=True,
-                    hide_index=True,
-                    column_config={
-                        "DOSSARD": "Dossard",
-                        "NOM": "Nom",
-                        "PRENOM": "Prénom",
-                        "COURSE": "Épreuve 2026",
-                        "RÉSULTAT BOL D'AIR": "Résultat Bol d'Air 2026 (Classé)"
-                    }
-                )
-            else:
-                st.write("Aucun participant identifié pour l'instant sur le Bol d'Air 2026.")
-
-        # -------------------------------------------------------------
-        # FOCUS TRAIL DE LA RENAISSANCE 2026
-        # -------------------------------------------------------------
-        if col_renaissance:
-            st.markdown("---")
-            st.markdown("### 🏰 Performances & Podiums au Trail de la Renaissance 2026")
-            
-            df_ren = df[df[col_renaissance].notna() & (df[col_renaissance].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)].copy()
-            
-            if not df_ren.empty:
-                total_ren = len(df_ren)
-                dist_counts_ren = df_ren['COURSE'].value_counts()
-                
-                cols_m_ren = st.columns(1 + len(dist_counts_ren))
-                cols_m_ren[0].metric("🏰 Total Trail de la Renaissance", total_ren)
-                
-                for idx, (dist_name, count_val) in enumerate(dist_counts_ren.items()):
-                    cols_m_ren[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
-
-                st.markdown(" ")
-                
-                df_ren['RANK_NUM'] = df_ren[col_renaissance].apply(extract_rank_number)
-                df_ren['RÉSULTAT RENAISSANCE'] = df_ren[col_renaissance].apply(add_medal_prefix)
-                
-                df_ren_sorted = df_ren.sort_values(by=['RANK_NUM', 'NOM']).reset_index(drop=True)
-                
-                cols_ren = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT RENAISSANCE']
-                if 'DOSSARD' in df_ren_sorted.columns and df_ren_sorted['DOSSARD'].notna().any():
-                    cols_ren.insert(0, 'DOSSARD')
-                
-                st.dataframe(
-                    df_ren_sorted[cols_ren],
-                    use_container_width=True,
-                    hide_index=True,
-                    column_config={
-                        "DOSSARD": "Dossard",
-                        "NOM": "Nom",
-                        "PRENOM": "Prénom",
-                        "COURSE": "Épreuve 2026",
-                        "RÉSULTAT RENAISSANCE": "Résultat Renaissance 2026 (Classé)"
-                    }
-                )
-            else:
-                st.write("Aucun participant identifié pour l'instant sur le Trail de la Renaissance 2026.")
 
         # -------------------------------------------------------------
         # SECTION PODIUMS, TEMPOS & STATISTIQUES HISTORIQUES
@@ -839,7 +771,7 @@ try:
         c_left, c_right = st.columns(2)
         
         with c_left:
-            st.markdown("### 🏃‍♂️ Inscrits par Épreuve / Distance")
+            st.markdown("### 🏃‍♂️️ Inscrits par Épreuve / Distance")
             if not df_epreuves.empty and 'COURSE' in df_epreuves.columns:
                 df_courses = df_epreuves.groupby(['COURSE', 'SEXE']).size().unstack(fill_value=0)
                 if 'H' not in df_courses.columns: df_courses['H'] = 0
@@ -893,60 +825,97 @@ try:
                     )
 
     # -------------------------------------------------------------
-    # ONGLET 2 : RÉSULTATS DES MEMBRES RAIDS DINGUES
+    # ONGLET 2 : NOUVEL ONGLET DÉDIÉ BOL D'AIR & RENAISSANCE
     # -------------------------------------------------------------
-    with tab_raids:
-        st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
-        st.write("Retrouvez la liste exclusive de nos membres ayant au moins une participation enregistrée en 2024 ou 2025 !")
+    with tab_vides_trails:
+        st.subheader("🌲 Performances & Podiums - Trails Voisins 2026")
+        st.write("Retrouvez ici les résultats et performances de nos inscrits sur les deux trails phares de la région en 2026 !")
         
-        df['CLEAN_NOM'] = df['NOM_COMPLET'].apply(clean_name_str)
-        is_in_official_list = df['CLEAN_NOM'].isin(MEMBRES_RAIDS_CLEAN)
-        is_adherent_course = df['COURSE'].astype(str).str.upper().str.contains("ADHERENT")
-        
-        df_raids_all = df[is_in_official_list | is_adherent_course].copy()
-
-        has_res_2025_r = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE") if has_2025 else pd.Series([False]*len(df_raids_all))
-        has_res_2024_r = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE") if has_2024 else pd.Series([False]*len(df_raids_all))
-        
-        df_raids = df_raids_all[has_res_2025_r | has_res_2024_r].copy()
-
-        if not df_raids.empty:
-            if has_2025: df_raids['FOULEES 2025'] = df_raids['FOULEES 2025'].apply(add_medal_prefix)
-            if has_2024: df_raids['FOULEES 2024'] = df_raids['FOULEES 2024'].apply(add_medal_prefix)
+        # 1. BOL D'AIR 2026
+        if col_boldair:
+            st.markdown("---")
+            st.markdown("### 🌲 Performances & Podiums au Bol d'Air 2026")
             
-            df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
+            df_ba = df[df[col_boldair].notna() & (df[col_boldair].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)].copy()
             
-            col_r1, col_r2 = st.columns([1, 2])
-            with col_r1:
-                st.metric("🏃 Membres ayant déjà couru (2024/2025)", len(df_raids_sorted))
-            with col_r2:
-                sel_membre = st.selectbox(
-                    "🔍 Filtrer par membre du club :",
-                    options=["-- Tous les membres --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
+            if not df_ba.empty:
+                total_ba = len(df_ba)
+                dist_counts_ba = df_ba['COURSE'].value_counts()
+                
+                cols_m_ba = st.columns(1 + len(dist_counts_ba))
+                cols_m_ba[0].metric("🌲 Total Participants Bol d'Air", total_ba)
+                
+                for idx, (dist_name, count_val) in enumerate(dist_counts_ba.items()):
+                    cols_m_ba[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
+
+                st.markdown(" ")
+                
+                df_ba['RANK_NUM'] = df_ba[col_boldair].apply(extract_rank_number)
+                df_ba['RÉSULTAT BOL D\'AIR'] = df_ba[col_boldair].apply(add_medal_prefix)
+                
+                df_ba_sorted = df_ba.sort_values(by=['RANK_NUM', 'NOM']).reset_index(drop=True)
+                
+                cols_ba = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT BOL D\'AIR']
+                if 'DOSSARD' in df_ba_sorted.columns and df_ba_sorted['DOSSARD'].notna().any():
+                    cols_ba.insert(0, 'DOSSARD')
+                
+                st.dataframe(
+                    df_ba_sorted[cols_ba],
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "DOSSARD": "Dossard",
+                        "NOM": "Nom",
+                        "PRENOM": "Prénom",
+                        "COURSE": "Épreuve 2026",
+                        "RÉSULTAT BOL D'AIR": "Résultat Bol d'Air 2026 (Classé)"
+                    }
                 )
-
-            if sel_membre != "-- Tous les membres --":
-                df_raids_disp = df_raids_sorted[df_raids_sorted['NOM_COMPLET'] == sel_membre]
             else:
-                df_raids_disp = df_raids_sorted
+                st.write("Aucun participant identifié pour l'instant sur le Bol d'Air 2026.")
 
-            cols_show = ['NOM', 'PRENOM']
-            if has_2025: cols_show.append('FOULEES 2025')
-            if has_2024: cols_show.append('FOULEES 2024')
+        # 2. TRAIL DE LA RENAISSANCE 2026
+        if col_renaissance:
+            st.markdown("---")
+            st.markdown("### 🏰 Performances & Podiums au Trail de la Renaissance 2026")
             
-            st.dataframe(
-                df_raids_disp[cols_show], 
-                use_container_width=True, 
-                hide_index=True,
-                column_config={
-                    "NOM": "Nom",
-                    "PRENOM": "Prénom",
-                    "FOULEES 2025": "Édition 2025",
-                    "FOULEES 2024": "Édition 2024"
-                }
-            )
-        else:
-            st.warning("Aucun membre de l'association n'a de résultat enregistré en 2024 ou 2025 dans le CSV actuel.")
+            df_ren = df[df[col_renaissance].notna() & (df[col_renaissance].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)].copy()
+            
+            if not df_ren.empty:
+                total_ren = len(df_ren)
+                dist_counts_ren = df_ren['COURSE'].value_counts()
+                
+                cols_m_ren = st.columns(1 + len(dist_counts_ren))
+                cols_m_ren[0].metric("🏰 Total Trail de la Renaissance", total_ren)
+                
+                for idx, (dist_name, count_val) in enumerate(dist_counts_ren.items()):
+                    cols_m_ren[idx + 1].metric(f"🚩 Inscrits {dist_name}", count_val)
+
+                st.markdown(" ")
+                
+                df_ren['RANK_NUM'] = df_ren[col_renaissance].apply(extract_rank_number)
+                df_ren['RÉSULTAT RENAISSANCE'] = df_ren[col_renaissance].apply(add_medal_prefix)
+                
+                df_ren_sorted = df_ren.sort_values(by=['RANK_NUM', 'NOM']).reset_index(drop=True)
+                
+                cols_ren = ['NOM', 'PRENOM', 'COURSE', 'RÉSULTAT RENAISSANCE']
+                if 'DOSSARD' in df_ren_sorted.columns and df_ren_sorted['DOSSARD'].notna().any():
+                    cols_ren.insert(0, 'DOSSARD')
+                
+                st.dataframe(
+                    df_ren_sorted[cols_ren],
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "DOSSARD": "Dossard",
+                        "NOM": "Nom",
+                        "PRENOM": "Prénom",
+                        "COURSE": "Épreuve 2026",
+                        "RÉSULTAT RENAISSANCE": "Résultat Renaissance 2026 (Classé)"
+                    }
+                )
+            else:
+                st.write("Aucun participant identifié pour l'instant sur le Trail de la Renaissance 2026.")
 
     # -------------------------------------------------------------
     # ONGLET 3 : RECHERCHE PARTICIPANT
@@ -1062,7 +1031,7 @@ try:
                 col_map_c, col_info_c = st.columns([1, 1])
                 
                 with col_map_c:
-                    st.markdown(f"#### 🗺️ Localisation : {coureur['VILLE_CLEAN']}")
+                    st.markdown(f"#### 🗺️️ Localisation : {coureur['VILLE_CLEAN']}")
                     df_v_unique = pd.DataFrame([{'NOM_VILLE': nom_ville, 'CODE_POSTAL': cp_ville}])
                     coords_c = geolocaliser_communes(df_v_unique)
                     
@@ -1089,7 +1058,7 @@ try:
                         st.write("Carte non disponible.")
 
                 with col_info_c:
-                    st.markdown(f"#### 🏘️️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} participants)")
+                    st.markdown(f"#### 🏘️ Inscrits de {coureur['NOM_VILLE']} ({nb_coureurs_ville} participants)")
                     dist_counts = df_ville_all['COURSE'].value_counts()
                     dist_str = " | ".join([f"**{course}** : {cnt}" for course, cnt in dist_counts.items()])
                     st.markdown(f"📊 **Répartition :** {dist_str}")
@@ -1357,7 +1326,63 @@ try:
                 if os.path.exists(sp_file):
                     st.image(sp_file, width=180)
                 else:
-                    st.info(f"🏷️️ **{sp_nom}**")
+                    st.info(f"🏷️ **{sp_nom}**")
+
+    # -------------------------------------------------------------
+    # ONGLET 7 : RÉSULTATS DES MEMBRES RAIDS DINGUES (PLACÉ EN DERNIER)
+    # -------------------------------------------------------------
+    with tab_raids:
+        st.subheader("🛡️ Historique & Performances des Membres Raids Dingues")
+        st.write("Retrouvez la liste exclusive de nos membres ayant au moins une participation enregistrée en 2024 ou 2025 !")
+        
+        df['CLEAN_NOM'] = df['NOM_COMPLET'].apply(clean_name_str)
+        is_in_official_list = df['CLEAN_NOM'].isin(MEMBRES_RAIDS_CLEAN)
+        is_adherent_course = df['COURSE'].astype(str).str.upper().str.contains("ADHERENT")
+        
+        df_raids_all = df[is_in_official_list | is_adherent_course].copy()
+
+        has_res_2025_r = df_raids_all['FOULEES 2025'].notna() & (df_raids_all['FOULEES 2025'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2025'].astype(str).str.upper() != "NONE") if has_2025 else pd.Series([False]*len(df_raids_all))
+        has_res_2024_r = df_raids_all['FOULEES 2024'].notna() & (df_raids_all['FOULEES 2024'].astype(str).str.strip() != "") & (df_raids_all['FOULEES 2024'].astype(str).str.upper() != "NONE") if has_2024 else pd.Series([False]*len(df_raids_all))
+        
+        df_raids = df_raids_all[has_res_2025_r | has_res_2024_r].copy()
+
+        if not df_raids.empty:
+            if has_2025: df_raids['FOULEES 2025'] = df_raids['FOULEES 2025'].apply(add_medal_prefix)
+            if has_2024: df_raids['FOULEES 2024'] = df_raids['FOULEES 2024'].apply(add_medal_prefix)
+            
+            df_raids_sorted = df_raids.sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
+            
+            col_r1, col_r2 = st.columns([1, 2])
+            with col_r1:
+                st.metric("🏃 Membres ayant déjà couru (2024/2025)", len(df_raids_sorted))
+            with col_r2:
+                sel_membre = st.selectbox(
+                    "🔍 Filtrer par membre du club :",
+                    options=["-- Tous les membres --"] + list(df_raids_sorted['NOM_COMPLET'].unique())
+                )
+
+            if sel_membre != "-- Tous les membres --":
+                df_raids_disp = df_raids_sorted[df_raids_sorted['NOM_COMPLET'] == sel_membre]
+            else:
+                df_raids_disp = df_raids_sorted
+
+            cols_show = ['NOM', 'PRENOM']
+            if has_2025: cols_show.append('FOULEES 2025')
+            if has_2024: cols_show.append('FOULEES 2024')
+            
+            st.dataframe(
+                df_raids_disp[cols_show], 
+                use_container_width=True, 
+                hide_index=True,
+                column_config={
+                    "NOM": "Nom",
+                    "PRENOM": "Prénom",
+                    "FOULEES 2025": "Édition 2025",
+                    "FOULEES 2024": "Édition 2024"
+                }
+            )
+        else:
+            st.warning("Aucun membre de l'association n'a de résultat enregistré en 2024 ou 2025 dans le CSV actuel.")
 
     # -------------------------------------------------------------
     # 🔄 RAFRAÎCHISSEMENT AUTOMATIQUE DU TEMPS
