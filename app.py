@@ -688,12 +688,29 @@ try:
             cond_2025 = df_epreuves['FOULEES 2025'].notna() & (df_epreuves['FOULEES 2025'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)
             cond_2024 = df_epreuves['FOULEES 2024'].notna() & (df_epreuves['FOULEES 2024'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)
             
-            # Présents en 2024 ET en 2025 (3e participation d'affilée)
+            # 1. Présents en 2024 ET en 2025 (3e participation d'affilée)
             df_fidele_3 = df_epreuves[cond_2025 & cond_2024].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
             
-            # Présents SEULEMENT en 2024 OU en 2025 (2e participation)
+            # 2. Présents SEULEMENT en 2024 OU en 2025 (2e participation, 1 seule édition)
             cond_exclusif = (cond_2025 | cond_2024) & ~(cond_2025 & cond_2024)
             df_fidele_1 = df_epreuves[cond_exclusif].sort_values(by=['NOM', 'PRENOM']).reset_index(drop=True)
+            
+            # Calculs pour le Flash Speaker Global (niveau flèche rouge)
+            f3_count = len(df_fidele_3)
+            
+            f1_2025_count = len(df_fidele_1[df_fidele_1['FOULEES 2025'].notna() & (df_fidele_1['FOULEES 2025'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)])
+            f1_2024_count = len(df_fidele_1[df_fidele_1['FOULEES 2024'].notna() & (df_fidele_1['FOULEES 2024'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)])
+            
+            tot_2025_global = f3_count + f1_2025_count  # ex: 22 + 39 = 61
+            tot_2024_global = f3_count + f1_2024_count  # ex: 22 + 21 = 43
+            tot_anciens_uniques = f3_count + len(df_fidele_1)  # Total coureurs ayant un historique
+            
+            # BANDEAU RÉCAPITULATIF GLOBAL SPEAKER (NIVEAU FLÈCHE ROUGE)
+            st.success(f"""
+            🗣️ **Flash Speaker — Récapitulatif Global des Anciens Participants ({tot_anciens_uniques} coureurs au total) :**
+            * 📅 **Total ayant couru en 2025 :** **{tot_2025_global}** coureurs *( {f3_count} présent(e)s en 2024 & 2025 + {f1_2025_count} présent(e)s uniquement en 2025 )*
+            * 📅 **Total ayant couru en 2024 :** **{tot_2024_global}** coureurs *( {f3_count} présent(e)s en 2024 & 2025 + {f1_2024_count} présent(e)s uniquement en 2024 )*
+            """)
             
             def count_by_course(df_subset, pattern):
                 if df_subset.empty: return 0
@@ -710,7 +727,7 @@ try:
                 f3_25 = count_by_course(df_fidele_3, "25")
                 f3_m = count_by_course(df_fidele_3, "MARCHE")
                 
-                st.success(f"🗣️ **Flash Speaker :** 🥾 Marche : **{f3_m}** | 🏃 8 KM : **{f3_8}** | 🏃 15 KM : **{f3_15}** | 🏃 25 KM : **{f3_25}**")
+                st.info(f"📊 **Par épreuve 2026 :** 🥾 Marche : **{f3_m}** | 🏃 8 KM : **{f3_8}** | 🏃 15 KM : **{f3_15}** | 🏃 25 KM : **{f3_25}**")
                 
                 if not df_fidele_3.empty:
                     cols_f3 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
@@ -738,17 +755,12 @@ try:
                 st.markdown(f"#### 🏅 2e Participation ({len(df_fidele_1)} participants)")
                 st.caption("A déjà participé en 2024 OU en 2025 (1 seule édition) !")
                 
-                # Comptage direct sur les colonnes du tableau df_fidele_1 pour éviter tout décalage d'index
-                f1_2025 = len(df_fidele_1[df_fidele_1['FOULEES 2025'].notna() & (df_fidele_1['FOULEES 2025'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)])
-                f1_2024 = len(df_fidele_1[df_fidele_1['FOULEES 2024'].notna() & (df_fidele_1['FOULEES 2024'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)])
-                
                 f1_8 = count_by_course(df_fidele_1, "8")
                 f1_15 = count_by_course(df_fidele_1, "15")
                 f1_25 = count_by_course(df_fidele_1, "25")
                 f1_m = count_by_course(df_fidele_1, "MARCHE")
                 
-                st.info(f"🗣️ **Flash Speaker :** 📅 Présents en 2025 : **{f1_2025}** | 📅 Présents en 2024 : **{f1_2024}**\n\n"
-                        f"📊 **Par épreuve 2026 :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
+                st.info(f"📊 **Par épreuve 2026 :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
                 
                 if not df_fidele_1.empty:
                     cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
