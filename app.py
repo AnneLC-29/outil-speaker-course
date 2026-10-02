@@ -738,12 +738,16 @@ try:
                 st.markdown(f"#### 🏅 2e Participation ({len(df_fidele_1)} participants)")
                 st.caption("A déjà participé en 2024 OU en 2025 (1 seule édition) !")
                 
+                f1_2025 = len(df_fidele_1[cond_2025])
+                f1_2024 = len(df_fidele_1[cond_2024])
+                
                 f1_8 = count_by_course(df_fidele_1, "8")
                 f1_15 = count_by_course(df_fidele_1, "15")
                 f1_25 = count_by_course(df_fidele_1, "25")
                 f1_m = count_by_course(df_fidele_1, "MARCHE")
                 
-                st.info(f"🗣️ **Flash Speaker :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
+                st.info(f"🗣️ **Flash Speaker :** 📅 Présents en 2025 : **{f1_2025}** | 📅 Présents en 2024 : **{f1_2024}**\n\n"
+                        f"📊 **Par épreuve 2026 :** 🥾 Marche : **{f1_m}** | 🏃 8 KM : **{f1_8}** | 🏃 15 KM : **{f1_15}** | 🏃 25 KM : **{f1_25}**")
                 
                 if not df_fidele_1.empty:
                     cols_f1 = ['NOM', 'PRENOM', 'COURSE', 'FOULEES 2025', 'FOULEES 2024']
