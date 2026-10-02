@@ -738,8 +738,9 @@ try:
                 st.markdown(f"#### 🏅 2e Participation ({len(df_fidele_1)} participants)")
                 st.caption("A déjà participé en 2024 OU en 2025 (1 seule édition) !")
                 
-                f1_2025 = len(df_fidele_1[cond_2025])
-                f1_2024 = len(df_fidele_1[cond_2024])
+                # Comptage direct sur les colonnes du tableau df_fidele_1 pour éviter tout décalage d'index
+                f1_2025 = len(df_fidele_1[df_fidele_1['FOULEES 2025'].notna() & (df_fidele_1['FOULEES 2025'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)])
+                f1_2024 = len(df_fidele_1[df_fidele_1['FOULEES 2024'].notna() & (df_fidele_1['FOULEES 2024'].astype(str).str.strip().str.upper().isin(["", "-", "NONE", "NAN"]) == False)])
                 
                 f1_8 = count_by_course(df_fidele_1, "8")
                 f1_15 = count_by_course(df_fidele_1, "15")
